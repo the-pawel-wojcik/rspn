@@ -37,6 +37,7 @@ dev = [
     "sphinx-copybutton",
     "sphinx-autobuild",
     "sphinx-autodoc-typehints",
+    "pdaggerq",
 ]
 
 [tool.hatch.build.targets.wheel]
