@@ -27,11 +27,24 @@ class UHF_CCSD_LR:
     uhf_ccsd_data: UHF_CCSD_Data
     uhf_scf_data: Intermediates
 
-    def find_polarizabilities(self):
+    def find_polarizabilities(self) -> dict[Descartes, dict[Descartes, float]]:
         cc_jacobian = self.build_the_cc_jacobian()
         cc_electric_dipole = self.build_cc_electric_dipole_singles()
         t_response = self.find_t_response(cc_jacobian, cc_electric_dipole)
         eta_mu = self._find_eta_mu()
+        pol = {
+            first: {
+                second: sum(
+                    float(
+                        np.sum(eta_mu[first][spin] * t_response[second][spin])
+                    )
+                    for spin in ['aa', 'bb']
+                )
+                for second in CARTESIAN
+            } for first in CARTESIAN
+        }
+        return pol
+        
     
     def _find_eta_mu(self) -> dict[Descartes, dict[str, NDArray]]:
         """ mu stands for the electric dipole moment """
