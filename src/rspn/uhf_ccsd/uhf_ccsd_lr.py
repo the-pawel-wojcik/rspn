@@ -19,6 +19,8 @@ from rspn.uhf_ccsd.equations.singles_singles import (
     get_singles_singles_bbaa,
     get_singles_singles_bbbb,
 )
+import rspn.uhf_ccsd.equations.eta.singles as eta_singles
+import rspn.uhf_ccsd.equations.eta.doubles as eta_doubles
 
 @dataclass
 class UHF_CCSD_LR:
@@ -29,7 +31,39 @@ class UHF_CCSD_LR:
         cc_jacobian = self.build_the_cc_jacobian()
         cc_electric_dipole = self.build_cc_electric_dipole_singles()
         t_response = self.find_t_response(cc_jacobian, cc_electric_dipole)
+        eta_mu = self._find_eta_mu()
     
+    def _find_eta_mu(self) -> dict[Descartes, dict[str, NDArray]]:
+        """ mu stands for the electric dipole moment """
+        operators = {
+            Descartes.x: dict(
+                h_aa=self.uhf_scf_data.mua_x,
+                h_bb=self.uhf_scf_data.mub_x,
+            ),
+            Descartes.y: dict(
+                h_aa=self.uhf_scf_data.mua_y,
+                h_bb=self.uhf_scf_data.mub_y,
+            ),
+            Descartes.z: dict(
+                h_aa=self.uhf_scf_data.mua_y,
+                h_bb=self.uhf_scf_data.mub_y,
+            ),
+        }
+        etas = {}
+        for coord in CARTESIAN:
+            etas[coord] = dict()
+            etas[coord]['aa'] = eta_singles.get_eta_aa(
+                self.uhf_scf_data,
+                self.uhf_ccsd_data,
+                **operators[coord],
+            )
+            etas[coord]['bb'] = eta_singles.get_eta_bb(
+                self.uhf_scf_data,
+                self.uhf_ccsd_data,
+                **operators[coord],
+            )
+        return etas
+
     def find_t_response(
         self,
         cc_jacobian: NDArray,
