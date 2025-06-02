@@ -67,24 +67,42 @@ class UHF_CCSD_LR:
     def find_t_response(
         self,
         cc_jacobian: NDArray,
-        cc_mu: dict[Descartes, NDArray],
-    ) -> dict[Descartes, NDArray]:
-
+        cc_mu: dict[Descartes, dict[str, NDArray]],
+    ) -> dict[Descartes, dict[str, NDArray]]:
+        dims = self.assign_dims()
         t_response_mu = {}
         for coord in CARTESIAN:
-            response, exit_code = gmres(
+            mu = cc_mu[coord]
+            rhs = np.vstack(
+                (
+                    mu['aa'].reshape(-1, 1),
+                    mu['bb'].reshape(-1, 1),
+                )
+            )
+            gmres_output = gmres(
                 cc_jacobian,
-                cc_mu[coord],
+                rhs,
                 rtol=1e-7,
                 atol=1e-7,
             )
+            exit_code: int = gmres_output[1]
             if exit_code != 0:
-                msg = f'gmres didn\'t find the response vector for mu {coord}'
+                msg = f'gmres didn\'t find the response vector for mu {coord}.'
                 raise RuntimeError(msg)
-            t_response_mu[coord] = response
+            response: NDArray = gmres_output[0]
+            scf = self.uhf_scf_data
+            nmo = scf.nmo
+            noa = scf.noa
+            nva = nmo - noa
+            nob = scf.nob
+            nvb = nmo - nob
+            t_response_mu[coord] = {
+                'aa': response[:dims['aa']].reshape((nva, noa)),
+                'bb': response[dims['aa']:].reshape((nvb, nob)),
+            }
         return t_response_mu
 
-    def assign_dims(self):
+    def assign_dims(self) -> dict[str, int]:
         """ TODO: make it work alright """
         scf = self.uhf_scf_data
         nmo = scf.nmo
@@ -97,6 +115,7 @@ class UHF_CCSD_LR:
         self.dims['ab'] = nva * nob
         self.dims['ba'] = nvb * noa
         self.dims['bb'] = nvb * nob
+        return self.dims
 
     def build_the_cc_jacobian(self):
         self.assign_dims()
@@ -121,7 +140,9 @@ class UHF_CCSD_LR:
         jacobian = np.block([[aaaa, aabb], [bbaa, bbbb]])
         return jacobian
 
-    def build_cc_electric_dipole_singles(self) -> dict[Descartes, NDArray]:
+    def build_cc_electric_dipole_singles(
+        self
+    ) -> dict[Descartes, dict[str, NDArray]]:
         r"""
         Builds the matrices:
 
@@ -139,27 +160,29 @@ class UHF_CCSD_LR:
             cc_mu[coord] = self._build_the_cc_dipole_helper(coord)
         return cc_mu
 
-    def _build_the_cc_dipole_helper(self, coord: Descartes):
+    def _build_the_cc_dipole_helper(
+        self, coord: Descartes,
+    ) -> dict[str, NDArray]:
         scf = self.uhf_scf_data
         ccsd = self.uhf_ccsd_data
-        self.assign_dims()
-        dim_aa = self.dims['aa']
-        dim_bb = self.dims['bb']
 
         if coord == Descartes.x:
-            aa = get_mux_aa(scf, ccsd).reshape(dim_aa)
-            bb = get_mux_bb(scf, ccsd).reshape(dim_bb)
-            return np.block([aa, bb])
+            return {
+                'aa': get_mux_aa(scf, ccsd),
+                'bb': get_mux_bb(scf, ccsd),
+            }
 
         elif coord == Descartes.y:
-            aa = get_muy_aa(scf, ccsd).reshape(dim_aa)
-            bb = get_muy_bb(scf, ccsd).reshape(dim_bb)
-            return np.block([aa, bb])
+            return {
+                'aa': get_muy_aa(scf, ccsd),
+                'bb': get_muy_bb(scf, ccsd),
+            }
 
         elif coord == Descartes.z:
-            aa = get_muz_aa(scf, ccsd).reshape(dim_aa)
-            bb = get_muz_bb(scf, ccsd).reshape(dim_bb)
-            return np.block([aa, bb])
+            return {
+                'aa': get_muz_aa(scf, ccsd),
+                'bb': get_muz_bb(scf, ccsd),
+            }
 
         else:
             raise ValueError(f"Unknown cartesian coordinate: {coord}.")

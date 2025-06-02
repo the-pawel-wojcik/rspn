@@ -1,10 +1,9 @@
 import pickle
 
 from chem.ccsd.uhf_ccsd import UHF_CCSD
-from chem.meta.coordinates import CARTESIAN
+from chem.meta.coordinates import Descartes
 from rspn.uhf_ccsd.uhf_ccsd_lr import UHF_CCSD_LR
 import numpy as np
-from scipy.sparse.linalg import gmres
 
 
 def t_response_test():
@@ -12,17 +11,19 @@ def t_response_test():
         ccsd: UHF_CCSD = pickle.load(bak_file)
     lr = UHF_CCSD_LR(ccsd.data, ccsd.scf_data)
     cc_jacobian = lr.build_the_cc_jacobian()
-    cc_mu = {}
-    for coord in CARTESIAN:
-        cc_mu[coord] = lr._build_the_cc_dipole_helper(coord)
-
-    for coord in CARTESIAN:
-        sol, exit_code = gmres(cc_jacobian, cc_mu[coord], rtol=1e-7, atol=1e-7)
-        if exit_code != 0:
-            raise RuntimeError('GMRES didn\'t find the response vector!')
-        print(f'Response vector for {coord} found!')
-        print(f'{np.allclose(cc_jacobian @ sol, cc_mu[coord], rtol=1e-6, atol=1e-6)=}')
-
+    cc_mu = lr.build_cc_electric_dipole_singles()
+    t_response = lr.find_t_response(
+        cc_jacobian=cc_jacobian,
+        cc_mu=cc_mu,
+    )
+    print(f'{t_response.keys()=}')
+    assert set(t_response.keys()) == {Descartes.x, Descartes.y, Descartes.z}
+    mux = t_response[Descartes.x]
+    print(f'{mux.keys()=}')
+    assert set(mux.keys()) == {'aa', 'bb'}
+    aa = mux['aa']
+    with np.printoptions(precision=3):
+        print(aa)
 
 if __name__ == "__main__":
     t_response_test()
