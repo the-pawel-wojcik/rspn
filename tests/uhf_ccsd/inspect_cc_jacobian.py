@@ -1,10 +1,11 @@
 import pickle
+
 from chem.ccsd.uhf_ccsd import UHF_CCSD
 from rspn.uhf_ccsd.uhf_ccsd_lr import UHF_CCSD_LR
 import numpy as np
 
 def view_the_jacobian():
-    with open('uhf_ccsd.pkl','rb') as bak_file:
+    with open('pickles/uhf_ccsd.pkl','rb') as bak_file:
        ccsd: UHF_CCSD = pickle.load(bak_file)
 
     lr = UHF_CCSD_LR(ccsd.data, ccsd.scf_data)
@@ -24,7 +25,7 @@ def view_the_jacobian():
 
 
 def look_at_the_eigensystem():
-    with open('uhf_ccsd.pkl','rb') as bak_file:
+    with open('pickles/uhf_ccsd.pkl','rb') as bak_file:
        ccsd: UHF_CCSD = pickle.load(bak_file)
 
     lr = UHF_CCSD_LR(ccsd.data, ccsd.scf_data)
@@ -46,12 +47,12 @@ def look_at_the_eigensystem():
 
 
 def save_cc_jacobian():
-    with open('uhf_ccsd.pkl','rb') as bak_file:
+    with open('pickles/uhf_ccsd.pkl','rb') as bak_file:
        ccsd: UHF_CCSD = pickle.load(bak_file)
 
     lr = UHF_CCSD_LR(ccsd.data, ccsd.scf_data)
     cc_jacobian = lr.build_the_cc_jacobian()
-    with open('cc_jacobian.pkl','wb') as bak_file:
+    with open('pickles/cc_jacobian.pkl','wb') as bak_file:
         pickle.dump(cc_jacobian, bak_file)
 
 

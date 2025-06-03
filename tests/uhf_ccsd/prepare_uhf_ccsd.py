@@ -6,12 +6,12 @@ from chem.ccsd.uhf_ccsd import UHF_CCSD
 
 
 def basic_test():
-    mol, scf_energy, wfn = scf()
+    _, _, wfn = scf()
     intermediates = extract_intermediates(wfn)
     ccsd = UHF_CCSD(intermediates)
     ccsd.verbose = 1
     ccsd.solve_cc_equations()
-    with open('uhf_ccsd.pkl','wb') as bak_file:
+    with open('pickles/uhf_ccsd.pkl','wb') as bak_file:
         pickle.dump(ccsd, bak_file)
 
 

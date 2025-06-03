@@ -3,11 +3,10 @@ import pickle
 from chem.ccsd.uhf_ccsd import UHF_CCSD
 from chem.meta.coordinates import Descartes
 from rspn.uhf_ccsd.uhf_ccsd_lr import UHF_CCSD_LR
-import numpy as np
 
 
-def t_response_test():
-    with open('uhf_ccsd.pkl','rb') as bak_file:
+def test_t_response():
+    with open('pickles/uhf_ccsd.pkl','rb') as bak_file:
         ccsd: UHF_CCSD = pickle.load(bak_file)
     lr = UHF_CCSD_LR(ccsd.data, ccsd.scf_data)
     cc_jacobian = lr.build_the_cc_jacobian()
@@ -16,14 +15,13 @@ def t_response_test():
         cc_jacobian=cc_jacobian,
         cc_mu=cc_mu,
     )
-    print(f'{t_response.keys()=}')
     assert set(t_response.keys()) == {Descartes.x, Descartes.y, Descartes.z}
     mux = t_response[Descartes.x]
-    print(f'{mux.keys()=}')
     assert set(mux.keys()) == {'aa', 'bb'}
-    aa = mux['aa']
-    with np.printoptions(precision=3):
-        print(aa)
+    # aa = mux['aa']
+    # TODO: add tests of the values
+    # with np.printoptions(precision=3):
+    #     print(aa)
 
 if __name__ == "__main__":
-    t_response_test()
+    test_t_response()

@@ -5,13 +5,13 @@ import numpy as np
 
 
 def test():
-    with open('uhf_ccsd.pkl','rb') as bak_file:
+    with open('pickles/uhf_ccsd.pkl','rb') as bak_file:
        ccsd: UHF_CCSD = pickle.load(bak_file)
 
     lr = UHF_CCSD_LR(ccsd.data, ccsd.scf_data)
     cc_jacobian = lr.build_the_cc_jacobian()
     evals, evecs = np.linalg.eig(cc_jacobian)
-    # The cc jacobian matrix is non-symmetric so a transpose, in general, does
+    # The CC Jacobian matrix is non-symmetric so a transpose, in general, does
     # not produce the inverse
     assert not np.allclose(evecs.T @ cc_jacobian @ evecs, np.diag(evals))
     # The inverse needs to be calculated
