@@ -13,7 +13,7 @@ from rspn.uhf_ccsd.equations.dipole.singles import (
     get_muz_aa,
     get_muz_bb,
 )
-from rspn.uhf_ccsd.equations.singles_singles import (
+from rspn.uhf_ccsd.equations.cc_jacobian.singles_singles import (
     get_singles_singles_aaaa,
     get_singles_singles_aabb,
     get_singles_singles_bbaa,
