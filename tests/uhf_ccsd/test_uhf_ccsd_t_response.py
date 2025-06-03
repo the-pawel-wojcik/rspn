@@ -18,7 +18,8 @@ def test_t_response():
     assert set(t_response.keys()) == {Descartes.x, Descartes.y, Descartes.z}
     mux = t_response[Descartes.x]
     assert set(mux.keys()) == {'aa', 'bb'}
-    # aa = mux['aa']
+    aa = mux['aa']
+    assert aa.shape == (19, 5)
     # TODO: add tests of the values
     # with np.printoptions(precision=3):
     #     print(aa)
