@@ -13,9 +13,14 @@ def test_polarizabilities():
     t_response = lr.find_t_response(cc_jacobian, cc_mu)
     eta_mu = lr._find_eta_mu()
     pol_etaA_xB = lr._build_pol_eta_X(eta_mu, t_response)
-    print(f'{pol_etaA_xB=!s}')
+    fmt='=^50'
+    print(f'{'η^A X^B':{fmt}}')
+    print(pol_etaA_xB)
     pol_xA_F_xB = lr._build_pol_xA_F_xB(t_res_A=t_response, t_res_B=t_response)
-    print(f'{pol_xA_F_xB=!s}')
+    print(f'{'X^B F X^B':{fmt}}')
+    print(pol_xA_F_xB)
+    print(f'{' Polarizability ':{fmt}}')
+    print(pol_etaA_xB + pol_xA_F_xB + pol_etaA_xB)
 
 
 if __name__ == "__main__":

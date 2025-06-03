@@ -121,8 +121,8 @@ class UHF_CCSD_LR:
                 h_bb=self.uhf_scf_data.mub_y,
             ),
             Descartes.z: dict(
-                h_aa=self.uhf_scf_data.mua_y,
-                h_bb=self.uhf_scf_data.mub_y,
+                h_aa=self.uhf_scf_data.mua_z,
+                h_bb=self.uhf_scf_data.mub_z,
             ),
         }
         etas = {}
