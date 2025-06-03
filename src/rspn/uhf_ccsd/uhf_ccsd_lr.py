@@ -43,6 +43,18 @@ class Polarizability:
         }
         return cls(data = pol)
 
+    def __add__(self, other) -> Polarizability:
+        if not isinstance(other, Polarizability):
+            msg = f"Don't know how to add to {type(other)}."
+            raise ValueError(msg)
+        
+        return Polarizability.from_builder(
+            builder=lambda first, second: (
+                self.data[first][second] 
+                + 
+                other.data[first][second]
+            ),
+        )
 
     def __str__(self) -> str:
         pretty = ""
@@ -63,17 +75,26 @@ class UHF_CCSD_LR:
         t_response = self.find_t_response(cc_jacobian, cc_electric_dipole)
         eta_mu = self._find_eta_mu()
 
-        # first term is 2* if static and both operators are the same
+        # TODO: all operators work only for the electric dipole operator
+        pol_etaA_xB = self._build_pol_eta_X(eta_mu, t_response)
+        pol_etaB_xA = self._build_pol_eta_X(eta_mu, t_response)
+
+        return pol_etaA_xB + pol_etaB_xA
+
+    def _build_pol_eta_X(self, eta, t_response) -> Polarizability:
+        r"""
+        Calculates 
+        sum _mu \eta _\mu X _\mu
+        """
         pol = Polarizability.from_builder(
-            builder=lambda first, second: 2 * sum(
+            builder=lambda first, second: sum(
                 float(
-                    np.sum(eta_mu[first][spin] * t_response[second][spin])
+                    np.sum(eta[first][spin] * t_response[second][spin])
                 )
                 for spin in ['aa', 'bb']
             ),
         )
         return pol
-        
     
     def _find_eta_mu(self) -> dict[Descartes, dict[str, NDArray]]:
         """ mu stands for the electric dipole moment """
