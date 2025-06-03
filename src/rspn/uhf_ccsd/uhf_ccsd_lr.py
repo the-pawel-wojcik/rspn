@@ -1,4 +1,7 @@
+from __future__ import annotations
 from dataclasses import dataclass
+import itertools
+from typing import Callable
 from chem.ccsd.uhf_ccsd import UHF_CCSD_Data
 from chem.hf.intermediates_builders import Intermediates
 from chem.meta.coordinates import Descartes, CARTESIAN
@@ -22,27 +25,53 @@ from rspn.uhf_ccsd.equations.cc_jacobian.singles_singles import (
 import rspn.uhf_ccsd.equations.eta.singles as eta_singles
 import rspn.uhf_ccsd.equations.eta.doubles as eta_doubles
 
+
+@dataclass
+class Polarizability:
+    data: dict[Descartes, dict[Descartes, float]]
+
+    @classmethod
+    def from_builder(
+        cls,
+        builder: Callable[[Descartes, Descartes], float]
+    ) -> Polarizability:
+        pol = {
+            first: {
+                second: builder(first, second)
+                for second in CARTESIAN
+            } for first in CARTESIAN
+        }
+        return cls(data = pol)
+
+
+    def __str__(self) -> str:
+        pretty = ""
+        fmt = '7.4f'
+        for left, right in itertools.product(CARTESIAN, repeat=2):
+            pretty += f'{left}{right}: {self.data[left][right]:{fmt}}\n'
+        return pretty
+
+
 @dataclass
 class UHF_CCSD_LR:
     uhf_ccsd_data: UHF_CCSD_Data
     uhf_scf_data: Intermediates
 
-    def find_polarizabilities(self) -> dict[Descartes, dict[Descartes, float]]:
+    def find_polarizabilities(self) -> Polarizability:
         cc_jacobian = self.build_the_cc_jacobian()
         cc_electric_dipole = self.build_cc_electric_dipole_singles()
         t_response = self.find_t_response(cc_jacobian, cc_electric_dipole)
         eta_mu = self._find_eta_mu()
-        pol = {
-            first: {
-                second: sum(
-                    float(
-                        np.sum(eta_mu[first][spin] * t_response[second][spin])
-                    )
-                    for spin in ['aa', 'bb']
+
+        # first term is 2* if static and both operators are the same
+        pol = Polarizability.from_builder(
+            builder=lambda first, second: 2 * sum(
+                float(
+                    np.sum(eta_mu[first][spin] * t_response[second][spin])
                 )
-                for second in CARTESIAN
-            } for first in CARTESIAN
-        }
+                for spin in ['aa', 'bb']
+            ),
+        )
         return pol
         
     
