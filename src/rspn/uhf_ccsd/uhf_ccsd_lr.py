@@ -1,11 +1,9 @@
-from __future__ import annotations
 from dataclasses import dataclass
-import itertools
-from typing import Callable
 from chem.ccsd.uhf_ccsd import UHF_CCSD_Data
 from chem.hf.intermediates_builders import Intermediates
 from chem.ccsd.equations.util import GeneratorsInput
 from chem.meta.coordinates import Descartes, CARTESIAN
+from chem.meta.polarizability import Polarizability
 import numpy as np
 from numpy.typing import NDArray
 from scipy.sparse.linalg import gmres
@@ -31,44 +29,6 @@ from rspn.uhf_ccsd.equations.lHeecc.e1e1 import (
     get_lhe1e1cc_bbaa,
     get_lhe1e1cc_bbbb,
 )
-
-@dataclass
-class Polarizability:
-    data: dict[Descartes, dict[Descartes, float]]
-
-    @classmethod
-    def from_builder(
-        cls,
-        builder: Callable[[Descartes, Descartes], float]
-    ) -> Polarizability:
-        pol = {
-            first: {
-                second: builder(first, second)
-                for second in CARTESIAN
-            } for first in CARTESIAN
-        }
-        return cls(data = pol)
-
-    def __add__(self, other) -> Polarizability:
-        if not isinstance(other, Polarizability):
-            msg = f"Don't know how to add to {type(other)}."
-            raise ValueError(msg)
-        
-        return Polarizability.from_builder(
-            builder=lambda first, second: (
-                self.data[first][second] 
-                + 
-                other.data[first][second]
-            ),
-        )
-
-    def __str__(self) -> str:
-        pretty = ""
-        fmt = '7.4f'
-        for left, right in itertools.product(CARTESIAN, repeat=2):
-            pretty += f'{left}{right}: {self.data[left][right]:{fmt}}\n'
-        return pretty
-
 
 @dataclass
 class UHF_CCSD_LR:
