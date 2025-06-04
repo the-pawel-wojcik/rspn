@@ -7,16 +7,12 @@ from chem.ccsd.uhf_ccsd import UHF_CCSD_Data
 def get_eta_aa(
     uhf_scf_data: Intermediates,
     uhf_ccsd_data: UHF_CCSD_Data,
-    h_aa: NDArray,
-    h_bb: NDArray,
+    operator_aa: NDArray,
+    operator_bb: NDArray,
 ) -> NDArray:
-    """ The matrices h_aa and h_bb should be the matrix elements of the operator
-    in question, e.g. mu_x_a and mu_x_b. """
-    f_aa = uhf_scf_data.f_aa
-    f_bb = uhf_scf_data.f_bb
-    g_aaaa = uhf_scf_data.g_aaaa
-    g_abab = uhf_scf_data.g_abab
-    g_bbbb = uhf_scf_data.g_bbbb
+    """ tensor_subscripts: ('a', 'i') """
+    h_aa = operator_aa
+    h_bb = operator_bb
     kd_aa =  uhf_scf_data.identity_aa
     kd_bb =  uhf_scf_data.identity_bb
     va = uhf_scf_data.va
@@ -53,16 +49,12 @@ def get_eta_aa(
 def get_eta_bb(
     uhf_scf_data: Intermediates,
     uhf_ccsd_data: UHF_CCSD_Data,
-    h_aa: NDArray,
-    h_bb: NDArray,
+    operator_aa: NDArray,
+    operator_bb: NDArray,
 ) -> NDArray:
-    """ The matrices h_aa and h_bb should be the matrix elements of the operator
-    in question, e.g. mu_x_a and mu_x_b. """
-    f_aa = uhf_scf_data.f_aa
-    f_bb = uhf_scf_data.f_bb
-    g_aaaa = uhf_scf_data.g_aaaa
-    g_abab = uhf_scf_data.g_abab
-    g_bbbb = uhf_scf_data.g_bbbb
+    """ tensor_subscripts: ('a', 'i') """
+    h_aa = operator_aa
+    h_bb = operator_bb
     kd_aa =  uhf_scf_data.identity_aa
     kd_bb =  uhf_scf_data.identity_bb
     va = uhf_scf_data.va

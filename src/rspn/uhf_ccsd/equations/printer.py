@@ -27,6 +27,7 @@ def print_function_header(
     spin_subscript: str = '',
     defines_exclude: set[DefineSections] | None = None,
     extra_definitions: None | Iterable[str] = None,
+    extra_arguments: None | Iterable[str] = None,
 ) -> None:
 
     if not quantity.isidentifier():
@@ -40,7 +41,13 @@ def print_function_header(
     
     body = f'''\n\ndef get_{quantity}{spin_subscript}(
     uhf_scf_data: Intermediates,
-    uhf_ccsd_data: UHF_CCSD_Data,
+    uhf_ccsd_data: UHF_CCSD_Data,'''
+
+    if extra_arguments is not None:
+        for argument in extra_arguments:
+            body += f'\n{TAB}{argument},'
+
+    body += '''
 ) -> NDArray:'''
 
     if comment != '':
@@ -106,6 +113,7 @@ def print_to_numpy(
     tensor_subscripts: Sequence[str],
     defines_exclude: set[DefineSections] | None = None,
     extra_definitions: Iterable[str] | None = None,
+    extra_arguments: Iterable[str] | None = None,
 ):
     subscripts_count = len(tensor_subscripts)
     for spin_mix in itertools.product(['a', 'b'], repeat=subscripts_count):
@@ -126,6 +134,7 @@ def print_to_numpy(
             spin_subscript=spin_subscript,
             defines_exclude=defines_exclude,
             extra_definitions=extra_definitions,
+            extra_arguments=extra_arguments,
         )
 
         out_var = tensor_name + '_' + spin_subscript
