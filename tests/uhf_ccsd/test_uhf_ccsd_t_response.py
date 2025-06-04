@@ -22,6 +22,8 @@ def test_t_response():
     }
     aa = t_mu_res_x['aa']
     assert aa.shape == (19, 5)
+    aaaa = t_mu_res_x['aaaa']
+    assert aaaa.shape == (19, 19, 5, 5)
     # TODO: add tests of the values
     # with np.printoptions(precision=3):
     #     print(aa)

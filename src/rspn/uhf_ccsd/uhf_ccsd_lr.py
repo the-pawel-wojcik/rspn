@@ -186,25 +186,27 @@ class UHF_CCSD_LR:
                 float(
                     np.sum(eta[first][spin] * t_response[second][spin])
                 )
-                for spin in ['aa', 'bb']
+                for spin in [
+                    'aa', 'bb', 'aaaa', 'abab', 'abba', 'baab', 'baba', 'bbbb',
+                ]
             ),
         )
         return pol
     
     def _find_eta_mu(self) -> dict[Descartes, dict[str, NDArray]]:
-        """ mu stands for the electric dipole moment """
+        """ mu stands for the electric dipole moment. """
         operators = {
             Descartes.x: dict(
-                h_aa=self.uhf_scf_data.mua_x,
-                h_bb=self.uhf_scf_data.mub_x,
+                operator_aa=self.uhf_scf_data.mua_x,
+                operator_bb=self.uhf_scf_data.mub_x,
             ),
             Descartes.y: dict(
-                h_aa=self.uhf_scf_data.mua_y,
-                h_bb=self.uhf_scf_data.mub_y,
+                operator_aa=self.uhf_scf_data.mua_y,
+                operator_bb=self.uhf_scf_data.mub_y,
             ),
             Descartes.z: dict(
-                h_aa=self.uhf_scf_data.mua_z,
-                h_bb=self.uhf_scf_data.mub_z,
+                operator_aa=self.uhf_scf_data.mua_z,
+                operator_bb=self.uhf_scf_data.mub_z,
             ),
         }
         etas = {}
@@ -216,6 +218,36 @@ class UHF_CCSD_LR:
                 **operators[coord],
             )
             etas[coord]['bb'] = eta_singles.get_eta_bb(
+                self.uhf_scf_data,
+                self.uhf_ccsd_data,
+                **operators[coord],
+            )
+            etas[coord]['aaaa'] = eta_doubles.get_eta_aaaa(
+                self.uhf_scf_data,
+                self.uhf_ccsd_data,
+                **operators[coord],
+            )
+            etas[coord]['abab'] = eta_doubles.get_eta_abab(
+                self.uhf_scf_data,
+                self.uhf_ccsd_data,
+                **operators[coord],
+            )
+            etas[coord]['abba'] = eta_doubles.get_eta_abba(
+                self.uhf_scf_data,
+                self.uhf_ccsd_data,
+                **operators[coord],
+            )
+            etas[coord]['baab'] = eta_doubles.get_eta_baab(
+                self.uhf_scf_data,
+                self.uhf_ccsd_data,
+                **operators[coord],
+            )
+            etas[coord]['baba'] = eta_doubles.get_eta_baba(
+                self.uhf_scf_data,
+                self.uhf_ccsd_data,
+                **operators[coord],
+            )
+            etas[coord]['bbbb'] = eta_doubles.get_eta_bbbb(
                 self.uhf_scf_data,
                 self.uhf_ccsd_data,
                 **operators[coord],
@@ -599,6 +631,7 @@ class UHF_CCSD_LR:
             self.uhf_ccsd_data,
         ).reshape(dims['bbbb'], dims['bbbb'])
 
+        # get ready
         jacobian = np.block([
             [aa_aa, aa_bb, aa_aaaa, aa_abab, aa_abba, aa_baab, aa_baba, aa_bbbb,],
             [bb_aa, bb_bb, bb_aaaa, bb_abab, bb_abba, bb_baab, bb_baba, bb_bbbb,],

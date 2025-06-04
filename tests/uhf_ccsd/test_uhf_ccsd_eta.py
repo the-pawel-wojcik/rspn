@@ -16,9 +16,12 @@ def test_eta_works():
     eta_mu = lr._find_eta_mu()
     assert set(eta_mu) == {coord for coord in CARTESIAN}
     for key, val in eta_mu.items():
-        assert set(val) == {'aa', 'bb'}
+        assert set(val) == {
+            'aa', 'bb', 'aaaa', 'abab', 'abba', 'baab', 'baba', 'bbbb',
+        }
         assert val['aa'].shape == (19, 5)
         assert val['bb'].shape == (19, 5)
+        assert val['aaaa'].shape == (19, 19, 5, 5)
 
 
 def test_eta_missing_lambda():
