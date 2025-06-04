@@ -1,8 +1,18 @@
 import itertools
-from collections.abc import Sequence
+from collections.abc import Iterable, Sequence
 from pdaggerq.parser import contracted_strings_to_tensor_terms
+from enum import Enum, auto
 
 TAB='    '
+
+class DefineSections(Enum):
+    FOCK = auto()
+    FLUCTUATION = auto()
+    IDENTITY = auto()
+    SLICES = auto()
+    CC_AMPS = auto()
+    LAMBDA_AMPS = auto()
+
 
 def print_imports() -> None:
     print('from numpy import einsum')
@@ -11,7 +21,12 @@ def print_imports() -> None:
     print('from chem.ccsd.uhf_ccsd import UHF_CCSD_Data')
 
 
-def print_function_header(quantity: str, spin_subscript: str = '') -> None:
+def print_function_header(
+    quantity: str,
+    spin_subscript: str = '',
+    defines_exclude: set[DefineSections] | None = None,
+    extra_definitions: None | Iterable[str] = None,
+) -> None:
 
     if not quantity.isidentifier():
         raise ValueError('Argument must be a valid python isidentifier.')
@@ -21,41 +36,72 @@ def print_function_header(quantity: str, spin_subscript: str = '') -> None:
     if spin_subscript != '':
         spin_subscript = '_' + spin_subscript
 
+    
     body = f'''\n\ndef get_{quantity}{spin_subscript}(
     uhf_scf_data: Intermediates,
     uhf_ccsd_data: UHF_CCSD_Data,
-) -> NDArray:
-    """ The matrices h_aa and h_bb should be the matrix elements of the operator
-    in question, e.g. mu_x_a and mu_x_b. """
+) -> NDArray:'''
+
+    if extra_definitions is not None:
+        for definition in extra_definitions:
+            body += f'\n{TAB}{definition}'
+
+    if defines_exclude is None:
+        defines_exclude = set()
+
+    if DefineSections.FOCK not in defines_exclude:
+        body += f'''
     f_aa = uhf_scf_data.f_aa
-    f_bb = uhf_scf_data.f_bb
+    f_bb = uhf_scf_data.f_bb'''
+
+    if DefineSections.FLUCTUATION not in defines_exclude:
+        body += '''
     g_aaaa = uhf_scf_data.g_aaaa
     g_abab = uhf_scf_data.g_abab
-    g_bbbb = uhf_scf_data.g_bbbb
+    g_bbbb = uhf_scf_data.g_bbbb'''
+
+    if DefineSections.IDENTITY not in defines_exclude:
+        body += '''
     kd_aa =  uhf_scf_data.identity_aa
-    kd_bb =  uhf_scf_data.identity_bb
+    kd_bb =  uhf_scf_data.identity_bb'''
+
+    if DefineSections.SLICES not in defines_exclude:
+        body += '''
     va = uhf_scf_data.va
     vb = uhf_scf_data.vb
     oa = uhf_scf_data.oa
-    ob = uhf_scf_data.ob
+    ob = uhf_scf_data.ob'''
+
+    if DefineSections.CC_AMPS not in defines_exclude:
+        body += '''
     t1_aa = uhf_ccsd_data.t1_aa
     t1_bb = uhf_ccsd_data.t1_bb
     t2_aaaa = uhf_ccsd_data.t2_aaaa
     t2_abab = uhf_ccsd_data.t2_abab
-    t2_bbbb = uhf_ccsd_data.t2_bbbb
+    t2_bbbb = uhf_ccsd_data.t2_bbbb'''
+
+    if DefineSections.LAMBDA_AMPS not in defines_exclude:
+        body += '''
     if uhf_ccsd_data.lmbda is None:
         raise RuntimeError("Lambda amplitues missing in UHF_CCSD_Data")
     l1_aa = uhf_ccsd_data.lmbda.l1_aa
     l1_bb = uhf_ccsd_data.lmbda.l1_bb
     l2_aaaa = uhf_ccsd_data.lmbda.l2_aaaa
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
-    l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
-    '''
+    l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb'''
+
+    body += f'\n{TAB}'
+
     print(body)
 
 
-def print_to_numpy(pq, tensor_name: str, tensor_subscripts: Sequence[str]):
-    print_imports()
+def print_to_numpy(
+    pq,
+    tensor_name: str,
+    tensor_subscripts: Sequence[str],
+    defines_exclude: set[DefineSections] | None = None,
+    extra_definitions: Iterable[str] | None = None,
+):
     subscripts_count = len(tensor_subscripts)
     for spin_mix in itertools.product(['a', 'b'], repeat=subscripts_count):
         spin_labels = {
@@ -72,6 +118,8 @@ def print_to_numpy(pq, tensor_name: str, tensor_subscripts: Sequence[str]):
         print_function_header(
             quantity=tensor_name,
             spin_subscript=spin_subscript,
+            defines_exclude=defines_exclude,
+            extra_definitions=extra_definitions,
         )
 
         out_var = tensor_name + '_' + spin_subscript
