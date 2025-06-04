@@ -36,10 +36,72 @@ from rspn.uhf_ccsd.equations.dipole.doubles import (
     get_muz_bbbb,
 )
 from rspn.uhf_ccsd.equations.cc_jacobian.singles_singles import (
-    get_singles_singles_aaaa,
-    get_singles_singles_aabb,
-    get_singles_singles_bbaa,
-    get_singles_singles_bbbb,
+    get_cc_j_singles_singles_aaaa,
+    get_cc_j_singles_singles_aabb,
+    get_cc_j_singles_singles_bbaa,
+    get_cc_j_singles_singles_bbbb,
+)
+from rspn.uhf_ccsd.equations.cc_jacobian.singles_doubles import (
+    get_cc_j_singles_doubles_aaaaaa,
+    get_cc_j_singles_doubles_aaabab,
+    get_cc_j_singles_doubles_aaabba,
+    get_cc_j_singles_doubles_aabaab,
+    get_cc_j_singles_doubles_aababa,
+    get_cc_j_singles_doubles_bbabab,
+    get_cc_j_singles_doubles_bbabba,
+    get_cc_j_singles_doubles_bbbaab,
+    get_cc_j_singles_doubles_bbbaba,
+    get_cc_j_singles_doubles_bbbbbb,
+)
+from rspn.uhf_ccsd.equations.cc_jacobian.doubles_singles import (
+    get_cc_j_doubles_singles_aaaaaa,
+    get_cc_j_doubles_singles_ababaa,
+    get_cc_j_doubles_singles_abbaaa,
+    get_cc_j_doubles_singles_baabaa,
+    get_cc_j_doubles_singles_babaaa,
+    get_cc_j_doubles_singles_bbbbaa,
+    get_cc_j_doubles_singles_aaaabb,
+    get_cc_j_doubles_singles_ababbb,
+    get_cc_j_doubles_singles_abbabb,
+    get_cc_j_doubles_singles_baabbb,
+    get_cc_j_doubles_singles_bababb,
+    get_cc_j_doubles_singles_bbbbbb,
+)
+from rspn.uhf_ccsd.equations.cc_jacobian.doubles_doubles import (
+    get_cc_j_doubles_doubles_aaaaaaaa,
+    get_cc_j_doubles_doubles_aaaaabab,
+    get_cc_j_doubles_doubles_aaaaabba,
+    get_cc_j_doubles_doubles_aaaabaab,
+    get_cc_j_doubles_doubles_aaaababa,
+    get_cc_j_doubles_doubles_ababaaaa,
+    get_cc_j_doubles_doubles_abababab,
+    get_cc_j_doubles_doubles_abababba,
+    get_cc_j_doubles_doubles_ababbaab,
+    get_cc_j_doubles_doubles_ababbaba,
+    get_cc_j_doubles_doubles_ababbbbb,
+    get_cc_j_doubles_doubles_abbaaaaa,
+    get_cc_j_doubles_doubles_abbaabab,
+    get_cc_j_doubles_doubles_abbaabba,
+    get_cc_j_doubles_doubles_abbabaab,
+    get_cc_j_doubles_doubles_abbababa,
+    get_cc_j_doubles_doubles_abbabbbb,
+    get_cc_j_doubles_doubles_baabaaaa,
+    get_cc_j_doubles_doubles_baababab,
+    get_cc_j_doubles_doubles_baababba,
+    get_cc_j_doubles_doubles_baabbaab,
+    get_cc_j_doubles_doubles_baabbaba,
+    get_cc_j_doubles_doubles_baabbbbb,
+    get_cc_j_doubles_doubles_babaaaaa,
+    get_cc_j_doubles_doubles_babaabab,
+    get_cc_j_doubles_doubles_babaabba,
+    get_cc_j_doubles_doubles_bababaab,
+    get_cc_j_doubles_doubles_babababa,
+    get_cc_j_doubles_doubles_bababbbb,
+    get_cc_j_doubles_doubles_bbbbabab,
+    get_cc_j_doubles_doubles_bbbbabba,
+    get_cc_j_doubles_doubles_bbbbbaab,
+    get_cc_j_doubles_doubles_bbbbbaba,
+    get_cc_j_doubles_doubles_bbbbbbbb,
 )
 import rspn.uhf_ccsd.equations.eta.singles as eta_singles
 import rspn.uhf_ccsd.equations.eta.doubles as eta_doubles
@@ -191,30 +253,40 @@ class UHF_CCSD_LR:
             if exit_code != 0:
                 msg = f'gmres didn\'t find the response vector for mu {coord}.'
                 raise RuntimeError(msg)
-            response: NDArray = gmres_output[0]
+
             scf = self.uhf_scf_data
             nmo = scf.nmo
             noa = scf.noa
-            nva = nmo - noa
             nob = scf.nob
+            nva = nmo - noa
             nvb = nmo - nob
+
+            blocks = [
+                'aa', 'bb', 'aaaa', 'abab', 'abba', 'baab', 'baba', 'bbbb',
+            ]
+
             slices = dict()
             current_size = 0
-            for block in [
-                'aa', 'bb', 'aaaa', 'abab', 'abba', 'baab', 'baba', 'bbbb',
-            ]:
+            for block in blocks:
                 block_dim = dims[block]
                 slices[block] = slice(current_size, current_size + block_dim)
                 current_size += block_dim
+
+            shapes = {
+                'aa': (nva, noa),
+                'bb': (nvb, nob),
+                'aaaa': (nva, nva, noa, noa),
+                'abab': (nva, nvb, noa, nob),
+                'abba': (nva, nvb, nob, noa),
+                'baab': (nvb, nva, noa, nob),
+                'baba': (nvb, nva, nob, noa),
+                'bbbb': (nvb, nvb, nob, nob),
+            }
+
+            response: NDArray = gmres_output[0]
             t_response_mu[coord] = {
-                'aa': response[slices['aa']].reshape((nva, noa)),
-                'bb': response[slices['bb']].reshape((nvb, nob)),
-                'aaaa': response[slices['aaaa']].reshape((nva, nva, noa, noa)),
-                'abab': response[slices['abab']].reshape((nva, nvb, noa, nob)),
-                'abba': response[slices['abba']].reshape((nva, nvb, nob, noa)),
-                'baab': response[slices['baab']].reshape((nvb, nva, noa, nob)),
-                'baba': response[slices['baba']].reshape((nvb, nva, nob, noa)),
-                'bbbb': response[slices['bbbb']].reshape((nvb, nvb, nob, nob)),
+                block: response[slices[block]].reshape(shapes[block])
+                for block in blocks
             }
         return t_response_mu
 
@@ -240,26 +312,303 @@ class UHF_CCSD_LR:
         return self.dims
 
     def build_the_cc_jacobian(self):
-        self.assign_dims()
+        dims = self.assign_dims()
         dim_aa = self.dims['aa']
         dim_bb = self.dims['bb']
-        aaaa = get_singles_singles_aaaa(
+        aa_aa = get_cc_j_singles_singles_aaaa(
             self.uhf_scf_data,
             self.uhf_ccsd_data,
         ).reshape(dim_aa, dim_aa)
-        aabb = get_singles_singles_aabb(
+        aa_bb = get_cc_j_singles_singles_aabb(
             self.uhf_scf_data,
             self.uhf_ccsd_data,
         ).reshape(dim_aa, dim_bb)
-        bbaa = get_singles_singles_bbaa(
+        bb_aa = get_cc_j_singles_singles_bbaa(
             self.uhf_scf_data,
             self.uhf_ccsd_data,
         ).reshape(dim_bb, dim_aa)
-        bbbb = get_singles_singles_bbbb(
+        bb_bb = get_cc_j_singles_singles_bbbb(
             self.uhf_scf_data,
             self.uhf_ccsd_data,
         ).reshape(dim_bb, dim_bb)
-        jacobian = np.block([[aaaa, aabb], [bbaa, bbbb]])
+
+        aa_aaaa = get_cc_j_singles_doubles_aaaaaa(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['aa'], dims['aaaa'])
+        aa_abab = get_cc_j_singles_doubles_aaabab(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['aa'], dims['abab'])
+        aa_abba = get_cc_j_singles_doubles_aaabba(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['aa'], dims['abba'])
+        aa_baab = get_cc_j_singles_doubles_aabaab(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['aa'], dims['baab'])
+        aa_baba = get_cc_j_singles_doubles_aababa(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['aa'], dims['baba'])
+        aa_bbbb = np.zeros(shape=(dims['aa'], dims['bbbb']))
+        bb_aaaa = np.zeros(shape=(dims['bb'], dims['aaaa']))
+        bb_abab = get_cc_j_singles_doubles_bbabab(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['bb'], dims['abab'])
+        bb_abba = get_cc_j_singles_doubles_bbabba(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['bb'], dims['abba'])
+        bb_baab = get_cc_j_singles_doubles_bbbaab(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['bb'], dims['baab'])
+        bb_baba = get_cc_j_singles_doubles_bbbaba(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['bb'], dims['baba'])
+        bb_bbbb = get_cc_j_singles_doubles_bbbbbb(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['bb'], dims['bbbb'])
+
+        aaaa_aa = get_cc_j_doubles_singles_aaaaaa(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['aaaa'], dims['aa'])
+        abab_aa = get_cc_j_doubles_singles_ababaa(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['abab'], dims['aa'])
+        abba_aa = get_cc_j_doubles_singles_abbaaa(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['abba'], dims['aa'])
+        baab_aa = get_cc_j_doubles_singles_baabaa(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['baab'], dims['aa'])
+        baba_aa = get_cc_j_doubles_singles_babaaa(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['baba'], dims['aa'])
+        bbbb_aa = get_cc_j_doubles_singles_bbbbaa(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['bbbb'], dims['aa'])
+
+        aaaa_bb = get_cc_j_doubles_singles_aaaabb(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['aaaa'], dims['bb'])
+        abab_bb = get_cc_j_doubles_singles_ababbb(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['abab'], dims['bb'])
+        abba_bb = get_cc_j_doubles_singles_abbabb(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['abba'], dims['bb'])
+        baab_bb = get_cc_j_doubles_singles_baabbb(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['baab'], dims['bb'])
+        baba_bb = get_cc_j_doubles_singles_bababb(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['baba'], dims['bb'])
+        bbbb_bb = get_cc_j_doubles_singles_bbbbbb(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['bbbb'], dims['bb'])
+
+        aaaa_aaaa = get_cc_j_doubles_doubles_aaaaaaaa(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['aaaa'], dims['aaaa'])
+
+        aaaa_abab = get_cc_j_doubles_doubles_aaaaabab(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['aaaa'], dims['abab'])
+
+        aaaa_abba = get_cc_j_doubles_doubles_aaaaabba(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['aaaa'], dims['abba'])
+
+        aaaa_baab = get_cc_j_doubles_doubles_aaaabaab(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['aaaa'], dims['baab'])
+
+        aaaa_baba = get_cc_j_doubles_doubles_aaaababa(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['aaaa'], dims['baba'])
+
+        aaaa_bbbb = np.zeros(shape=(dims['aaaa'], dims['bbbb']))
+
+        abab_aaaa = get_cc_j_doubles_doubles_ababaaaa(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['abab'], dims['aaaa'])
+
+        abab_abab = get_cc_j_doubles_doubles_abababab(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['abab'], dims['abab'])
+
+        abab_abba = get_cc_j_doubles_doubles_abababba(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['abab'], dims['abba'])
+
+        abab_baab = get_cc_j_doubles_doubles_ababbaab(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['abab'], dims['baab'])
+
+        abab_baba = get_cc_j_doubles_doubles_ababbaba(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['abab'], dims['baba'])
+
+        abab_bbbb = get_cc_j_doubles_doubles_ababbbbb(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['abab'], dims['bbbb'])
+
+        abba_aaaa = get_cc_j_doubles_doubles_abbaaaaa(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['abba'], dims['aaaa'])
+
+        abba_abab = get_cc_j_doubles_doubles_abbaabab(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['abba'], dims['abab'])
+
+        abba_abba = get_cc_j_doubles_doubles_abbaabba(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['abba'], dims['abba'])
+
+        abba_baab = get_cc_j_doubles_doubles_abbabaab(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['abba'], dims['baab'])
+
+        abba_baba = get_cc_j_doubles_doubles_abbababa(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['abba'], dims['baba'])
+
+        abba_bbbb = get_cc_j_doubles_doubles_abbabbbb(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['abba'], dims['bbbb'])
+
+        baab_aaaa = get_cc_j_doubles_doubles_baabaaaa(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['baab'], dims['aaaa'])
+
+        baab_abab = get_cc_j_doubles_doubles_baababab(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['baab'], dims['abab'])
+
+        baab_abba = get_cc_j_doubles_doubles_baababba(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['baab'], dims['abba'])
+
+        baab_baab = get_cc_j_doubles_doubles_baabbaab(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['baab'], dims['baab'])
+
+        baab_baba = get_cc_j_doubles_doubles_baabbaba(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['baab'], dims['baba'])
+
+        baab_bbbb = get_cc_j_doubles_doubles_baabbbbb(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['baab'], dims['bbbb'])
+
+        baba_aaaa = get_cc_j_doubles_doubles_babaaaaa(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['baba'], dims['aaaa'])
+
+        baba_abab = get_cc_j_doubles_doubles_babaabab(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['baba'], dims['abab'])
+
+        baba_abba = get_cc_j_doubles_doubles_babaabba(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['baba'], dims['abba'])
+
+        baba_baab = get_cc_j_doubles_doubles_bababaab(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['baba'], dims['baab'])
+
+        baba_baba = get_cc_j_doubles_doubles_babababa(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['baba'], dims['baba'])
+
+        baba_bbbb = get_cc_j_doubles_doubles_bababbbb(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['baba'], dims['bbbb'])
+
+        bbbb_aaaa = np.zeros(shape=(dims['bbbb'], dims['aaaa']))
+
+        bbbb_abab = get_cc_j_doubles_doubles_bbbbabab(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['bbbb'], dims['abab'])
+
+        bbbb_abba = get_cc_j_doubles_doubles_bbbbabba(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['bbbb'], dims['abba'])
+
+        bbbb_baab = get_cc_j_doubles_doubles_bbbbbaab(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['bbbb'], dims['baab'])
+
+        bbbb_baba = get_cc_j_doubles_doubles_bbbbbaba(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['bbbb'], dims['baba'])
+
+        bbbb_bbbb = get_cc_j_doubles_doubles_bbbbbbbb(
+            self.uhf_scf_data,
+            self.uhf_ccsd_data,
+        ).reshape(dims['bbbb'], dims['bbbb'])
+
+        jacobian = np.block([
+            [aa_aa, aa_bb, aa_aaaa, aa_abab, aa_abba, aa_baab, aa_baba, aa_bbbb,],
+            [bb_aa, bb_bb, bb_aaaa, bb_abab, bb_abba, bb_baab, bb_baba, bb_bbbb,],
+            [aaaa_aa, aaaa_bb, aaaa_aaaa, aaaa_abab, aaaa_abba, aaaa_baab, aaaa_baba, aaaa_bbbb,],
+            [abab_aa, abab_bb, abab_aaaa, abab_abab, abab_abba, abab_baab, abab_baba, abab_bbbb,],
+            [abba_aa, abba_bb, abba_aaaa, abba_abab, abba_abba, abba_baab, abba_baba, abba_bbbb,],
+            [baab_aa, baab_bb, baab_aaaa, baab_abab, baab_abba, baab_baab, baab_baba, baab_bbbb,],
+            [baba_aa, baba_bb, baba_aaaa, baba_abab, baba_abba, baba_baab, baba_baba, baba_bbbb,],
+            [bbbb_aa, bbbb_bb, bbbb_aaaa, bbbb_abab, bbbb_abba, bbbb_baab, bbbb_baba, bbbb_bbbb,],
+        ])
         return jacobian
 
     def build_cc_electric_dipole_singles(
