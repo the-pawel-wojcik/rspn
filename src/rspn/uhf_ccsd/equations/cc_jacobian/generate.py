@@ -59,11 +59,30 @@ def build_singles_doubles_block():
     return pq
 
 
+def build_doubles_singles_block():
+    """ Builds A _{abji ck} """
+    pq = pdaggerq.pq_helper('fermi')
+
+    # <mu| = <HF| a*_i a*_j a_b a_a
+    pq.set_left_operators([['e2(i,j,b,a)']])
+
+    # commutator
+    pq.add_st_operator(1.0, ['f', 'e1(c,k)'], ['t1', 't2'])
+    pq.add_st_operator(-1.0, ['e1(c,k)', 'f'], ['t1', 't2'])
+
+    pq.add_st_operator(1.0, ['v', 'e1(c,k)'], ['t1', 't2'])
+    pq.add_st_operator(-1.0, ['e1(c,k)', 'v'], ['t1', 't2'])
+
+    pq.simplify()
+
+    return pq
+
+
 def build_doubles_doubles_block():
     """ Builds A _{abji cdlk} """
     pq = pdaggerq.pq_helper('fermi')
 
-    # <mu| = <HF| a*_i a_a
+    # <mu| = <HF| a*_i a*_j a_b a_a
     pq.set_left_operators([['e2(i,j,b,a)']])
 
     # commutator
@@ -81,8 +100,9 @@ def build_doubles_doubles_block():
 def main():
 
     do_singles_singles = False
-    do_singles_doubles = True
-    do_doubles_doubles = False
+    do_singles_doubles = False
+    do_doubles_singles = False
+    do_doubles_doubles = True
 
     if do_singles_singles:
         pq = build_singles_singles_block()
@@ -102,6 +122,16 @@ def main():
             tensor_name='cc_j_singles_doubles',
             defines_exclude={DefineSections.LAMBDA_AMPS},
             tensor_subscripts=('a', 'i', 'b', 'c', 'k', 'j'),
+        )
+
+    elif do_doubles_singles:
+        pq = build_doubles_singles_block()
+        print_imports()
+        print_to_numpy(
+            pq,
+            tensor_name='cc_j_doubles_singles',
+            defines_exclude={DefineSections.LAMBDA_AMPS},
+            tensor_subscripts=('a', 'b', 'j', 'i', 'c', 'k'),
         )
 
     elif do_doubles_doubles:
