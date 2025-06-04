@@ -23,6 +23,7 @@ def print_imports() -> None:
 
 def print_function_header(
     quantity: str,
+    comment: str = '',
     spin_subscript: str = '',
     defines_exclude: set[DefineSections] | None = None,
     extra_definitions: None | Iterable[str] = None,
@@ -41,6 +42,10 @@ def print_function_header(
     uhf_scf_data: Intermediates,
     uhf_ccsd_data: UHF_CCSD_Data,
 ) -> NDArray:'''
+
+    if comment != '':
+        body += f'''
+    """ {comment} """'''
 
     if extra_definitions is not None:
         for definition in extra_definitions:
@@ -117,6 +122,7 @@ def print_to_numpy(
         spin_subscript = ''.join(spin_labels.values())
         print_function_header(
             quantity=tensor_name,
+            comment=f'tensor_subscripts: {tensor_subscripts}',
             spin_subscript=spin_subscript,
             defines_exclude=defines_exclude,
             extra_definitions=extra_definitions,
