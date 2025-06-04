@@ -15,6 +15,26 @@ from rspn.uhf_ccsd.equations.dipole.singles import (
     get_muz_aa,
     get_muz_bb,
 )
+from rspn.uhf_ccsd.equations.dipole.doubles import (
+    get_mux_aaaa,
+    get_mux_abab,
+    get_mux_abba,
+    get_mux_baab,
+    get_mux_baba,
+    get_mux_bbbb,
+    get_muy_aaaa,
+    get_muy_abab,
+    get_muy_abba,
+    get_muy_baab,
+    get_muy_baba,
+    get_muy_bbbb,
+    get_muz_aaaa,
+    get_muz_abab,
+    get_muz_abba,
+    get_muz_baab,
+    get_muz_baba,
+    get_muz_bbbb,
+)
 from rspn.uhf_ccsd.equations.cc_jacobian.singles_singles import (
     get_singles_singles_aaaa,
     get_singles_singles_aabb,
@@ -153,6 +173,12 @@ class UHF_CCSD_LR:
                 (
                     mu['aa'].reshape(-1, 1),
                     mu['bb'].reshape(-1, 1),
+                    mu['aaaa'].reshape(-1, 1),
+                    mu['abab'].reshape(-1, 1),
+                    mu['abba'].reshape(-1, 1),
+                    mu['baab'].reshape(-1, 1),
+                    mu['baba'].reshape(-1, 1),
+                    mu['bbbb'].reshape(-1, 1),
                 )
             )
             gmres_output = gmres(
@@ -172,9 +198,23 @@ class UHF_CCSD_LR:
             nva = nmo - noa
             nob = scf.nob
             nvb = nmo - nob
+            slices = dict()
+            current_size = 0
+            for block in [
+                'aa', 'bb', 'aaaa', 'abab', 'abba', 'baab', 'baba', 'bbbb',
+            ]:
+                block_dim = dims[block]
+                slices[block] = slice(current_size, current_size + block_dim)
+                current_size += block_dim
             t_response_mu[coord] = {
-                'aa': response[:dims['aa']].reshape((nva, noa)),
-                'bb': response[dims['aa']:].reshape((nvb, nob)),
+                'aa': response[slices['aa']].reshape((nva, noa)),
+                'bb': response[slices['bb']].reshape((nvb, nob)),
+                'aaaa': response[slices['aaaa']].reshape((nva, nva, noa, noa)),
+                'abab': response[slices['abab']].reshape((nva, nvb, noa, nob)),
+                'abba': response[slices['abba']].reshape((nva, nvb, nob, noa)),
+                'baab': response[slices['baab']].reshape((nvb, nva, noa, nob)),
+                'baba': response[slices['baba']].reshape((nvb, nva, nob, noa)),
+                'bbbb': response[slices['bbbb']].reshape((nvb, nvb, nob, nob)),
             }
         return t_response_mu
 
@@ -191,6 +231,12 @@ class UHF_CCSD_LR:
         self.dims['ab'] = nva * nob
         self.dims['ba'] = nvb * noa
         self.dims['bb'] = nvb * nob
+        self.dims['aaaa'] = nva * nva * noa * noa
+        self.dims['abab'] = nva * nvb * noa * nob
+        self.dims['abba'] = nva * nvb * nob * noa
+        self.dims['baab'] = nvb * nva * noa * nob
+        self.dims['baba'] = nvb * nva * nob * noa
+        self.dims['bbbb'] = nvb * nvb * nob * nob
         return self.dims
 
     def build_the_cc_jacobian(self):
@@ -246,18 +292,36 @@ class UHF_CCSD_LR:
             return {
                 'aa': get_mux_aa(scf, ccsd),
                 'bb': get_mux_bb(scf, ccsd),
+                'aaaa': get_mux_aaaa(scf, ccsd),
+                'abab': get_mux_abab(scf, ccsd),
+                'abba': get_mux_abba(scf, ccsd),
+                'baab': get_mux_baab(scf, ccsd),
+                'baba': get_mux_baba(scf, ccsd),
+                'bbbb': get_mux_bbbb(scf, ccsd),
             }
 
         elif coord == Descartes.y:
             return {
                 'aa': get_muy_aa(scf, ccsd),
                 'bb': get_muy_bb(scf, ccsd),
+                'aaaa': get_muy_aaaa(scf, ccsd),
+                'abab': get_muy_abab(scf, ccsd),
+                'abba': get_muy_abba(scf, ccsd),
+                'baab': get_muy_baab(scf, ccsd),
+                'baba': get_muy_baba(scf, ccsd),
+                'bbbb': get_muy_bbbb(scf, ccsd),
             }
 
         elif coord == Descartes.z:
             return {
                 'aa': get_muz_aa(scf, ccsd),
                 'bb': get_muz_bb(scf, ccsd),
+                'aaaa': get_muz_aaaa(scf, ccsd),
+                'abab': get_muz_abab(scf, ccsd),
+                'abba': get_muz_abba(scf, ccsd),
+                'baab': get_muz_baab(scf, ccsd),
+                'baba': get_muz_baba(scf, ccsd),
+                'bbbb': get_muz_bbbb(scf, ccsd),
             }
 
         else:
