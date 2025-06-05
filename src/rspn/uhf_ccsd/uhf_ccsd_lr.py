@@ -105,12 +105,7 @@ from rspn.uhf_ccsd.equations.cc_jacobian.doubles_doubles import (
 )
 import rspn.uhf_ccsd.equations.eta.singles as eta_singles
 import rspn.uhf_ccsd.equations.eta.doubles as eta_doubles
-from rspn.uhf_ccsd.equations.lHeecc.e1e1 import (
-    get_lhe1e1cc_aaaa,
-    get_lhe1e1cc_aabb,
-    get_lhe1e1cc_bbaa,
-    get_lhe1e1cc_bbbb,
-)
+from rspn.uhf_ccsd._lheecc import build_pol_xA_F_xB
 
 @dataclass
 class UHF_CCSD_LR:
@@ -125,56 +120,14 @@ class UHF_CCSD_LR:
 
         # TODO: all operators work only for the electric dipole operator
         pol_etaA_xB = self._build_pol_eta_X(eta_mu, t_response)
-        pol_xA_F_xB = self._build_pol_xA_F_xB(
-            t_res_A=t_response, t_res_B=t_response,
+        pol_xA_F_xB = build_pol_xA_F_xB(
+            self, t_res_A=t_response, t_res_B=t_response,
         )
         # when there is only one operator this term is the same as the first one
         # pol_etaB_xA = self._build_pol_eta_X(eta_mu, t_response)
         pol_etaB_xA = pol_etaA_xB
 
         return pol_etaA_xB + pol_xA_F_xB + pol_etaB_xA
-
-    def _build_pol_xA_F_xB(self, t_res_B, t_res_A) -> Polarizability:
-        kwargs = GeneratorsInput(
-            uhf_scf_data=self.uhf_scf_data,
-            uhf_ccsd_data=self.uhf_ccsd_data,
-        )
-        f_aaaa = get_lhe1e1cc_aaaa(**kwargs)
-        f_aabb = get_lhe1e1cc_aabb(**kwargs)
-        f_bbaa = get_lhe1e1cc_bbaa(**kwargs)
-        f_bbbb = get_lhe1e1cc_bbbb(**kwargs)
-
-        return Polarizability.from_builder(
-            builder=lambda first, second: (
-                np.einsum(
-                    'ai,aibj,bj->',
-                    t_res_A[first]['aa'],
-                    f_aaaa,
-                    t_res_B[second]['aa'],
-                )
-                +
-                np.einsum(
-                    'ai,aibj,bj->',
-                    t_res_A[first]['aa'],
-                    f_aabb,
-                    t_res_B[second]['bb'],
-                )
-                +
-                np.einsum(
-                    'ai,aibj,bj->',
-                    t_res_A[first]['bb'],
-                    f_bbaa,
-                    t_res_B[second]['aa'],
-                )
-                +
-                np.einsum(
-                    'ai,aibj,bj->',
-                    t_res_A[first]['bb'],
-                    f_bbbb,
-                    t_res_B[second]['bb'],
-                )
-            )
-        )
 
     def _build_pol_eta_X(self, eta, t_response) -> Polarizability:
         r"""
