@@ -120,8 +120,12 @@ class UHF_CCSD_LR:
 
         # TODO: all operators work only for the electric dipole operator
         pol_etaA_xB = self._build_pol_eta_X(eta_mu, t_response)
+        kwargs = GeneratorsInput(
+            uhf_scf_data=self.uhf_scf_data,
+            uhf_ccsd_data=self.uhf_ccsd_data,
+        )
         pol_xA_F_xB = build_pol_xA_F_xB(
-            self, t_res_A=t_response, t_res_B=t_response,
+            kwargs, t_res_A=t_response, t_res_B=t_response,
         )
         # when there is only one operator this term is the same as the first one
         # pol_etaB_xA = self._build_pol_eta_X(eta_mu, t_response)

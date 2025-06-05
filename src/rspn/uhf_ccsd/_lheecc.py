@@ -75,17 +75,12 @@ from rspn.uhf_ccsd.equations.lHeecc.e2e2 import (
     # get_lhe2e2cc_bbbbbaba,
     get_lhe2e2cc_bbbbbbbb,
 )
-from rspn.uhf_ccsd.uhf_ccsd_lr import UHF_CCSD_LR
 
 def build_pol_xA_F_xB(
-    uhf_ccsd_lr: UHF_CCSD_LR,
+    kwargs: GeneratorsInput,
     t_res_B: dict[Descartes, dict[str, NDArray]],
     t_res_A: dict[Descartes, dict[str, NDArray]],
 ) -> Polarizability:
-    kwargs = GeneratorsInput(
-        uhf_scf_data=uhf_ccsd_lr.uhf_scf_data,
-        uhf_ccsd_data=uhf_ccsd_lr.uhf_ccsd_data,
-    )
     f_aa_aa = get_lhe1e1cc_aaaa(**kwargs)
     f_aa_bb = get_lhe1e1cc_aabb(**kwargs)
     f_bb_aa = get_lhe1e1cc_bbaa(**kwargs)
