@@ -81,8 +81,8 @@ def build_cc_jacobian(
     doubles_doubles = cc_jacobian_doubles_doubles(kwargs=kwargs, dims=dims)
 
     jacobian = np.block([
-        singles_singles, singles_doubles,
-        doubles_singles, doubles_doubles,
+        [singles_singles, singles_doubles,],
+        [doubles_singles, doubles_doubles,],
     ])
     return jacobian
 
