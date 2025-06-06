@@ -18,6 +18,14 @@ which I can translate to
 |     y    | 0.000 | 6.694 | 0.000 |
 |     z    | 0.000 | 0.000 | 4.980 |
 
+### STO-3G
+
+|  ɑ (au³) |   x  |  y   |  z   |
+| -------- | ---- | ---- | ---- |
+|     x    | 0.04 | 0.00 | 0.00 |
+|     y    | 0.00 | 5.51 | 0.00 |
+|     z    | 0.00 | 0.00 | 2.57 |
+
 ## CCSD
 
 ### STO-3G
@@ -90,16 +98,9 @@ which I can translate to
 | Reference  | DOI  | Squib |
 | --         | --   | ---   |
 | Landolt-Bornstein Vol 1 part 3 p509 (1951)  |  | 1951LB1.3:509 |
-| DE Woon, TH Dunning Jr "Gaussian basis sets for use in correlated molecular
-calculations. IV. Calculation of static electrical properties" J. Chem. Phys.
-100(4) 2975, 1994  | 10.1063/1.466439  | 1994Woo/Dun:2975 |
-| TN Olney, NM Cann, G Cooper, CE Brion, Absolute scale determination for
-photoabsorption spectra and the calculation of molecular properties using dipole
-sum-rules, Chem. Phys. 223 (1997) 59-98  | 10.1016/S0301-0104(97)00145-6  |
-1997Oln/Can:59 |
-| M Gussoni, R Rui, G Zerbi "Electronic and relaxation contribution to linear
-molecular polarizability. An analysis of the experimental values" J. Mol.
-Struct. 447 (1998) 163-215  | 10.1016/S0022-2860(97)00292-5  | 1998Gus/Rui:163 |
+| DE Woon, TH Dunning Jr "Gaussian basis sets for use in correlated molecular calculations. IV. Calculation of static electrical properties" J. Chem. Phys. 100(4) 2975, 1994  | 10.1063/1.466439  | 1994Woo/Dun:2975 |
+| TN Olney, NM Cann, G Cooper, CE Brion, Absolute scale determination for photoabsorption spectra and the calculation of molecular properties using dipole sum-rules, Chem. Phys. 223 (1997) 59-98  | 10.1016/S0301-0104(97)00145-6  | 1997Oln/Can:59 |
+| M Gussoni, R Rui, G Zerbi "Electronic and relaxation contribution to linear molecular polarizability. An analysis of the experimental values" J. Mol. Struct. 447 (1998) 163-215  | 10.1016/S0022-2860(97)00292-5  | 1998Gus/Rui:163 |
 
 ## Experimental polarizability 
 10.1016/S0301-0104(97)00145-6  TN Olney, NM Cann, G Cooper, CE Brion, Absolute
