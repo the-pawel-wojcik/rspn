@@ -33,44 +33,32 @@ def get_lhe2e2cc_aaaaaaaa(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    contracted_intermediate = -1.00 * einsum('kjab,ic->abjick', g_aaaa[oa, oa, va, va], l1_aa)
-    lhe2e2cc_aaaaaaaa =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('ijac,kb->abjick', g_aaaa[oa, oa, va, va], l1_aa)
-    lhe2e2cc_aaaaaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abjkci', contracted_intermediate)  + -1.00000 * einsum('abjick->bajick', contracted_intermediate)  +  1.00000 * einsum('abjick->bajkci', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('kiac,jb->abjick', g_aaaa[oa, oa, va, va], l1_aa)
-    lhe2e2cc_aaaaaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('kjal,ilbc->abjiclk', g_aaaa[oa, oa, va, oa], l2_aaaa)
-    lhe2e2cc_aaaaaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abijclk', contracted_intermediate)  + -1.00000 * einsum('abjiclk->bajiclk', contracted_intermediate)  +  1.00000 * einsum('abjiclk->baijclk', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('ijcl,klab->abjiclk', g_aaaa[oa, oa, va, oa], l2_aaaa)
-    lhe2e2cc_aaaaaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abjkcli', contracted_intermediate) 
-    lhe2e2cc_aaaaaaaa +=  1.00 * einsum('kicl,jlab->abjiclk', g_aaaa[oa, oa, va, oa], l2_aaaa)
-    contracted_intermediate =  1.00 * einsum('kdab,ijdc->abjicdk', g_aaaa[oa, va, va, va], l2_aaaa)
-    lhe2e2cc_aaaaaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->acjibdk', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('jdac,kidb->abjicdk', g_aaaa[oa, va, va, va], l2_aaaa)
-    lhe2e2cc_aaaaaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->abijcdk', contracted_intermediate)  + -1.00000 * einsum('abjicdk->bajicdk', contracted_intermediate)  +  1.00000 * einsum('abjicdk->baijcdk', contracted_intermediate) 
-    lhe2e2cc_aaaaaaaa +=  1.00 * einsum('kdbc,ijda->abjicdk', g_aaaa[oa, va, va, va], l2_aaaa)
-    contracted_intermediate = -1.00 * einsum('lkab,dl,ijcd->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_aaaaaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->acjibdlk', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('ljac,dl,kibd->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_aaaaaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->bajicdlk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->baijcdlk', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('kjad,dl,libc->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_aaaaaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->bajicdlk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->baijcdlk', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('lkad,dl,ijbc->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_aaaaaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->bajicdlk', contracted_intermediate) 
-    lhe2e2cc_aaaaaaaa += -1.00 * einsum('lkbc,dl,ijad->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
-    contracted_intermediate = -1.00 * einsum('ijcd,dl,lkab->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_aaaaaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('ljcd,dl,kiab->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
+    contracted_intermediate = -1.00 * einsum('ljab,kicd->abjicdlk', g_aaaa[oa, oa, va, va], l2_aaaa)
+    lhe2e2cc_aaaaaaaa =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjicdkl', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('liab,kjcd->abjicdlk', g_aaaa[oa, oa, va, va], l2_aaaa)
+    lhe2e2cc_aaaaaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjicdkl', contracted_intermediate) 
+    lhe2e2cc_aaaaaaaa +=  1.00 * einsum('klab,ijcd->abjicdlk', g_aaaa[oa, oa, va, va], l2_aaaa)
+    contracted_intermediate = -1.00 * einsum('ijac,klbd->abjicdlk', g_aaaa[oa, oa, va, va], l2_aaaa)
+    lhe2e2cc_aaaaaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjldcik', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('kjac,libd->abjicdlk', g_aaaa[oa, oa, va, va], l2_aaaa)
+    lhe2e2cc_aaaaaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abijdclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('liac,kjbd->abjicdlk', g_aaaa[oa, oa, va, va], l2_aaaa)
+    lhe2e2cc_aaaaaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjkdcli', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('ijbc,klad->abjicdlk', g_aaaa[oa, oa, va, va], l2_aaaa)
+    lhe2e2cc_aaaaaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjldcik', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('kjbc,liad->abjicdlk', g_aaaa[oa, oa, va, va], l2_aaaa)
+    lhe2e2cc_aaaaaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abijdclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('libc,kjad->abjicdlk', g_aaaa[oa, oa, va, va], l2_aaaa)
+    lhe2e2cc_aaaaaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjkdcli', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('ijcd,klab->abjicdlk', g_aaaa[oa, oa, va, va], l2_aaaa)
+    lhe2e2cc_aaaaaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('kjcd,liab->abjicdlk', g_aaaa[oa, oa, va, va], l2_aaaa)
     lhe2e2cc_aaaaaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
-    lhe2e2cc_aaaaaaaa += -1.00 * einsum('kicd,dl,ljab->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
-    contracted_intermediate =  1.00 * einsum('ka,ijbc->abjick', f_aa[oa, va], l2_aaaa)
-    lhe2e2cc_aaaaaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('jc,kiab->abjick', f_aa[oa, va], l2_aaaa)
-    lhe2e2cc_aaaaaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
+    lhe2e2cc_aaaaaaaa +=  1.00 * einsum('licd,kjab->abjicdlk', g_aaaa[oa, oa, va, va], l2_aaaa)
     return lhe2e2cc_aaaaaaaa
 
 
-def get_lhe2e2cc_aaaaaaba(
+def get_lhe2e2cc_aaaaabab(
     uhf_scf_data: Intermediates,
     uhf_ccsd_data: UHF_CCSD_Data,
 ) -> NDArray:
@@ -99,69 +87,23 @@ def get_lhe2e2cc_aaaaaaba(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    contracted_intermediate = -1.00 * einsum('kjab,ic->abjick', g_aaaa[oa, oa, va, va], l1_aa)
-    lhe2e2cc_aaaaaaba =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('ijac,kb->abjick', g_aaaa[oa, oa, va, va], l1_aa)
-    lhe2e2cc_aaaaaaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abjkci', contracted_intermediate)  + -1.00000 * einsum('abjick->bajick', contracted_intermediate)  +  1.00000 * einsum('abjick->bajkci', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('kiac,jb->abjick', g_aaaa[oa, oa, va, va], l1_aa)
-    lhe2e2cc_aaaaaaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('kdab,ijdc->abjicdk', g_aaaa[oa, va, va, va], l2_aaaa)
-    lhe2e2cc_aaaaaaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->acjibdk', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('jdac,kidb->abjicdk', g_aaaa[oa, va, va, va], l2_aaaa)
-    lhe2e2cc_aaaaaaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->abijcdk', contracted_intermediate)  + -1.00000 * einsum('abjicdk->bajicdk', contracted_intermediate)  +  1.00000 * einsum('abjicdk->baijcdk', contracted_intermediate) 
-    lhe2e2cc_aaaaaaba +=  1.00 * einsum('kdbc,ijda->abjicdk', g_aaaa[oa, va, va, va], l2_aaaa)
-    contracted_intermediate =  1.00 * einsum('ka,ijbc->abjick', f_aa[oa, va], l2_aaaa)
-    lhe2e2cc_aaaaaaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('jc,kiab->abjick', f_aa[oa, va], l2_aaaa)
-    lhe2e2cc_aaaaaaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
-    return lhe2e2cc_aaaaaaba
-
-
-def get_lhe2e2cc_aaaaabaa(
-    uhf_scf_data: Intermediates,
-    uhf_ccsd_data: UHF_CCSD_Data,
-) -> NDArray:
-    """ tensor_subscripts: ('a', 'b', 'j', 'i', 'c', 'd', 'l', 'k') """
-    f_aa = uhf_scf_data.f_aa
-    f_bb = uhf_scf_data.f_bb
-    g_aaaa = uhf_scf_data.g_aaaa
-    g_abab = uhf_scf_data.g_abab
-    g_bbbb = uhf_scf_data.g_bbbb
-    kd_aa =  uhf_scf_data.identity_aa
-    kd_bb =  uhf_scf_data.identity_bb
-    va = uhf_scf_data.va
-    vb = uhf_scf_data.vb
-    oa = uhf_scf_data.oa
-    ob = uhf_scf_data.ob
-    t1_aa = uhf_ccsd_data.t1_aa
-    t1_bb = uhf_ccsd_data.t1_bb
-    t2_aaaa = uhf_ccsd_data.t2_aaaa
-    t2_abab = uhf_ccsd_data.t2_abab
-    t2_bbbb = uhf_ccsd_data.t2_bbbb
-    if uhf_ccsd_data.lmbda is None:
-        raise RuntimeError("Lambda amplitues missing in UHF_CCSD_Data")
-    l1_aa = uhf_ccsd_data.lmbda.l1_aa
-    l1_bb = uhf_ccsd_data.lmbda.l1_bb
-    l2_aaaa = uhf_ccsd_data.lmbda.l2_aaaa
-    l2_abab = uhf_ccsd_data.lmbda.l2_abab
-    l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
-    
-    contracted_intermediate = -1.00 * einsum('kjab,ic->abjick', g_aaaa[oa, oa, va, va], l1_aa)
-    lhe2e2cc_aaaaabaa =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('ijac,kb->abjick', g_aaaa[oa, oa, va, va], l1_aa)
-    lhe2e2cc_aaaaabaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abjkci', contracted_intermediate)  + -1.00000 * einsum('abjick->bajick', contracted_intermediate)  +  1.00000 * einsum('abjick->bajkci', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('kiac,jb->abjick', g_aaaa[oa, oa, va, va], l1_aa)
-    lhe2e2cc_aaaaabaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('kjal,ilbc->abjiclk', g_aaaa[oa, oa, va, oa], l2_aaaa)
-    lhe2e2cc_aaaaabaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abijclk', contracted_intermediate)  + -1.00000 * einsum('abjiclk->bajiclk', contracted_intermediate)  +  1.00000 * einsum('abjiclk->baijclk', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('ijcl,klab->abjiclk', g_aaaa[oa, oa, va, oa], l2_aaaa)
-    lhe2e2cc_aaaaabaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abjkcli', contracted_intermediate) 
-    lhe2e2cc_aaaaabaa +=  1.00 * einsum('kicl,jlab->abjiclk', g_aaaa[oa, oa, va, oa], l2_aaaa)
-    contracted_intermediate =  1.00 * einsum('ka,ijbc->abjick', f_aa[oa, va], l2_aaaa)
-    lhe2e2cc_aaaaabaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('jc,kiab->abjick', f_aa[oa, va], l2_aaaa)
-    lhe2e2cc_aaaaabaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
-    return lhe2e2cc_aaaaabaa
+    lhe2e2cc_aaaaabab =  1.00 * einsum('ljab,ikcd->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aaaaabab += -1.00 * einsum('liab,jkcd->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    contracted_intermediate =  1.00 * einsum('ijac,lkbd->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aaaaabab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('jkad,libc->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aaaaabab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
+    lhe2e2cc_aaaaabab +=  1.00 * einsum('liac,jkbd->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aaaaabab += -1.00 * einsum('lkad,ijbc->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    contracted_intermediate = -1.00 * einsum('ijbc,lkad->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aaaaabab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('jkbd,liac->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aaaaabab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
+    lhe2e2cc_aaaaabab += -1.00 * einsum('libc,jkad->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aaaaabab +=  1.00 * einsum('lkbd,ijac->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    contracted_intermediate = -1.00 * einsum('jkcd,liab->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aaaaabab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
+    return lhe2e2cc_aaaaabab
 
 
 def get_lhe2e2cc_aaaaabba(
@@ -193,20 +135,22 @@ def get_lhe2e2cc_aaaaabba(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    contracted_intermediate = -1.00 * einsum('kjab,ic->abjick', g_aaaa[oa, oa, va, va], l1_aa)
-    lhe2e2cc_aaaaabba =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('ijac,kb->abjick', g_aaaa[oa, oa, va, va], l1_aa)
-    lhe2e2cc_aaaaabba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abjkci', contracted_intermediate)  + -1.00000 * einsum('abjick->bajick', contracted_intermediate)  +  1.00000 * einsum('abjick->bajkci', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('kiac,jb->abjick', g_aaaa[oa, oa, va, va], l1_aa)
-    lhe2e2cc_aaaaabba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('klad,dl,ijbc->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_aaaaabba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->bajicdlk', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('jlcd,dl,kiab->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
+    lhe2e2cc_aaaaabba = -1.00 * einsum('kjab,ilcd->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aaaaabba +=  1.00 * einsum('kiab,jlcd->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aaaaabba += -1.00 * einsum('ijac,klbd->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aaaaabba +=  1.00 * einsum('jlad,kibc->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    contracted_intermediate =  1.00 * einsum('kjac,ilbd->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
     lhe2e2cc_aaaaabba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('ka,ijbc->abjick', f_aa[oa, va], l2_aaaa)
-    lhe2e2cc_aaaaabba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('jc,kiab->abjick', f_aa[oa, va], l2_aaaa)
-    lhe2e2cc_aaaaabba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('ilad,kjbc->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aaaaabba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate) 
+    lhe2e2cc_aaaaabba +=  1.00 * einsum('ijbc,klad->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aaaaabba += -1.00 * einsum('jlbd,kiac->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    contracted_intermediate = -1.00 * einsum('kjbc,ilad->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aaaaabba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('ilbd,kjac->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aaaaabba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate) 
+    lhe2e2cc_aaaaabba +=  1.00 * einsum('jlcd,kiab->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aaaaabba += -1.00 * einsum('ilcd,kjab->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
     return lhe2e2cc_aaaaabba
 
 
@@ -239,22 +183,26 @@ def get_lhe2e2cc_aaaabaab(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    contracted_intermediate = -1.00 * einsum('jkac,ib->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_aaaabaab =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('ikac,jb->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_aaaabaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    lhe2e2cc_aaaabaab += -1.00 * einsum('jklc,ilab->abjiclk', g_abab[oa, ob, oa, vb], l2_aaaa)
-    lhe2e2cc_aaaabaab +=  1.00 * einsum('iklc,jlab->abjiclk', g_abab[oa, ob, oa, vb], l2_aaaa)
-    lhe2e2cc_aaaabaab +=  1.00 * einsum('dkac,ijdb->abjicdk', g_abab[va, ob, va, vb], l2_aaaa)
-    lhe2e2cc_aaaabaab += -1.00 * einsum('dkbc,ijda->abjicdk', g_abab[va, ob, va, vb], l2_aaaa)
-    lhe2e2cc_aaaabaab +=  1.00 * einsum('lkac,dl,ijbd->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_aaaabaab += -1.00 * einsum('lkbc,dl,ijad->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_aaaabaab +=  1.00 * einsum('jkdc,dl,liab->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_aaaabaab += -1.00 * einsum('ikdc,dl,ljab->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
+    lhe2e2cc_aaaabaab = -1.00 * einsum('ljab,ikdc->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aaaabaab +=  1.00 * einsum('liab,jkdc->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    contracted_intermediate = -1.00 * einsum('ijad,lkbc->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aaaabaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('jkac,libd->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aaaabaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
+    lhe2e2cc_aaaabaab += -1.00 * einsum('liad,jkbc->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aaaabaab +=  1.00 * einsum('lkac,ijbd->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    contracted_intermediate =  1.00 * einsum('ijbd,lkac->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aaaabaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('jkbc,liad->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aaaabaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
+    lhe2e2cc_aaaabaab +=  1.00 * einsum('libd,jkac->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aaaabaab += -1.00 * einsum('lkbc,ijad->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    contracted_intermediate =  1.00 * einsum('jkdc,liab->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aaaabaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
     return lhe2e2cc_aaaabaab
 
 
-def get_lhe2e2cc_aaaababb(
+def get_lhe2e2cc_aaaababa(
     uhf_scf_data: Intermediates,
     uhf_ccsd_data: UHF_CCSD_Data,
 ) -> NDArray:
@@ -283,55 +231,23 @@ def get_lhe2e2cc_aaaababb(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    contracted_intermediate = -1.00 * einsum('jkac,ib->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_aaaababb =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('ikac,jb->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_aaaababb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('jkal,ilbc->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    lhe2e2cc_aaaababb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abijclk', contracted_intermediate)  + -1.00000 * einsum('abjiclk->bajiclk', contracted_intermediate)  +  1.00000 * einsum('abjiclk->baijclk', contracted_intermediate) 
-    lhe2e2cc_aaaababb +=  1.00 * einsum('dkac,ijdb->abjicdk', g_abab[va, ob, va, vb], l2_aaaa)
-    lhe2e2cc_aaaababb += -1.00 * einsum('dkbc,ijda->abjicdk', g_abab[va, ob, va, vb], l2_aaaa)
-    return lhe2e2cc_aaaababb
-
-
-def get_lhe2e2cc_aaaabbab(
-    uhf_scf_data: Intermediates,
-    uhf_ccsd_data: UHF_CCSD_Data,
-) -> NDArray:
-    """ tensor_subscripts: ('a', 'b', 'j', 'i', 'c', 'd', 'l', 'k') """
-    f_aa = uhf_scf_data.f_aa
-    f_bb = uhf_scf_data.f_bb
-    g_aaaa = uhf_scf_data.g_aaaa
-    g_abab = uhf_scf_data.g_abab
-    g_bbbb = uhf_scf_data.g_bbbb
-    kd_aa =  uhf_scf_data.identity_aa
-    kd_bb =  uhf_scf_data.identity_bb
-    va = uhf_scf_data.va
-    vb = uhf_scf_data.vb
-    oa = uhf_scf_data.oa
-    ob = uhf_scf_data.ob
-    t1_aa = uhf_ccsd_data.t1_aa
-    t1_bb = uhf_ccsd_data.t1_bb
-    t2_aaaa = uhf_ccsd_data.t2_aaaa
-    t2_abab = uhf_ccsd_data.t2_abab
-    t2_bbbb = uhf_ccsd_data.t2_bbbb
-    if uhf_ccsd_data.lmbda is None:
-        raise RuntimeError("Lambda amplitues missing in UHF_CCSD_Data")
-    l1_aa = uhf_ccsd_data.lmbda.l1_aa
-    l1_bb = uhf_ccsd_data.lmbda.l1_bb
-    l2_aaaa = uhf_ccsd_data.lmbda.l2_aaaa
-    l2_abab = uhf_ccsd_data.lmbda.l2_abab
-    l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
-    
-    contracted_intermediate = -1.00 * einsum('jkac,ib->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_aaaabbab =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('ikac,jb->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_aaaabbab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    lhe2e2cc_aaaabbab += -1.00 * einsum('jklc,ilab->abjiclk', g_abab[oa, ob, oa, vb], l2_aaaa)
-    lhe2e2cc_aaaabbab +=  1.00 * einsum('iklc,jlab->abjiclk', g_abab[oa, ob, oa, vb], l2_aaaa)
-    contracted_intermediate = -1.00 * einsum('jdac,ikbd->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    lhe2e2cc_aaaabbab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->abijcdk', contracted_intermediate)  + -1.00000 * einsum('abjicdk->bajicdk', contracted_intermediate)  +  1.00000 * einsum('abjicdk->baijcdk', contracted_intermediate) 
-    return lhe2e2cc_aaaabbab
+    lhe2e2cc_aaaababa =  1.00 * einsum('kjab,ildc->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aaaababa += -1.00 * einsum('kiab,jldc->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aaaababa +=  1.00 * einsum('ijad,klbc->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aaaababa += -1.00 * einsum('jlac,kibd->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    contracted_intermediate = -1.00 * einsum('kjad,ilbc->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aaaababa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('ilac,kjbd->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aaaababa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate) 
+    lhe2e2cc_aaaababa += -1.00 * einsum('ijbd,klac->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aaaababa +=  1.00 * einsum('jlbc,kiad->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    contracted_intermediate =  1.00 * einsum('kjbd,ilac->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aaaababa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('ilbc,kjad->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aaaababa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate) 
+    lhe2e2cc_aaaababa += -1.00 * einsum('jldc,kiab->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aaaababa +=  1.00 * einsum('ildc,kjab->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    return lhe2e2cc_aaaababa
 
 
 def get_lhe2e2cc_aaaabbbb(
@@ -363,19 +279,69 @@ def get_lhe2e2cc_aaaabbbb(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    contracted_intermediate = -1.00 * einsum('jkac,ib->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_aaaabbbb =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('ikac,jb->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_aaaabbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('jkal,ilbc->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    lhe2e2cc_aaaabbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abijclk', contracted_intermediate)  + -1.00000 * einsum('abjiclk->bajiclk', contracted_intermediate)  +  1.00000 * einsum('abjiclk->baijclk', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('jdac,ikbd->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    lhe2e2cc_aaaabbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->abijcdk', contracted_intermediate)  + -1.00000 * einsum('abjicdk->bajicdk', contracted_intermediate)  +  1.00000 * einsum('abjicdk->baijcdk', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('jlac,dl,ikbd->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_aaaabbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->bajicdlk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->baijcdlk', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('jkad,dl,ilbc->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_aaaabbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->bajicdlk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->baijcdlk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('jlac,ikbd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_aaaabbbb =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('jkac,ilbd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_aaaabbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abijdclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('ilac,jkbd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_aaaabbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('jlbc,ikad->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_aaaabbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('jkbc,ilad->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_aaaabbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abijdclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('ilbc,jkad->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_aaaabbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
     return lhe2e2cc_aaaabbbb
+
+
+def get_lhe2e2cc_aaababaa(
+    uhf_scf_data: Intermediates,
+    uhf_ccsd_data: UHF_CCSD_Data,
+) -> NDArray:
+    """ tensor_subscripts: ('a', 'b', 'j', 'i', 'c', 'd', 'l', 'k') """
+    f_aa = uhf_scf_data.f_aa
+    f_bb = uhf_scf_data.f_bb
+    g_aaaa = uhf_scf_data.g_aaaa
+    g_abab = uhf_scf_data.g_abab
+    g_bbbb = uhf_scf_data.g_bbbb
+    kd_aa =  uhf_scf_data.identity_aa
+    kd_bb =  uhf_scf_data.identity_bb
+    va = uhf_scf_data.va
+    vb = uhf_scf_data.vb
+    oa = uhf_scf_data.oa
+    ob = uhf_scf_data.ob
+    t1_aa = uhf_ccsd_data.t1_aa
+    t1_bb = uhf_ccsd_data.t1_bb
+    t2_aaaa = uhf_ccsd_data.t2_aaaa
+    t2_abab = uhf_ccsd_data.t2_abab
+    t2_bbbb = uhf_ccsd_data.t2_bbbb
+    if uhf_ccsd_data.lmbda is None:
+        raise RuntimeError("Lambda amplitues missing in UHF_CCSD_Data")
+    l1_aa = uhf_ccsd_data.lmbda.l1_aa
+    l1_bb = uhf_ccsd_data.lmbda.l1_bb
+    l2_aaaa = uhf_ccsd_data.lmbda.l2_aaaa
+    l2_abab = uhf_ccsd_data.lmbda.l2_abab
+    l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
+    
+    contracted_intermediate = -1.00 * einsum('ljab,kicd->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aaababaa =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjicdkl', contracted_intermediate) 
+    lhe2e2cc_aaababaa += -1.00 * einsum('klab,jicd->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aaababaa += -1.00 * einsum('jiad,klbc->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aaababaa +=  1.00 * einsum('ljac,kibd->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aaababaa += -1.00 * einsum('kjac,libd->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aaababaa += -1.00 * einsum('kiad,ljbc->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aaababaa +=  1.00 * einsum('liad,kjbc->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aaababaa += -1.00 * einsum('lkac,jibd->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aaababaa +=  1.00 * einsum('jibd,klac->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aaababaa += -1.00 * einsum('ljbc,kiad->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aaababaa +=  1.00 * einsum('kjbc,liad->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aaababaa +=  1.00 * einsum('kibd,ljac->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aaababaa += -1.00 * einsum('libd,kjac->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aaababaa +=  1.00 * einsum('lkbc,jiad->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aaababaa += -1.00 * einsum('jicd,klab->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aaababaa += -1.00 * einsum('kicd,ljab->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aaababaa +=  1.00 * einsum('licd,kjab->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    return lhe2e2cc_aaababaa
 
 
 def get_lhe2e2cc_aaabbaaa(
@@ -407,35 +373,28 @@ def get_lhe2e2cc_aaabbaaa(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    lhe2e2cc_aaabbaaa = -1.00 * einsum('kjab,ic->abjick', g_aaaa[oa, oa, va, va], l1_bb)
-    contracted_intermediate =  1.00 * einsum('jiac,kb->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_aaabbaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('kiac,jb->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_aaabbaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('kjal,libc->abjiclk', g_aaaa[oa, oa, va, oa], l2_abab)
-    lhe2e2cc_aaabbaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->bajiclk', contracted_intermediate) 
-    lhe2e2cc_aaabbaaa +=  1.00 * einsum('jilc,klab->abjiclk', g_abab[oa, ob, oa, vb], l2_aaaa)
-    lhe2e2cc_aaabbaaa += -1.00 * einsum('kilc,jlab->abjiclk', g_abab[oa, ob, oa, vb], l2_aaaa)
-    lhe2e2cc_aaabbaaa += -1.00 * einsum('kdab,jidc->abjicdk', g_aaaa[oa, va, va, va], l2_abab)
-    contracted_intermediate = -1.00 * einsum('diac,kjdb->abjicdk', g_abab[va, ob, va, vb], l2_aaaa)
-    lhe2e2cc_aaabbaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->bajicdk', contracted_intermediate) 
-    lhe2e2cc_aaabbaaa += -1.00 * einsum('lkab,dl,jidc->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    contracted_intermediate = -1.00 * einsum('liac,dl,kjbd->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_aaabbaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->bajicdlk', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('kjad,dl,libc->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_aaabbaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->bajicdlk', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('lkad,dl,jibc->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_aaabbaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->bajicdlk', contracted_intermediate) 
-    lhe2e2cc_aaabbaaa += -1.00 * einsum('jidc,dl,lkab->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_aaabbaaa += -1.00 * einsum('lidc,dl,kjab->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_aaabbaaa +=  1.00 * einsum('kidc,dl,ljab->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
-    contracted_intermediate = -1.00 * einsum('ka,jibc->abjick', f_aa[oa, va], l2_abab)
-    lhe2e2cc_aaabbaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    lhe2e2cc_aaabbaaa += -1.00 * einsum('ic,kjab->abjick', f_bb[ob, vb], l2_aaaa)
+    contracted_intermediate =  1.00 * einsum('ljab,kidc->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aaabbaaa =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjicdkl', contracted_intermediate) 
+    lhe2e2cc_aaabbaaa +=  1.00 * einsum('klab,jidc->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aaabbaaa +=  1.00 * einsum('jiac,klbd->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aaabbaaa += -1.00 * einsum('ljad,kibc->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aaabbaaa +=  1.00 * einsum('kjad,libc->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aaabbaaa +=  1.00 * einsum('kiac,ljbd->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aaabbaaa += -1.00 * einsum('liac,kjbd->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aaabbaaa +=  1.00 * einsum('lkad,jibc->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aaabbaaa += -1.00 * einsum('jibc,klad->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aaabbaaa +=  1.00 * einsum('ljbd,kiac->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aaabbaaa += -1.00 * einsum('kjbd,liac->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aaabbaaa += -1.00 * einsum('kibc,ljad->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aaabbaaa +=  1.00 * einsum('libc,kjad->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aaabbaaa += -1.00 * einsum('lkbd,jiac->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aaabbaaa +=  1.00 * einsum('jidc,klab->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aaabbaaa +=  1.00 * einsum('kidc,ljab->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aaabbaaa += -1.00 * einsum('lidc,kjab->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
     return lhe2e2cc_aaabbaaa
 
 
-def get_lhe2e2cc_aaabbaba(
+def get_lhe2e2cc_aaabbbab(
     uhf_scf_data: Intermediates,
     uhf_ccsd_data: UHF_CCSD_Data,
 ) -> NDArray:
@@ -464,68 +423,21 @@ def get_lhe2e2cc_aaabbaba(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    lhe2e2cc_aaabbaba = -1.00 * einsum('kjab,ic->abjick', g_aaaa[oa, oa, va, va], l1_bb)
-    contracted_intermediate =  1.00 * einsum('jiac,kb->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_aaabbaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('kiac,jb->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_aaabbaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('kial,jlbc->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    lhe2e2cc_aaabbaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->bajiclk', contracted_intermediate) 
-    lhe2e2cc_aaabbaba += -1.00 * einsum('kdab,jidc->abjicdk', g_aaaa[oa, va, va, va], l2_abab)
-    contracted_intermediate = -1.00 * einsum('diac,kjdb->abjicdk', g_abab[va, ob, va, vb], l2_aaaa)
-    lhe2e2cc_aaabbaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->bajicdk', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('ka,jibc->abjick', f_aa[oa, va], l2_abab)
-    lhe2e2cc_aaabbaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    lhe2e2cc_aaabbaba += -1.00 * einsum('ic,kjab->abjick', f_bb[ob, vb], l2_aaaa)
-    return lhe2e2cc_aaabbaba
-
-
-def get_lhe2e2cc_aaabbbaa(
-    uhf_scf_data: Intermediates,
-    uhf_ccsd_data: UHF_CCSD_Data,
-) -> NDArray:
-    """ tensor_subscripts: ('a', 'b', 'j', 'i', 'c', 'd', 'l', 'k') """
-    f_aa = uhf_scf_data.f_aa
-    f_bb = uhf_scf_data.f_bb
-    g_aaaa = uhf_scf_data.g_aaaa
-    g_abab = uhf_scf_data.g_abab
-    g_bbbb = uhf_scf_data.g_bbbb
-    kd_aa =  uhf_scf_data.identity_aa
-    kd_bb =  uhf_scf_data.identity_bb
-    va = uhf_scf_data.va
-    vb = uhf_scf_data.vb
-    oa = uhf_scf_data.oa
-    ob = uhf_scf_data.ob
-    t1_aa = uhf_ccsd_data.t1_aa
-    t1_bb = uhf_ccsd_data.t1_bb
-    t2_aaaa = uhf_ccsd_data.t2_aaaa
-    t2_abab = uhf_ccsd_data.t2_abab
-    t2_bbbb = uhf_ccsd_data.t2_bbbb
-    if uhf_ccsd_data.lmbda is None:
-        raise RuntimeError("Lambda amplitues missing in UHF_CCSD_Data")
-    l1_aa = uhf_ccsd_data.lmbda.l1_aa
-    l1_bb = uhf_ccsd_data.lmbda.l1_bb
-    l2_aaaa = uhf_ccsd_data.lmbda.l2_aaaa
-    l2_abab = uhf_ccsd_data.lmbda.l2_abab
-    l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
-    
-    lhe2e2cc_aaabbbaa = -1.00 * einsum('kjab,ic->abjick', g_aaaa[oa, oa, va, va], l1_bb)
-    contracted_intermediate =  1.00 * einsum('jiac,kb->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_aaabbbaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('kiac,jb->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_aaabbbaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('kjal,libc->abjiclk', g_aaaa[oa, oa, va, oa], l2_abab)
-    lhe2e2cc_aaabbbaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->bajiclk', contracted_intermediate) 
-    lhe2e2cc_aaabbbaa +=  1.00 * einsum('jilc,klab->abjiclk', g_abab[oa, ob, oa, vb], l2_aaaa)
-    lhe2e2cc_aaabbbaa += -1.00 * einsum('kilc,jlab->abjiclk', g_abab[oa, ob, oa, vb], l2_aaaa)
-    lhe2e2cc_aaabbbaa += -1.00 * einsum('kdac,jibd->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    contracted_intermediate =  1.00 * einsum('jdac,kibd->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    lhe2e2cc_aaabbbaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->bajicdk', contracted_intermediate) 
-    lhe2e2cc_aaabbbaa +=  1.00 * einsum('kdbc,jiad->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    contracted_intermediate = -1.00 * einsum('ka,jibc->abjick', f_aa[oa, va], l2_abab)
-    lhe2e2cc_aaabbbaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    lhe2e2cc_aaabbbaa += -1.00 * einsum('ic,kjab->abjick', f_bb[ob, vb], l2_aaaa)
-    return lhe2e2cc_aaabbbaa
+    lhe2e2cc_aaabbbab = -1.00 * einsum('ljab,kicd->abjicdlk', g_aaaa[oa, oa, va, va], l2_bbbb)
+    contracted_intermediate = -1.00 * einsum('jiac,lkbd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_aaabbbab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('jkac,libd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_aaabbbab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('liac,jkbd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_aaabbbab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjkdcli', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('jibc,lkad->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_aaabbbab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('jkbc,liad->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_aaabbbab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('libc,jkad->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_aaabbbab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjkdcli', contracted_intermediate) 
+    lhe2e2cc_aaabbbab += -1.00 * einsum('kicd,ljab->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_aaaa)
+    return lhe2e2cc_aaabbbab
 
 
 def get_lhe2e2cc_aaabbbba(
@@ -557,30 +469,71 @@ def get_lhe2e2cc_aaabbbba(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    lhe2e2cc_aaabbbba = -1.00 * einsum('kjab,ic->abjick', g_aaaa[oa, oa, va, va], l1_bb)
-    contracted_intermediate =  1.00 * einsum('jiac,kb->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_aaabbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('kiac,jb->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_aaabbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('kial,jlbc->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    lhe2e2cc_aaabbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->bajiclk', contracted_intermediate) 
-    lhe2e2cc_aaabbbba += -1.00 * einsum('kdac,jibd->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    contracted_intermediate =  1.00 * einsum('jdac,kibd->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    lhe2e2cc_aaabbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->bajicdk', contracted_intermediate) 
-    lhe2e2cc_aaabbbba +=  1.00 * einsum('kdbc,jiad->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    lhe2e2cc_aaabbbba +=  1.00 * einsum('klac,dl,jibd->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    contracted_intermediate = -1.00 * einsum('jlac,dl,kibd->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_aaabbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->bajicdlk', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('kiad,dl,jlbc->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_aaabbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->bajicdlk', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('klad,dl,jibc->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_aaabbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->bajicdlk', contracted_intermediate) 
-    lhe2e2cc_aaabbbba += -1.00 * einsum('klbc,dl,jiad->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_aaabbbba +=  1.00 * einsum('licd,dl,kjab->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
-    contracted_intermediate = -1.00 * einsum('ka,jibc->abjick', f_aa[oa, va], l2_abab)
-    lhe2e2cc_aaabbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    lhe2e2cc_aaabbbba += -1.00 * einsum('ic,kjab->abjick', f_bb[ob, vb], l2_aaaa)
+    lhe2e2cc_aaabbbba =  1.00 * einsum('kjab,licd->abjicdlk', g_aaaa[oa, oa, va, va], l2_bbbb)
+    contracted_intermediate =  1.00 * einsum('jiac,klbd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_aaabbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjldcik', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('kiac,jlbd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_aaabbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('klac,jibd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_aaabbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('jibc,klad->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_aaabbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjldcik', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('kibc,jlad->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_aaabbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('klbc,jiad->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_aaabbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    lhe2e2cc_aaabbbba +=  1.00 * einsum('licd,kjab->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_aaaa)
     return lhe2e2cc_aaabbbba
+
+
+def get_lhe2e2cc_aabaabaa(
+    uhf_scf_data: Intermediates,
+    uhf_ccsd_data: UHF_CCSD_Data,
+) -> NDArray:
+    """ tensor_subscripts: ('a', 'b', 'j', 'i', 'c', 'd', 'l', 'k') """
+    f_aa = uhf_scf_data.f_aa
+    f_bb = uhf_scf_data.f_bb
+    g_aaaa = uhf_scf_data.g_aaaa
+    g_abab = uhf_scf_data.g_abab
+    g_bbbb = uhf_scf_data.g_bbbb
+    kd_aa =  uhf_scf_data.identity_aa
+    kd_bb =  uhf_scf_data.identity_bb
+    va = uhf_scf_data.va
+    vb = uhf_scf_data.vb
+    oa = uhf_scf_data.oa
+    ob = uhf_scf_data.ob
+    t1_aa = uhf_ccsd_data.t1_aa
+    t1_bb = uhf_ccsd_data.t1_bb
+    t2_aaaa = uhf_ccsd_data.t2_aaaa
+    t2_abab = uhf_ccsd_data.t2_abab
+    t2_bbbb = uhf_ccsd_data.t2_bbbb
+    if uhf_ccsd_data.lmbda is None:
+        raise RuntimeError("Lambda amplitues missing in UHF_CCSD_Data")
+    l1_aa = uhf_ccsd_data.lmbda.l1_aa
+    l1_bb = uhf_ccsd_data.lmbda.l1_bb
+    l2_aaaa = uhf_ccsd_data.lmbda.l2_aaaa
+    l2_abab = uhf_ccsd_data.lmbda.l2_abab
+    l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
+    
+    contracted_intermediate =  1.00 * einsum('liab,kjcd->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aabaabaa =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjicdkl', contracted_intermediate) 
+    lhe2e2cc_aabaabaa +=  1.00 * einsum('klab,ijcd->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    contracted_intermediate =  1.00 * einsum('ijad,klbc->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aabaabaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_aabaabaa +=  1.00 * einsum('kjad,libc->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aabaabaa +=  1.00 * einsum('kiac,ljbd->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    contracted_intermediate = -1.00 * einsum('liac,kjbd->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aabaabaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('ijbd,klac->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aabaabaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_aabaabaa += -1.00 * einsum('kjbd,liac->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aabaabaa += -1.00 * einsum('kibc,ljad->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    contracted_intermediate =  1.00 * einsum('libc,kjad->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aabaabaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('ijcd,klab->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aabaabaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_aabaabaa +=  1.00 * einsum('kjcd,liab->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    return lhe2e2cc_aabaabaa
 
 
 def get_lhe2e2cc_aababaaa(
@@ -612,33 +565,28 @@ def get_lhe2e2cc_aababaaa(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    lhe2e2cc_aababaaa =  1.00 * einsum('kiab,jc->abjick', g_aaaa[oa, oa, va, va], l1_bb)
-    contracted_intermediate = -1.00 * einsum('ijac,kb->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_aababaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abjkci', contracted_intermediate)  + -1.00000 * einsum('abjick->bajick', contracted_intermediate)  +  1.00000 * einsum('abjick->bajkci', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('kial,ljbc->abjiclk', g_aaaa[oa, oa, va, oa], l2_abab)
-    lhe2e2cc_aababaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->bajiclk', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('ijlc,klab->abjiclk', g_abab[oa, ob, oa, vb], l2_aaaa)
-    lhe2e2cc_aababaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abjkcli', contracted_intermediate) 
-    lhe2e2cc_aababaaa +=  1.00 * einsum('kdab,ijdc->abjicdk', g_aaaa[oa, va, va, va], l2_abab)
-    contracted_intermediate =  1.00 * einsum('djac,kidb->abjicdk', g_abab[va, ob, va, vb], l2_aaaa)
-    lhe2e2cc_aababaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->bajicdk', contracted_intermediate) 
-    lhe2e2cc_aababaaa +=  1.00 * einsum('lkab,dl,ijdc->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    contracted_intermediate =  1.00 * einsum('ljac,dl,kibd->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_aababaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->bajicdlk', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('kiad,dl,ljbc->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_aababaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->bajicdlk', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('lkad,dl,ijbc->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_aababaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->bajicdlk', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('ijdc,dl,lkab->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
+    contracted_intermediate = -1.00 * einsum('liab,kjdc->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aababaaa =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjicdkl', contracted_intermediate) 
+    lhe2e2cc_aababaaa += -1.00 * einsum('klab,ijdc->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    contracted_intermediate = -1.00 * einsum('ijac,klbd->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aababaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_aababaaa += -1.00 * einsum('kjac,libd->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aababaaa += -1.00 * einsum('kiad,ljbc->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    contracted_intermediate =  1.00 * einsum('liad,kjbc->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
     lhe2e2cc_aababaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate) 
-    lhe2e2cc_aababaaa +=  1.00 * einsum('ljdc,dl,kiab->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
-    contracted_intermediate =  1.00 * einsum('ka,ijbc->abjick', f_aa[oa, va], l2_abab)
-    lhe2e2cc_aababaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    lhe2e2cc_aababaaa +=  1.00 * einsum('jc,kiab->abjick', f_bb[ob, vb], l2_aaaa)
+    contracted_intermediate =  1.00 * einsum('ijbc,klad->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aababaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_aababaaa +=  1.00 * einsum('kjbc,liad->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aababaaa +=  1.00 * einsum('kibd,ljac->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    contracted_intermediate = -1.00 * einsum('libd,kjac->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_aababaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('ijdc,klab->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_aababaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_aababaaa += -1.00 * einsum('kjdc,liab->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
     return lhe2e2cc_aababaaa
 
 
-def get_lhe2e2cc_aabababa(
+def get_lhe2e2cc_aababbab(
     uhf_scf_data: Intermediates,
     uhf_ccsd_data: UHF_CCSD_Data,
 ) -> NDArray:
@@ -667,64 +615,21 @@ def get_lhe2e2cc_aabababa(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    lhe2e2cc_aabababa =  1.00 * einsum('kiab,jc->abjick', g_aaaa[oa, oa, va, va], l1_bb)
-    contracted_intermediate = -1.00 * einsum('ijac,kb->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_aabababa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abjkci', contracted_intermediate)  + -1.00000 * einsum('abjick->bajick', contracted_intermediate)  +  1.00000 * einsum('abjick->bajkci', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('kjal,ilbc->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    lhe2e2cc_aabababa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->bajiclk', contracted_intermediate) 
-    lhe2e2cc_aabababa +=  1.00 * einsum('kdab,ijdc->abjicdk', g_aaaa[oa, va, va, va], l2_abab)
-    contracted_intermediate =  1.00 * einsum('djac,kidb->abjicdk', g_abab[va, ob, va, vb], l2_aaaa)
-    lhe2e2cc_aabababa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->bajicdk', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('ka,ijbc->abjick', f_aa[oa, va], l2_abab)
-    lhe2e2cc_aabababa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    lhe2e2cc_aabababa +=  1.00 * einsum('jc,kiab->abjick', f_bb[ob, vb], l2_aaaa)
-    return lhe2e2cc_aabababa
-
-
-def get_lhe2e2cc_aababbaa(
-    uhf_scf_data: Intermediates,
-    uhf_ccsd_data: UHF_CCSD_Data,
-) -> NDArray:
-    """ tensor_subscripts: ('a', 'b', 'j', 'i', 'c', 'd', 'l', 'k') """
-    f_aa = uhf_scf_data.f_aa
-    f_bb = uhf_scf_data.f_bb
-    g_aaaa = uhf_scf_data.g_aaaa
-    g_abab = uhf_scf_data.g_abab
-    g_bbbb = uhf_scf_data.g_bbbb
-    kd_aa =  uhf_scf_data.identity_aa
-    kd_bb =  uhf_scf_data.identity_bb
-    va = uhf_scf_data.va
-    vb = uhf_scf_data.vb
-    oa = uhf_scf_data.oa
-    ob = uhf_scf_data.ob
-    t1_aa = uhf_ccsd_data.t1_aa
-    t1_bb = uhf_ccsd_data.t1_bb
-    t2_aaaa = uhf_ccsd_data.t2_aaaa
-    t2_abab = uhf_ccsd_data.t2_abab
-    t2_bbbb = uhf_ccsd_data.t2_bbbb
-    if uhf_ccsd_data.lmbda is None:
-        raise RuntimeError("Lambda amplitues missing in UHF_CCSD_Data")
-    l1_aa = uhf_ccsd_data.lmbda.l1_aa
-    l1_bb = uhf_ccsd_data.lmbda.l1_bb
-    l2_aaaa = uhf_ccsd_data.lmbda.l2_aaaa
-    l2_abab = uhf_ccsd_data.lmbda.l2_abab
-    l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
-    
-    lhe2e2cc_aababbaa =  1.00 * einsum('kiab,jc->abjick', g_aaaa[oa, oa, va, va], l1_bb)
-    contracted_intermediate = -1.00 * einsum('ijac,kb->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_aababbaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abjkci', contracted_intermediate)  + -1.00000 * einsum('abjick->bajick', contracted_intermediate)  +  1.00000 * einsum('abjick->bajkci', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('kial,ljbc->abjiclk', g_aaaa[oa, oa, va, oa], l2_abab)
-    lhe2e2cc_aababbaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->bajiclk', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('ijlc,klab->abjiclk', g_abab[oa, ob, oa, vb], l2_aaaa)
-    lhe2e2cc_aababbaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abjkcli', contracted_intermediate) 
-    lhe2e2cc_aababbaa +=  1.00 * einsum('kdac,ijbd->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    contracted_intermediate = -1.00 * einsum('idac,kjbd->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    lhe2e2cc_aababbaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->bajicdk', contracted_intermediate) 
-    lhe2e2cc_aababbaa += -1.00 * einsum('kdbc,ijad->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    contracted_intermediate =  1.00 * einsum('ka,ijbc->abjick', f_aa[oa, va], l2_abab)
-    lhe2e2cc_aababbaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    lhe2e2cc_aababbaa +=  1.00 * einsum('jc,kiab->abjick', f_bb[ob, vb], l2_aaaa)
-    return lhe2e2cc_aababbaa
+    lhe2e2cc_aababbab =  1.00 * einsum('liab,kjcd->abjicdlk', g_aaaa[oa, oa, va, va], l2_bbbb)
+    contracted_intermediate =  1.00 * einsum('ijac,lkbd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_aababbab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjldcik', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('ikac,ljbd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_aababbab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('lkac,ijbd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_aababbab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('ijbc,lkad->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_aababbab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjldcik', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('ikbc,ljad->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_aababbab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('lkbc,ijad->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_aababbab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    lhe2e2cc_aababbab +=  1.00 * einsum('kjcd,liab->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_aaaa)
+    return lhe2e2cc_aababbab
 
 
 def get_lhe2e2cc_aababbba(
@@ -756,28 +661,67 @@ def get_lhe2e2cc_aababbba(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    lhe2e2cc_aababbba =  1.00 * einsum('kiab,jc->abjick', g_aaaa[oa, oa, va, va], l1_bb)
-    contracted_intermediate = -1.00 * einsum('ijac,kb->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_aababbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abjkci', contracted_intermediate)  + -1.00000 * einsum('abjick->bajick', contracted_intermediate)  +  1.00000 * einsum('abjick->bajkci', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('kjal,ilbc->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    lhe2e2cc_aababbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->bajiclk', contracted_intermediate) 
-    lhe2e2cc_aababbba +=  1.00 * einsum('kdac,ijbd->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    contracted_intermediate = -1.00 * einsum('idac,kjbd->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    lhe2e2cc_aababbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->bajicdk', contracted_intermediate) 
-    lhe2e2cc_aababbba += -1.00 * einsum('kdbc,ijad->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    lhe2e2cc_aababbba += -1.00 * einsum('klac,dl,ijbd->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    contracted_intermediate =  1.00 * einsum('ilac,dl,kjbd->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_aababbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->bajicdlk', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('kjad,dl,ilbc->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_aababbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->bajicdlk', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('klad,dl,ijbc->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_aababbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->bajicdlk', contracted_intermediate) 
-    lhe2e2cc_aababbba +=  1.00 * einsum('klbc,dl,ijad->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_aababbba += -1.00 * einsum('ljcd,dl,kiab->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
-    contracted_intermediate =  1.00 * einsum('ka,ijbc->abjick', f_aa[oa, va], l2_abab)
-    lhe2e2cc_aababbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    lhe2e2cc_aababbba +=  1.00 * einsum('jc,kiab->abjick', f_bb[ob, vb], l2_aaaa)
+    lhe2e2cc_aababbba = -1.00 * einsum('kiab,ljcd->abjicdlk', g_aaaa[oa, oa, va, va], l2_bbbb)
+    contracted_intermediate = -1.00 * einsum('ijac,klbd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_aababbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('kjac,ilbd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_aababbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('ilac,kjbd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_aababbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjkdcli', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('ijbc,klad->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_aababbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('kjbc,ilad->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_aababbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('ilbc,kjad->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_aababbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjkdcli', contracted_intermediate) 
+    lhe2e2cc_aababbba += -1.00 * einsum('ljcd,kiab->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_aaaa)
     return lhe2e2cc_aababbba
+
+
+def get_lhe2e2cc_aabbbbaa(
+    uhf_scf_data: Intermediates,
+    uhf_ccsd_data: UHF_CCSD_Data,
+) -> NDArray:
+    """ tensor_subscripts: ('a', 'b', 'j', 'i', 'c', 'd', 'l', 'k') """
+    f_aa = uhf_scf_data.f_aa
+    f_bb = uhf_scf_data.f_bb
+    g_aaaa = uhf_scf_data.g_aaaa
+    g_abab = uhf_scf_data.g_abab
+    g_bbbb = uhf_scf_data.g_bbbb
+    kd_aa =  uhf_scf_data.identity_aa
+    kd_bb =  uhf_scf_data.identity_bb
+    va = uhf_scf_data.va
+    vb = uhf_scf_data.vb
+    oa = uhf_scf_data.oa
+    ob = uhf_scf_data.ob
+    t1_aa = uhf_ccsd_data.t1_aa
+    t1_bb = uhf_ccsd_data.t1_bb
+    t2_aaaa = uhf_ccsd_data.t2_aaaa
+    t2_abab = uhf_ccsd_data.t2_abab
+    t2_bbbb = uhf_ccsd_data.t2_bbbb
+    if uhf_ccsd_data.lmbda is None:
+        raise RuntimeError("Lambda amplitues missing in UHF_CCSD_Data")
+    l1_aa = uhf_ccsd_data.lmbda.l1_aa
+    l1_bb = uhf_ccsd_data.lmbda.l1_bb
+    l2_aaaa = uhf_ccsd_data.lmbda.l2_aaaa
+    l2_abab = uhf_ccsd_data.lmbda.l2_abab
+    l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
+    
+    lhe2e2cc_aabbbbaa =  1.00 * einsum('klab,ijcd->abjicdlk', g_aaaa[oa, oa, va, va], l2_bbbb)
+    contracted_intermediate =  1.00 * einsum('ljac,kibd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_aabbbbaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('kjac,libd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_aabbbbaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abijdclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('liac,kjbd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_aabbbbaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('ljbc,kiad->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_aabbbbaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('kjbc,liad->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_aabbbbaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abijdclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('libc,kjad->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_aabbbbaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    lhe2e2cc_aabbbbaa +=  1.00 * einsum('ijcd,klab->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_aaaa)
+    return lhe2e2cc_aabbbbaa
 
 
 def get_lhe2e2cc_abaaaaab(
@@ -809,35 +753,24 @@ def get_lhe2e2cc_abaaaaab(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    contracted_intermediate =  1.00 * einsum('jkab,ic->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_abaaaaab =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
-    lhe2e2cc_abaaaaab += -1.00 * einsum('ijac,kb->abjick', g_aaaa[oa, oa, va, va], l1_bb)
-    lhe2e2cc_abaaaaab += -1.00 * einsum('jkcb,ia->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_abaaaaab +=  1.00 * einsum('ikcb,ja->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    contracted_intermediate =  1.00 * einsum('jklb,ilac->abjiclk', g_abab[oa, ob, oa, vb], l2_aaaa)
-    lhe2e2cc_abaaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abijclk', contracted_intermediate) 
-    lhe2e2cc_abaaaaab += -1.00 * einsum('ijcl,lkab->abjiclk', g_aaaa[oa, oa, va, oa], l2_abab)
-    lhe2e2cc_abaaaaab += -1.00 * einsum('dkab,ijdc->abjicdk', g_abab[va, ob, va, vb], l2_aaaa)
-    contracted_intermediate =  1.00 * einsum('jdac,ikdb->abjicdk', g_aaaa[oa, va, va, va], l2_abab)
-    lhe2e2cc_abaaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->abijcdk', contracted_intermediate) 
-    lhe2e2cc_abaaaaab +=  1.00 * einsum('dkcb,ijda->abjicdk', g_abab[va, ob, va, vb], l2_aaaa)
-    lhe2e2cc_abaaaaab += -1.00 * einsum('lkab,dl,ijcd->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
-    contracted_intermediate =  1.00 * einsum('ljac,dl,ikdb->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abaaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('jkdb,dl,liac->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abaaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
-    lhe2e2cc_abaaaaab += -1.00 * einsum('lkdb,dl,ijac->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abaaaaab +=  1.00 * einsum('lkcb,dl,ijad->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abaaaaab += -1.00 * einsum('ijcd,dl,lkab->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    contracted_intermediate =  1.00 * einsum('ljcd,dl,ikab->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abaaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
-    lhe2e2cc_abaaaaab += -1.00 * einsum('kb,ijac->abjick', f_bb[ob, vb], l2_aaaa)
-    contracted_intermediate = -1.00 * einsum('jc,ikab->abjick', f_aa[oa, va], l2_abab)
-    lhe2e2cc_abaaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
+    lhe2e2cc_abaaaaab = -1.00 * einsum('jkab,licd->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_abaaaaab +=  1.00 * einsum('ikab,ljcd->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_abaaaaab += -1.00 * einsum('lkab,ijcd->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    contracted_intermediate = -1.00 * einsum('ijac,lkdb->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_abaaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjldcik', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('liac,jkdb->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_abaaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('jkcb,liad->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_abaaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abijdclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('lkcb,ijad->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_abaaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('ijcd,lkab->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_abaaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_abaaaaab += -1.00 * einsum('licd,jkab->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
     return lhe2e2cc_abaaaaab
 
 
-def get_lhe2e2cc_abaaaabb(
+def get_lhe2e2cc_abaaaaba(
     uhf_scf_data: Intermediates,
     uhf_ccsd_data: UHF_CCSD_Data,
 ) -> NDArray:
@@ -866,68 +799,21 @@ def get_lhe2e2cc_abaaaabb(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    contracted_intermediate =  1.00 * einsum('jkab,ic->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_abaaaabb =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
-    lhe2e2cc_abaaaabb += -1.00 * einsum('ijac,kb->abjick', g_aaaa[oa, oa, va, va], l1_bb)
-    lhe2e2cc_abaaaabb += -1.00 * einsum('jkcb,ia->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_abaaaabb +=  1.00 * einsum('ikcb,ja->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    contracted_intermediate = -1.00 * einsum('jkal,ilcb->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    lhe2e2cc_abaaaabb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abijclk', contracted_intermediate) 
-    lhe2e2cc_abaaaabb +=  1.00 * einsum('jkcl,ilab->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    lhe2e2cc_abaaaabb += -1.00 * einsum('ikcl,jlab->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    lhe2e2cc_abaaaabb += -1.00 * einsum('dkab,ijdc->abjicdk', g_abab[va, ob, va, vb], l2_aaaa)
-    contracted_intermediate =  1.00 * einsum('jdac,ikdb->abjicdk', g_aaaa[oa, va, va, va], l2_abab)
-    lhe2e2cc_abaaaabb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->abijcdk', contracted_intermediate) 
-    lhe2e2cc_abaaaabb +=  1.00 * einsum('dkcb,ijda->abjicdk', g_abab[va, ob, va, vb], l2_aaaa)
-    lhe2e2cc_abaaaabb += -1.00 * einsum('kb,ijac->abjick', f_bb[ob, vb], l2_aaaa)
-    contracted_intermediate = -1.00 * einsum('jc,ikab->abjick', f_aa[oa, va], l2_abab)
-    lhe2e2cc_abaaaabb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
-    return lhe2e2cc_abaaaabb
-
-
-def get_lhe2e2cc_abaaabab(
-    uhf_scf_data: Intermediates,
-    uhf_ccsd_data: UHF_CCSD_Data,
-) -> NDArray:
-    """ tensor_subscripts: ('a', 'b', 'j', 'i', 'c', 'd', 'l', 'k') """
-    f_aa = uhf_scf_data.f_aa
-    f_bb = uhf_scf_data.f_bb
-    g_aaaa = uhf_scf_data.g_aaaa
-    g_abab = uhf_scf_data.g_abab
-    g_bbbb = uhf_scf_data.g_bbbb
-    kd_aa =  uhf_scf_data.identity_aa
-    kd_bb =  uhf_scf_data.identity_bb
-    va = uhf_scf_data.va
-    vb = uhf_scf_data.vb
-    oa = uhf_scf_data.oa
-    ob = uhf_scf_data.ob
-    t1_aa = uhf_ccsd_data.t1_aa
-    t1_bb = uhf_ccsd_data.t1_bb
-    t2_aaaa = uhf_ccsd_data.t2_aaaa
-    t2_abab = uhf_ccsd_data.t2_abab
-    t2_bbbb = uhf_ccsd_data.t2_bbbb
-    if uhf_ccsd_data.lmbda is None:
-        raise RuntimeError("Lambda amplitues missing in UHF_CCSD_Data")
-    l1_aa = uhf_ccsd_data.lmbda.l1_aa
-    l1_bb = uhf_ccsd_data.lmbda.l1_bb
-    l2_aaaa = uhf_ccsd_data.lmbda.l2_aaaa
-    l2_abab = uhf_ccsd_data.lmbda.l2_abab
-    l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
-    
-    contracted_intermediate =  1.00 * einsum('jkab,ic->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_abaaabab =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
-    lhe2e2cc_abaaabab += -1.00 * einsum('ijac,kb->abjick', g_aaaa[oa, oa, va, va], l1_bb)
-    lhe2e2cc_abaaabab += -1.00 * einsum('jkcb,ia->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_abaaabab +=  1.00 * einsum('ikcb,ja->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    contracted_intermediate =  1.00 * einsum('jklb,ilac->abjiclk', g_abab[oa, ob, oa, vb], l2_aaaa)
-    lhe2e2cc_abaaabab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abijclk', contracted_intermediate) 
-    lhe2e2cc_abaaabab += -1.00 * einsum('ijcl,lkab->abjiclk', g_aaaa[oa, oa, va, oa], l2_abab)
-    contracted_intermediate = -1.00 * einsum('jdcb,ikad->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    lhe2e2cc_abaaabab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->abijcdk', contracted_intermediate) 
-    lhe2e2cc_abaaabab += -1.00 * einsum('kb,ijac->abjick', f_bb[ob, vb], l2_aaaa)
-    contracted_intermediate = -1.00 * einsum('jc,ikab->abjick', f_aa[oa, va], l2_abab)
-    lhe2e2cc_abaaabab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
-    return lhe2e2cc_abaaabab
+    lhe2e2cc_abaaaaba =  1.00 * einsum('jlab,kicd->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_abaaaaba += -1.00 * einsum('ilab,kjcd->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_abaaaaba +=  1.00 * einsum('klab,ijcd->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    contracted_intermediate =  1.00 * einsum('ijac,kldb->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_abaaaaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('kjac,ildb->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_abaaaaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abijdclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('jlcb,kiad->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_abaaaaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('ilcb,kjad->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_abaaaaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjkdcli', contracted_intermediate) 
+    lhe2e2cc_abaaaaba +=  1.00 * einsum('ijcd,klab->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    contracted_intermediate = -1.00 * einsum('kjcd,ilab->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_abaaaaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
+    return lhe2e2cc_abaaaaba
 
 
 def get_lhe2e2cc_abaaabbb(
@@ -959,30 +845,75 @@ def get_lhe2e2cc_abaaabbb(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    contracted_intermediate =  1.00 * einsum('jkab,ic->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_abaaabbb =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
-    lhe2e2cc_abaaabbb += -1.00 * einsum('ijac,kb->abjick', g_aaaa[oa, oa, va, va], l1_bb)
-    lhe2e2cc_abaaabbb += -1.00 * einsum('jkcb,ia->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_abaaabbb +=  1.00 * einsum('ikcb,ja->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    contracted_intermediate = -1.00 * einsum('jkal,ilcb->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    lhe2e2cc_abaaabbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abijclk', contracted_intermediate) 
-    lhe2e2cc_abaaabbb +=  1.00 * einsum('jkcl,ilab->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    lhe2e2cc_abaaabbb += -1.00 * einsum('ikcl,jlab->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    contracted_intermediate = -1.00 * einsum('jdcb,ikad->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    lhe2e2cc_abaaabbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->abijcdk', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('jlcb,dl,ikad->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
+    contracted_intermediate = -1.00 * einsum('jlab,ikcd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abaaabbb =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjicdkl', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('ilab,jkcd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abaaabbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjicdkl', contracted_intermediate) 
+    lhe2e2cc_abaaabbb += -1.00 * einsum('ijac,klbd->abjicdlk', g_aaaa[oa, oa, va, va], l2_bbbb)
+    lhe2e2cc_abaaabbb +=  1.00 * einsum('jlad,ikcb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate = -1.00 * einsum('jkad,ilcb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
     lhe2e2cc_abaaabbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('jkad,dl,ilcb->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
+    lhe2e2cc_abaaabbb += -1.00 * einsum('ilad,jkcb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abaaabbb +=  1.00 * einsum('jlcb,ikad->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate = -1.00 * einsum('jkcb,ilad->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
     lhe2e2cc_abaaabbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
-    lhe2e2cc_abaaabbb +=  1.00 * einsum('lkbd,dl,ijac->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abaaabbb +=  1.00 * einsum('jkcd,dl,ilab->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    contracted_intermediate = -1.00 * einsum('jlcd,dl,ikab->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
+    lhe2e2cc_abaaabbb += -1.00 * einsum('ilcb,jkad->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abaaabbb +=  1.00 * einsum('lkbd,ijac->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_aaaa)
+    lhe2e2cc_abaaabbb += -1.00 * einsum('jlcd,ikab->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate =  1.00 * einsum('jkcd,ilab->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
     lhe2e2cc_abaaabbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
-    lhe2e2cc_abaaabbb += -1.00 * einsum('ikcd,dl,jlab->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abaaabbb += -1.00 * einsum('kb,ijac->abjick', f_bb[ob, vb], l2_aaaa)
-    contracted_intermediate = -1.00 * einsum('jc,ikab->abjick', f_aa[oa, va], l2_abab)
-    lhe2e2cc_abaaabbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
+    lhe2e2cc_abaaabbb +=  1.00 * einsum('ilcd,jkab->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
     return lhe2e2cc_abaaabbb
+
+
+def get_lhe2e2cc_abaababb(
+    uhf_scf_data: Intermediates,
+    uhf_ccsd_data: UHF_CCSD_Data,
+) -> NDArray:
+    """ tensor_subscripts: ('a', 'b', 'j', 'i', 'c', 'd', 'l', 'k') """
+    f_aa = uhf_scf_data.f_aa
+    f_bb = uhf_scf_data.f_bb
+    g_aaaa = uhf_scf_data.g_aaaa
+    g_abab = uhf_scf_data.g_abab
+    g_bbbb = uhf_scf_data.g_bbbb
+    kd_aa =  uhf_scf_data.identity_aa
+    kd_bb =  uhf_scf_data.identity_bb
+    va = uhf_scf_data.va
+    vb = uhf_scf_data.vb
+    oa = uhf_scf_data.oa
+    ob = uhf_scf_data.ob
+    t1_aa = uhf_ccsd_data.t1_aa
+    t1_bb = uhf_ccsd_data.t1_bb
+    t2_aaaa = uhf_ccsd_data.t2_aaaa
+    t2_abab = uhf_ccsd_data.t2_abab
+    t2_bbbb = uhf_ccsd_data.t2_bbbb
+    if uhf_ccsd_data.lmbda is None:
+        raise RuntimeError("Lambda amplitues missing in UHF_CCSD_Data")
+    l1_aa = uhf_ccsd_data.lmbda.l1_aa
+    l1_bb = uhf_ccsd_data.lmbda.l1_bb
+    l2_aaaa = uhf_ccsd_data.lmbda.l2_aaaa
+    l2_abab = uhf_ccsd_data.lmbda.l2_abab
+    l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
+    
+    contracted_intermediate =  1.00 * einsum('jlab,ikdc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abaababb =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjicdkl', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('ilab,jkdc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abaababb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjicdkl', contracted_intermediate) 
+    lhe2e2cc_abaababb +=  1.00 * einsum('ijad,klbc->abjicdlk', g_aaaa[oa, oa, va, va], l2_bbbb)
+    lhe2e2cc_abaababb += -1.00 * einsum('jlac,ikdb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate =  1.00 * einsum('jkac,ildb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abaababb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
+    lhe2e2cc_abaababb +=  1.00 * einsum('ilac,jkdb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abaababb += -1.00 * einsum('jldb,ikac->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate =  1.00 * einsum('jkdb,ilac->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abaababb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
+    lhe2e2cc_abaababb +=  1.00 * einsum('ildb,jkac->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abaababb += -1.00 * einsum('lkbc,ijad->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_aaaa)
+    lhe2e2cc_abaababb +=  1.00 * einsum('jldc,ikab->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate = -1.00 * einsum('jkdc,ilab->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abaababb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
+    lhe2e2cc_abaababb += -1.00 * einsum('ildc,jkab->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    return lhe2e2cc_abaababb
 
 
 def get_lhe2e2cc_ababaaaa(
@@ -1014,30 +945,26 @@ def get_lhe2e2cc_ababaaaa(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    lhe2e2cc_ababaaaa =  1.00 * einsum('kiab,jc->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_ababaaaa +=  1.00 * einsum('jicb,ka->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_ababaaaa +=  1.00 * einsum('kjac,ib->abjick', g_aaaa[oa, oa, va, va], l1_bb)
-    lhe2e2cc_ababaaaa += -1.00 * einsum('kicb,ja->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_ababaaaa += -1.00 * einsum('kjal,licb->abjiclk', g_aaaa[oa, oa, va, oa], l2_abab)
-    lhe2e2cc_ababaaaa +=  1.00 * einsum('kilb,jlac->abjiclk', g_abab[oa, ob, oa, vb], l2_aaaa)
-    lhe2e2cc_ababaaaa +=  1.00 * einsum('kjcl,liab->abjiclk', g_aaaa[oa, oa, va, oa], l2_abab)
-    lhe2e2cc_ababaaaa +=  1.00 * einsum('kdac,jidb->abjicdk', g_aaaa[oa, va, va, va], l2_abab)
-    lhe2e2cc_ababaaaa += -1.00 * einsum('jdac,kidb->abjicdk', g_aaaa[oa, va, va, va], l2_abab)
-    lhe2e2cc_ababaaaa += -1.00 * einsum('dicb,kjda->abjicdk', g_abab[va, ob, va, vb], l2_aaaa)
-    lhe2e2cc_ababaaaa +=  1.00 * einsum('lkac,dl,jidb->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_ababaaaa += -1.00 * einsum('ljac,dl,kidb->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_ababaaaa += -1.00 * einsum('licb,dl,kjad->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_ababaaaa += -1.00 * einsum('kjad,dl,licb->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_ababaaaa += -1.00 * einsum('kidb,dl,ljac->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_ababaaaa += -1.00 * einsum('lkad,dl,jicb->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_ababaaaa +=  1.00 * einsum('kjcd,dl,liab->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_ababaaaa += -1.00 * einsum('ljcd,dl,kiab->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_ababaaaa +=  1.00 * einsum('ka,jicb->abjick', f_aa[oa, va], l2_abab)
-    lhe2e2cc_ababaaaa +=  1.00 * einsum('jc,kiab->abjick', f_aa[oa, va], l2_abab)
+    contracted_intermediate =  1.00 * einsum('liab,kjcd->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_ababaaaa =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjicdkl', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('ljac,kidb->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_ababaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('kjac,lidb->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_ababaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('lkac,jidb->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_ababaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('jicb,klad->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_ababaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('kicb,ljad->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_ababaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('licb,kjad->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_ababaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    lhe2e2cc_ababaaaa += -1.00 * einsum('ljcd,kiab->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_ababaaaa +=  1.00 * einsum('kjcd,liab->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
     return lhe2e2cc_ababaaaa
 
 
-def get_lhe2e2cc_ababaaba(
+def get_lhe2e2cc_abababab(
     uhf_scf_data: Intermediates,
     uhf_ccsd_data: UHF_CCSD_Data,
 ) -> NDArray:
@@ -1066,63 +993,23 @@ def get_lhe2e2cc_ababaaba(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    lhe2e2cc_ababaaba =  1.00 * einsum('kiab,jc->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_ababaaba +=  1.00 * einsum('jicb,ka->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_ababaaba +=  1.00 * einsum('kjac,ib->abjick', g_aaaa[oa, oa, va, va], l1_bb)
-    lhe2e2cc_ababaaba += -1.00 * einsum('kicb,ja->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_ababaaba += -1.00 * einsum('kial,jlcb->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    lhe2e2cc_ababaaba += -1.00 * einsum('jicl,klab->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    lhe2e2cc_ababaaba +=  1.00 * einsum('kicl,jlab->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    lhe2e2cc_ababaaba +=  1.00 * einsum('kdac,jidb->abjicdk', g_aaaa[oa, va, va, va], l2_abab)
-    lhe2e2cc_ababaaba += -1.00 * einsum('jdac,kidb->abjicdk', g_aaaa[oa, va, va, va], l2_abab)
-    lhe2e2cc_ababaaba += -1.00 * einsum('dicb,kjda->abjicdk', g_abab[va, ob, va, vb], l2_aaaa)
-    lhe2e2cc_ababaaba +=  1.00 * einsum('ka,jicb->abjick', f_aa[oa, va], l2_abab)
-    lhe2e2cc_ababaaba +=  1.00 * einsum('jc,kiab->abjick', f_aa[oa, va], l2_abab)
-    return lhe2e2cc_ababaaba
-
-
-def get_lhe2e2cc_abababaa(
-    uhf_scf_data: Intermediates,
-    uhf_ccsd_data: UHF_CCSD_Data,
-) -> NDArray:
-    """ tensor_subscripts: ('a', 'b', 'j', 'i', 'c', 'd', 'l', 'k') """
-    f_aa = uhf_scf_data.f_aa
-    f_bb = uhf_scf_data.f_bb
-    g_aaaa = uhf_scf_data.g_aaaa
-    g_abab = uhf_scf_data.g_abab
-    g_bbbb = uhf_scf_data.g_bbbb
-    kd_aa =  uhf_scf_data.identity_aa
-    kd_bb =  uhf_scf_data.identity_bb
-    va = uhf_scf_data.va
-    vb = uhf_scf_data.vb
-    oa = uhf_scf_data.oa
-    ob = uhf_scf_data.ob
-    t1_aa = uhf_ccsd_data.t1_aa
-    t1_bb = uhf_ccsd_data.t1_bb
-    t2_aaaa = uhf_ccsd_data.t2_aaaa
-    t2_abab = uhf_ccsd_data.t2_abab
-    t2_bbbb = uhf_ccsd_data.t2_bbbb
-    if uhf_ccsd_data.lmbda is None:
-        raise RuntimeError("Lambda amplitues missing in UHF_CCSD_Data")
-    l1_aa = uhf_ccsd_data.lmbda.l1_aa
-    l1_bb = uhf_ccsd_data.lmbda.l1_bb
-    l2_aaaa = uhf_ccsd_data.lmbda.l2_aaaa
-    l2_abab = uhf_ccsd_data.lmbda.l2_abab
-    l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
-    
-    lhe2e2cc_abababaa =  1.00 * einsum('kiab,jc->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_abababaa +=  1.00 * einsum('jicb,ka->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_abababaa +=  1.00 * einsum('kjac,ib->abjick', g_aaaa[oa, oa, va, va], l1_bb)
-    lhe2e2cc_abababaa += -1.00 * einsum('kicb,ja->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_abababaa += -1.00 * einsum('kjal,licb->abjiclk', g_aaaa[oa, oa, va, oa], l2_abab)
-    lhe2e2cc_abababaa +=  1.00 * einsum('kilb,jlac->abjiclk', g_abab[oa, ob, oa, vb], l2_aaaa)
-    lhe2e2cc_abababaa +=  1.00 * einsum('kjcl,liab->abjiclk', g_aaaa[oa, oa, va, oa], l2_abab)
-    lhe2e2cc_abababaa +=  1.00 * einsum('kdab,jicd->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    lhe2e2cc_abababaa +=  1.00 * einsum('jdcb,kiad->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    lhe2e2cc_abababaa += -1.00 * einsum('kdcb,jiad->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    lhe2e2cc_abababaa +=  1.00 * einsum('ka,jicb->abjick', f_aa[oa, va], l2_abab)
-    lhe2e2cc_abababaa +=  1.00 * einsum('jc,kiab->abjick', f_aa[oa, va], l2_abab)
-    return lhe2e2cc_abababaa
+    lhe2e2cc_abababab = -1.00 * einsum('jkab,licd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abababab += -1.00 * einsum('liab,jkcd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abababab +=  1.00 * einsum('lkab,jicd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abababab += -1.00 * einsum('jiad,lkcb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abababab +=  1.00 * einsum('ljac,kibd->abjicdlk', g_aaaa[oa, oa, va, va], l2_bbbb)
+    lhe2e2cc_abababab +=  1.00 * einsum('jkad,licb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate =  1.00 * einsum('liad,jkcb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abababab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate) 
+    lhe2e2cc_abababab += -1.00 * einsum('jicb,lkad->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abababab +=  1.00 * einsum('jkcb,liad->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abababab +=  1.00 * einsum('kibd,ljac->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_aaaa)
+    contracted_intermediate =  1.00 * einsum('licb,jkad->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abababab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate) 
+    lhe2e2cc_abababab +=  1.00 * einsum('jicd,lkab->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abababab += -1.00 * einsum('jkcd,liab->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abababab += -1.00 * einsum('licd,jkab->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    return lhe2e2cc_abababab
 
 
 def get_lhe2e2cc_abababba(
@@ -1154,26 +1041,22 @@ def get_lhe2e2cc_abababba(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    lhe2e2cc_abababba =  1.00 * einsum('kiab,jc->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_abababba +=  1.00 * einsum('jicb,ka->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_abababba +=  1.00 * einsum('kjac,ib->abjick', g_aaaa[oa, oa, va, va], l1_bb)
-    lhe2e2cc_abababba += -1.00 * einsum('kicb,ja->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_abababba += -1.00 * einsum('kial,jlcb->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    lhe2e2cc_abababba += -1.00 * einsum('jicl,klab->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    lhe2e2cc_abababba +=  1.00 * einsum('kicl,jlab->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    lhe2e2cc_abababba +=  1.00 * einsum('kdab,jicd->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    lhe2e2cc_abababba +=  1.00 * einsum('jdcb,kiad->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    lhe2e2cc_abababba += -1.00 * einsum('kdcb,jiad->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    lhe2e2cc_abababba += -1.00 * einsum('klab,dl,jicd->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abababba += -1.00 * einsum('jlcb,dl,kiad->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abababba += -1.00 * einsum('kiad,dl,jlcb->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abababba +=  1.00 * einsum('klad,dl,jicb->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abababba +=  1.00 * einsum('klcb,dl,jiad->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abababba += -1.00 * einsum('jicd,dl,klab->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abababba +=  1.00 * einsum('jlcd,dl,kiab->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abababba +=  1.00 * einsum('kicd,dl,jlab->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abababba +=  1.00 * einsum('ka,jicb->abjick', f_aa[oa, va], l2_abab)
-    lhe2e2cc_abababba +=  1.00 * einsum('jc,kiab->abjick', f_aa[oa, va], l2_abab)
+    lhe2e2cc_abababba =  1.00 * einsum('jlab,kicd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abababba +=  1.00 * einsum('kiab,jlcd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abababba += -1.00 * einsum('klab,jicd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate =  1.00 * einsum('jiad,klcb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abababba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_abababba += -1.00 * einsum('kjac,libd->abjicdlk', g_aaaa[oa, oa, va, va], l2_bbbb)
+    lhe2e2cc_abababba += -1.00 * einsum('kiad,jlcb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abababba +=  1.00 * einsum('klad,jicb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate =  1.00 * einsum('jicb,klad->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abababba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_abababba += -1.00 * einsum('kicb,jlad->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abababba += -1.00 * einsum('libd,kjac->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_aaaa)
+    lhe2e2cc_abababba +=  1.00 * einsum('klcb,jiad->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate = -1.00 * einsum('jicd,klab->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abababba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_abababba +=  1.00 * einsum('kicd,jlab->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
     return lhe2e2cc_abababba
 
 
@@ -1206,30 +1089,26 @@ def get_lhe2e2cc_ababbaab(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    lhe2e2cc_ababbaab =  1.00 * einsum('jkab,ic->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    contracted_intermediate =  1.00 * einsum('jiac,kb->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_ababbaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abjkci', contracted_intermediate) 
-    lhe2e2cc_ababbaab +=  1.00 * einsum('kibc,ja->abjick', g_bbbb[ob, ob, vb, vb], l1_aa)
-    lhe2e2cc_ababbaab += -1.00 * einsum('jklb,liac->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    contracted_intermediate = -1.00 * einsum('jilc,lkab->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    lhe2e2cc_ababbaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abjkcli', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('dkab,jidc->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    lhe2e2cc_ababbaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->acjibdk', contracted_intermediate) 
-    lhe2e2cc_ababbaab +=  1.00 * einsum('diac,jkdb->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    contracted_intermediate = -1.00 * einsum('lkab,dl,jidc->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_ababbaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->acjibdlk', contracted_intermediate) 
-    lhe2e2cc_ababbaab += -1.00 * einsum('liac,dl,jkdb->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_ababbaab += -1.00 * einsum('jkdb,dl,liac->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_ababbaab +=  1.00 * einsum('lkdb,dl,jiac->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    contracted_intermediate = -1.00 * einsum('jidc,dl,lkab->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
+    lhe2e2cc_ababbaab =  1.00 * einsum('jkab,lidc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_ababbaab +=  1.00 * einsum('liab,jkdc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_ababbaab += -1.00 * einsum('lkab,jidc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_ababbaab +=  1.00 * einsum('jiac,lkdb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_ababbaab += -1.00 * einsum('ljad,kibc->abjicdlk', g_aaaa[oa, oa, va, va], l2_bbbb)
+    lhe2e2cc_ababbaab += -1.00 * einsum('jkac,lidb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate = -1.00 * einsum('liac,jkdb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
     lhe2e2cc_ababbaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate) 
-    lhe2e2cc_ababbaab +=  1.00 * einsum('lidc,dl,jkab->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_ababbaab +=  1.00 * einsum('kb,jiac->abjick', f_bb[ob, vb], l2_abab)
-    lhe2e2cc_ababbaab +=  1.00 * einsum('ic,jkab->abjick', f_bb[ob, vb], l2_abab)
+    lhe2e2cc_ababbaab +=  1.00 * einsum('jidb,lkac->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_ababbaab += -1.00 * einsum('jkdb,liac->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_ababbaab += -1.00 * einsum('kibc,ljad->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_aaaa)
+    contracted_intermediate = -1.00 * einsum('lidb,jkac->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_ababbaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate) 
+    lhe2e2cc_ababbaab += -1.00 * einsum('jidc,lkab->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_ababbaab +=  1.00 * einsum('jkdc,liab->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_ababbaab +=  1.00 * einsum('lidc,jkab->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
     return lhe2e2cc_ababbaab
 
 
-def get_lhe2e2cc_ababbabb(
+def get_lhe2e2cc_ababbaba(
     uhf_scf_data: Intermediates,
     uhf_ccsd_data: UHF_CCSD_Data,
 ) -> NDArray:
@@ -1258,63 +1137,23 @@ def get_lhe2e2cc_ababbabb(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    lhe2e2cc_ababbabb =  1.00 * einsum('jkab,ic->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    contracted_intermediate =  1.00 * einsum('jiac,kb->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_ababbabb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abjkci', contracted_intermediate) 
-    lhe2e2cc_ababbabb +=  1.00 * einsum('kibc,ja->abjick', g_bbbb[ob, ob, vb, vb], l1_aa)
-    lhe2e2cc_ababbabb +=  1.00 * einsum('jkal,ilbc->abjiclk', g_abab[oa, ob, va, ob], l2_bbbb)
-    lhe2e2cc_ababbabb += -1.00 * einsum('kibl,jlac->abjiclk', g_bbbb[ob, ob, vb, ob], l2_abab)
-    lhe2e2cc_ababbabb +=  1.00 * einsum('kicl,jlab->abjiclk', g_bbbb[ob, ob, vb, ob], l2_abab)
-    contracted_intermediate =  1.00 * einsum('dkab,jidc->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    lhe2e2cc_ababbabb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->acjibdk', contracted_intermediate) 
-    lhe2e2cc_ababbabb +=  1.00 * einsum('diac,jkdb->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    lhe2e2cc_ababbabb +=  1.00 * einsum('kb,jiac->abjick', f_bb[ob, vb], l2_abab)
-    lhe2e2cc_ababbabb +=  1.00 * einsum('ic,jkab->abjick', f_bb[ob, vb], l2_abab)
-    return lhe2e2cc_ababbabb
-
-
-def get_lhe2e2cc_ababbbab(
-    uhf_scf_data: Intermediates,
-    uhf_ccsd_data: UHF_CCSD_Data,
-) -> NDArray:
-    """ tensor_subscripts: ('a', 'b', 'j', 'i', 'c', 'd', 'l', 'k') """
-    f_aa = uhf_scf_data.f_aa
-    f_bb = uhf_scf_data.f_bb
-    g_aaaa = uhf_scf_data.g_aaaa
-    g_abab = uhf_scf_data.g_abab
-    g_bbbb = uhf_scf_data.g_bbbb
-    kd_aa =  uhf_scf_data.identity_aa
-    kd_bb =  uhf_scf_data.identity_bb
-    va = uhf_scf_data.va
-    vb = uhf_scf_data.vb
-    oa = uhf_scf_data.oa
-    ob = uhf_scf_data.ob
-    t1_aa = uhf_ccsd_data.t1_aa
-    t1_bb = uhf_ccsd_data.t1_bb
-    t2_aaaa = uhf_ccsd_data.t2_aaaa
-    t2_abab = uhf_ccsd_data.t2_abab
-    t2_bbbb = uhf_ccsd_data.t2_bbbb
-    if uhf_ccsd_data.lmbda is None:
-        raise RuntimeError("Lambda amplitues missing in UHF_CCSD_Data")
-    l1_aa = uhf_ccsd_data.lmbda.l1_aa
-    l1_bb = uhf_ccsd_data.lmbda.l1_bb
-    l2_aaaa = uhf_ccsd_data.lmbda.l2_aaaa
-    l2_abab = uhf_ccsd_data.lmbda.l2_abab
-    l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
-    
-    lhe2e2cc_ababbbab =  1.00 * einsum('jkab,ic->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    contracted_intermediate =  1.00 * einsum('jiac,kb->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_ababbbab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abjkci', contracted_intermediate) 
-    lhe2e2cc_ababbbab +=  1.00 * einsum('kibc,ja->abjick', g_bbbb[ob, ob, vb, vb], l1_aa)
-    lhe2e2cc_ababbbab += -1.00 * einsum('jklb,liac->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    contracted_intermediate = -1.00 * einsum('jilc,lkab->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    lhe2e2cc_ababbbab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abjkcli', contracted_intermediate) 
-    lhe2e2cc_ababbbab += -1.00 * einsum('jdac,kidb->abjicdk', g_abab[oa, vb, va, vb], l2_bbbb)
-    lhe2e2cc_ababbbab += -1.00 * einsum('idbc,jkad->abjicdk', g_bbbb[ob, vb, vb, vb], l2_abab)
-    lhe2e2cc_ababbbab +=  1.00 * einsum('kdbc,jiad->abjicdk', g_bbbb[ob, vb, vb, vb], l2_abab)
-    lhe2e2cc_ababbbab +=  1.00 * einsum('kb,jiac->abjick', f_bb[ob, vb], l2_abab)
-    lhe2e2cc_ababbbab +=  1.00 * einsum('ic,jkab->abjick', f_bb[ob, vb], l2_abab)
-    return lhe2e2cc_ababbbab
+    lhe2e2cc_ababbaba = -1.00 * einsum('jlab,kidc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_ababbaba += -1.00 * einsum('kiab,jldc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_ababbaba +=  1.00 * einsum('klab,jidc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate = -1.00 * einsum('jiac,kldb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_ababbaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_ababbaba +=  1.00 * einsum('kjad,libc->abjicdlk', g_aaaa[oa, oa, va, va], l2_bbbb)
+    lhe2e2cc_ababbaba +=  1.00 * einsum('kiac,jldb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_ababbaba += -1.00 * einsum('klac,jidb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate = -1.00 * einsum('jidb,klac->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_ababbaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_ababbaba +=  1.00 * einsum('kidb,jlac->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_ababbaba +=  1.00 * einsum('libc,kjad->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_aaaa)
+    lhe2e2cc_ababbaba += -1.00 * einsum('kldb,jiac->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate =  1.00 * einsum('jidc,klab->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_ababbaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_ababbaba += -1.00 * einsum('kidc,jlab->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    return lhe2e2cc_ababbaba
 
 
 def get_lhe2e2cc_ababbbbb(
@@ -1346,26 +1185,18 @@ def get_lhe2e2cc_ababbbbb(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    lhe2e2cc_ababbbbb =  1.00 * einsum('jkab,ic->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    contracted_intermediate =  1.00 * einsum('jiac,kb->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_ababbbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abjkci', contracted_intermediate) 
-    lhe2e2cc_ababbbbb +=  1.00 * einsum('kibc,ja->abjick', g_bbbb[ob, ob, vb, vb], l1_aa)
-    lhe2e2cc_ababbbbb +=  1.00 * einsum('jkal,ilbc->abjiclk', g_abab[oa, ob, va, ob], l2_bbbb)
-    lhe2e2cc_ababbbbb += -1.00 * einsum('kibl,jlac->abjiclk', g_bbbb[ob, ob, vb, ob], l2_abab)
-    lhe2e2cc_ababbbbb +=  1.00 * einsum('kicl,jlab->abjiclk', g_bbbb[ob, ob, vb, ob], l2_abab)
-    lhe2e2cc_ababbbbb += -1.00 * einsum('jdac,kidb->abjicdk', g_abab[oa, vb, va, vb], l2_bbbb)
-    lhe2e2cc_ababbbbb += -1.00 * einsum('idbc,jkad->abjicdk', g_bbbb[ob, vb, vb, vb], l2_abab)
-    lhe2e2cc_ababbbbb +=  1.00 * einsum('kdbc,jiad->abjicdk', g_bbbb[ob, vb, vb, vb], l2_abab)
-    lhe2e2cc_ababbbbb += -1.00 * einsum('jlac,dl,kibd->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_ababbbbb += -1.00 * einsum('libc,dl,jkad->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_ababbbbb += -1.00 * einsum('jkad,dl,libc->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_ababbbbb += -1.00 * einsum('kibd,dl,jlac->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_ababbbbb += -1.00 * einsum('lkbd,dl,jiac->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_ababbbbb +=  1.00 * einsum('lkbc,dl,jiad->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_ababbbbb += -1.00 * einsum('licd,dl,jkab->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_ababbbbb +=  1.00 * einsum('kicd,dl,jlab->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_ababbbbb +=  1.00 * einsum('kb,jiac->abjick', f_bb[ob, vb], l2_abab)
-    lhe2e2cc_ababbbbb +=  1.00 * einsum('ic,jkab->abjick', f_bb[ob, vb], l2_abab)
+    contracted_intermediate =  1.00 * einsum('jlab,kicd->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_ababbbbb =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjicdkl', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('jiac,klbd->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_ababbbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjldcik', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('jkac,libd->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_ababbbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('kibc,jlad->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_ababbbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('libc,jkad->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_ababbbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjkdcli', contracted_intermediate) 
+    lhe2e2cc_ababbbbb +=  1.00 * einsum('kicd,jlab->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_ababbbbb += -1.00 * einsum('licd,jkab->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
     return lhe2e2cc_ababbbbb
 
 
@@ -1398,30 +1229,22 @@ def get_lhe2e2cc_abbaaaaa(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    lhe2e2cc_abbaaaaa = -1.00 * einsum('kjab,ic->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    contracted_intermediate = -1.00 * einsum('ijcb,ka->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_abbaaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abjkci', contracted_intermediate) 
-    lhe2e2cc_abbaaaaa += -1.00 * einsum('kiac,jb->abjick', g_aaaa[oa, oa, va, va], l1_bb)
-    lhe2e2cc_abbaaaaa += -1.00 * einsum('kjlb,ilac->abjiclk', g_abab[oa, ob, oa, vb], l2_aaaa)
-    lhe2e2cc_abbaaaaa +=  1.00 * einsum('kial,ljcb->abjiclk', g_aaaa[oa, oa, va, oa], l2_abab)
-    lhe2e2cc_abbaaaaa += -1.00 * einsum('kicl,ljab->abjiclk', g_aaaa[oa, oa, va, oa], l2_abab)
-    lhe2e2cc_abbaaaaa += -1.00 * einsum('kdac,ijdb->abjicdk', g_aaaa[oa, va, va, va], l2_abab)
-    lhe2e2cc_abbaaaaa +=  1.00 * einsum('djcb,kida->abjicdk', g_abab[va, ob, va, vb], l2_aaaa)
-    lhe2e2cc_abbaaaaa +=  1.00 * einsum('idac,kjdb->abjicdk', g_aaaa[oa, va, va, va], l2_abab)
-    lhe2e2cc_abbaaaaa += -1.00 * einsum('lkac,dl,ijdb->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abbaaaaa +=  1.00 * einsum('ljcb,dl,kiad->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abbaaaaa +=  1.00 * einsum('liac,dl,kjdb->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abbaaaaa +=  1.00 * einsum('kjdb,dl,liac->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abbaaaaa +=  1.00 * einsum('kiad,dl,ljcb->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abbaaaaa +=  1.00 * einsum('lkad,dl,ijcb->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abbaaaaa +=  1.00 * einsum('licd,dl,kjab->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abbaaaaa += -1.00 * einsum('kicd,dl,ljab->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abbaaaaa += -1.00 * einsum('ka,ijcb->abjick', f_aa[oa, va], l2_abab)
-    lhe2e2cc_abbaaaaa += -1.00 * einsum('ic,kjab->abjick', f_aa[oa, va], l2_abab)
+    contracted_intermediate = -1.00 * einsum('ljab,kicd->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_abbaaaaa =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjicdkl', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('kiac,ljdb->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_abbaaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('liac,kjdb->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_abbaaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjkdcli', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('ijcb,klad->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_abbaaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjldcik', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('kjcb,liad->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_abbaaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    lhe2e2cc_abbaaaaa += -1.00 * einsum('kicd,ljab->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_abbaaaaa +=  1.00 * einsum('licd,kjab->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
     return lhe2e2cc_abbaaaaa
 
 
-def get_lhe2e2cc_abbaaaba(
+def get_lhe2e2cc_abbaabab(
     uhf_scf_data: Intermediates,
     uhf_ccsd_data: UHF_CCSD_Data,
 ) -> NDArray:
@@ -1450,63 +1273,23 @@ def get_lhe2e2cc_abbaaaba(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    lhe2e2cc_abbaaaba = -1.00 * einsum('kjab,ic->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    contracted_intermediate = -1.00 * einsum('ijcb,ka->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_abbaaaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abjkci', contracted_intermediate) 
-    lhe2e2cc_abbaaaba += -1.00 * einsum('kiac,jb->abjick', g_aaaa[oa, oa, va, va], l1_bb)
-    lhe2e2cc_abbaaaba +=  1.00 * einsum('kjal,ilcb->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    contracted_intermediate =  1.00 * einsum('ijcl,klab->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    lhe2e2cc_abbaaaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abjkcli', contracted_intermediate) 
-    lhe2e2cc_abbaaaba += -1.00 * einsum('kdac,ijdb->abjicdk', g_aaaa[oa, va, va, va], l2_abab)
-    lhe2e2cc_abbaaaba +=  1.00 * einsum('djcb,kida->abjicdk', g_abab[va, ob, va, vb], l2_aaaa)
-    lhe2e2cc_abbaaaba +=  1.00 * einsum('idac,kjdb->abjicdk', g_aaaa[oa, va, va, va], l2_abab)
-    lhe2e2cc_abbaaaba += -1.00 * einsum('ka,ijcb->abjick', f_aa[oa, va], l2_abab)
-    lhe2e2cc_abbaaaba += -1.00 * einsum('ic,kjab->abjick', f_aa[oa, va], l2_abab)
-    return lhe2e2cc_abbaaaba
-
-
-def get_lhe2e2cc_abbaabaa(
-    uhf_scf_data: Intermediates,
-    uhf_ccsd_data: UHF_CCSD_Data,
-) -> NDArray:
-    """ tensor_subscripts: ('a', 'b', 'j', 'i', 'c', 'd', 'l', 'k') """
-    f_aa = uhf_scf_data.f_aa
-    f_bb = uhf_scf_data.f_bb
-    g_aaaa = uhf_scf_data.g_aaaa
-    g_abab = uhf_scf_data.g_abab
-    g_bbbb = uhf_scf_data.g_bbbb
-    kd_aa =  uhf_scf_data.identity_aa
-    kd_bb =  uhf_scf_data.identity_bb
-    va = uhf_scf_data.va
-    vb = uhf_scf_data.vb
-    oa = uhf_scf_data.oa
-    ob = uhf_scf_data.ob
-    t1_aa = uhf_ccsd_data.t1_aa
-    t1_bb = uhf_ccsd_data.t1_bb
-    t2_aaaa = uhf_ccsd_data.t2_aaaa
-    t2_abab = uhf_ccsd_data.t2_abab
-    t2_bbbb = uhf_ccsd_data.t2_bbbb
-    if uhf_ccsd_data.lmbda is None:
-        raise RuntimeError("Lambda amplitues missing in UHF_CCSD_Data")
-    l1_aa = uhf_ccsd_data.lmbda.l1_aa
-    l1_bb = uhf_ccsd_data.lmbda.l1_bb
-    l2_aaaa = uhf_ccsd_data.lmbda.l2_aaaa
-    l2_abab = uhf_ccsd_data.lmbda.l2_abab
-    l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
-    
-    lhe2e2cc_abbaabaa = -1.00 * einsum('kjab,ic->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    contracted_intermediate = -1.00 * einsum('ijcb,ka->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_abbaabaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abjkci', contracted_intermediate) 
-    lhe2e2cc_abbaabaa += -1.00 * einsum('kiac,jb->abjick', g_aaaa[oa, oa, va, va], l1_bb)
-    lhe2e2cc_abbaabaa += -1.00 * einsum('kjlb,ilac->abjiclk', g_abab[oa, ob, oa, vb], l2_aaaa)
-    lhe2e2cc_abbaabaa +=  1.00 * einsum('kial,ljcb->abjiclk', g_aaaa[oa, oa, va, oa], l2_abab)
-    lhe2e2cc_abbaabaa += -1.00 * einsum('kicl,ljab->abjiclk', g_aaaa[oa, oa, va, oa], l2_abab)
-    lhe2e2cc_abbaabaa += -1.00 * einsum('kdab,ijcd->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    lhe2e2cc_abbaabaa += -1.00 * einsum('idcb,kjad->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    lhe2e2cc_abbaabaa +=  1.00 * einsum('kdcb,ijad->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    lhe2e2cc_abbaabaa += -1.00 * einsum('ka,ijcb->abjick', f_aa[oa, va], l2_abab)
-    lhe2e2cc_abbaabaa += -1.00 * einsum('ic,kjab->abjick', f_aa[oa, va], l2_abab)
-    return lhe2e2cc_abbaabaa
+    lhe2e2cc_abbaabab =  1.00 * einsum('ljab,ikcd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbaabab +=  1.00 * einsum('ikab,ljcd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbaabab += -1.00 * einsum('lkab,ijcd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate =  1.00 * einsum('ijad,lkcb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbaabab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_abbaabab += -1.00 * einsum('ikad,ljcb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbaabab += -1.00 * einsum('liac,kjbd->abjicdlk', g_aaaa[oa, oa, va, va], l2_bbbb)
+    lhe2e2cc_abbaabab +=  1.00 * einsum('lkad,ijcb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate =  1.00 * einsum('ijcb,lkad->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbaabab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_abbaabab += -1.00 * einsum('kjbd,liac->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_aaaa)
+    lhe2e2cc_abbaabab += -1.00 * einsum('ikcb,ljad->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbaabab +=  1.00 * einsum('lkcb,ijad->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate = -1.00 * einsum('ijcd,lkab->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbaabab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_abbaabab +=  1.00 * einsum('ikcd,ljab->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    return lhe2e2cc_abbaabab
 
 
 def get_lhe2e2cc_abbaabba(
@@ -1538,26 +1321,22 @@ def get_lhe2e2cc_abbaabba(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    lhe2e2cc_abbaabba = -1.00 * einsum('kjab,ic->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    contracted_intermediate = -1.00 * einsum('ijcb,ka->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_abbaabba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abjkci', contracted_intermediate) 
-    lhe2e2cc_abbaabba += -1.00 * einsum('kiac,jb->abjick', g_aaaa[oa, oa, va, va], l1_bb)
-    lhe2e2cc_abbaabba +=  1.00 * einsum('kjal,ilcb->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    contracted_intermediate =  1.00 * einsum('ijcl,klab->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    lhe2e2cc_abbaabba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abjkcli', contracted_intermediate) 
-    lhe2e2cc_abbaabba += -1.00 * einsum('kdab,ijcd->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    lhe2e2cc_abbaabba += -1.00 * einsum('idcb,kjad->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    lhe2e2cc_abbaabba +=  1.00 * einsum('kdcb,ijad->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    lhe2e2cc_abbaabba +=  1.00 * einsum('klab,dl,ijcd->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abbaabba +=  1.00 * einsum('ilcb,dl,kjad->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abbaabba +=  1.00 * einsum('kjad,dl,ilcb->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abbaabba += -1.00 * einsum('klad,dl,ijcb->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abbaabba += -1.00 * einsum('klcb,dl,ijad->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    contracted_intermediate =  1.00 * einsum('ijcd,dl,klab->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
+    lhe2e2cc_abbaabba = -1.00 * einsum('kjab,ilcd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbaabba += -1.00 * einsum('ilab,kjcd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbaabba +=  1.00 * einsum('klab,ijcd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbaabba += -1.00 * einsum('ijad,klcb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbaabba +=  1.00 * einsum('kjad,ilcb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbaabba +=  1.00 * einsum('kiac,ljbd->abjicdlk', g_aaaa[oa, oa, va, va], l2_bbbb)
+    contracted_intermediate =  1.00 * einsum('ilad,kjcb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
     lhe2e2cc_abbaabba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate) 
-    lhe2e2cc_abbaabba += -1.00 * einsum('ilcd,dl,kjab->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abbaabba += -1.00 * einsum('ka,ijcb->abjick', f_aa[oa, va], l2_abab)
-    lhe2e2cc_abbaabba += -1.00 * einsum('ic,kjab->abjick', f_aa[oa, va], l2_abab)
+    lhe2e2cc_abbaabba += -1.00 * einsum('ijcb,klad->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbaabba +=  1.00 * einsum('ljbd,kiac->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_aaaa)
+    lhe2e2cc_abbaabba +=  1.00 * einsum('kjcb,ilad->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate =  1.00 * einsum('ilcb,kjad->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbaabba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate) 
+    lhe2e2cc_abbaabba +=  1.00 * einsum('ijcd,klab->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbaabba += -1.00 * einsum('kjcd,ilab->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbaabba += -1.00 * einsum('ilcd,kjab->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
     return lhe2e2cc_abbaabba
 
 
@@ -1590,30 +1369,26 @@ def get_lhe2e2cc_abbabaab(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    lhe2e2cc_abbabaab = -1.00 * einsum('ikab,jc->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_abbabaab += -1.00 * einsum('ijac,kb->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_abbabaab += -1.00 * einsum('kjbc,ia->abjick', g_bbbb[ob, ob, vb, vb], l1_aa)
-    lhe2e2cc_abbabaab +=  1.00 * einsum('ikac,jb->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_abbabaab +=  1.00 * einsum('iklb,ljac->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    lhe2e2cc_abbabaab +=  1.00 * einsum('ijlc,lkab->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    lhe2e2cc_abbabaab += -1.00 * einsum('iklc,ljab->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    contracted_intermediate = -1.00 * einsum('dkab,ijdc->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    lhe2e2cc_abbabaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->acjibdk', contracted_intermediate) 
-    lhe2e2cc_abbabaab += -1.00 * einsum('djac,ikdb->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    contracted_intermediate =  1.00 * einsum('lkab,dl,ijdc->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abbabaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->acjibdlk', contracted_intermediate) 
-    lhe2e2cc_abbabaab +=  1.00 * einsum('ljac,dl,ikdb->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abbabaab +=  1.00 * einsum('ikdb,dl,ljac->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abbabaab += -1.00 * einsum('lkdb,dl,ijac->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abbabaab +=  1.00 * einsum('ijdc,dl,lkab->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abbabaab += -1.00 * einsum('ljdc,dl,ikab->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abbabaab += -1.00 * einsum('ikdc,dl,ljab->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abbabaab += -1.00 * einsum('kb,ijac->abjick', f_bb[ob, vb], l2_abab)
-    lhe2e2cc_abbabaab += -1.00 * einsum('jc,ikab->abjick', f_bb[ob, vb], l2_abab)
+    lhe2e2cc_abbabaab = -1.00 * einsum('ljab,ikdc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbabaab += -1.00 * einsum('ikab,ljdc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbabaab +=  1.00 * einsum('lkab,ijdc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate = -1.00 * einsum('ijac,lkdb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbabaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_abbabaab +=  1.00 * einsum('ikac,ljdb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbabaab +=  1.00 * einsum('liad,kjbc->abjicdlk', g_aaaa[oa, oa, va, va], l2_bbbb)
+    lhe2e2cc_abbabaab += -1.00 * einsum('lkac,ijdb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate = -1.00 * einsum('ijdb,lkac->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbabaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_abbabaab +=  1.00 * einsum('kjbc,liad->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_aaaa)
+    lhe2e2cc_abbabaab +=  1.00 * einsum('ikdb,ljac->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbabaab += -1.00 * einsum('lkdb,ijac->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate =  1.00 * einsum('ijdc,lkab->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbabaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_abbabaab += -1.00 * einsum('ikdc,ljab->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
     return lhe2e2cc_abbabaab
 
 
-def get_lhe2e2cc_abbababb(
+def get_lhe2e2cc_abbababa(
     uhf_scf_data: Intermediates,
     uhf_ccsd_data: UHF_CCSD_Data,
 ) -> NDArray:
@@ -1642,63 +1417,23 @@ def get_lhe2e2cc_abbababb(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    lhe2e2cc_abbababb = -1.00 * einsum('ikab,jc->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_abbababb += -1.00 * einsum('ijac,kb->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_abbababb += -1.00 * einsum('kjbc,ia->abjick', g_bbbb[ob, ob, vb, vb], l1_aa)
-    lhe2e2cc_abbababb +=  1.00 * einsum('ikac,jb->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_abbababb +=  1.00 * einsum('kjbl,ilac->abjiclk', g_bbbb[ob, ob, vb, ob], l2_abab)
-    lhe2e2cc_abbababb += -1.00 * einsum('ikal,jlbc->abjiclk', g_abab[oa, ob, va, ob], l2_bbbb)
-    lhe2e2cc_abbababb += -1.00 * einsum('kjcl,ilab->abjiclk', g_bbbb[ob, ob, vb, ob], l2_abab)
-    contracted_intermediate = -1.00 * einsum('dkab,ijdc->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    lhe2e2cc_abbababb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->acjibdk', contracted_intermediate) 
-    lhe2e2cc_abbababb += -1.00 * einsum('djac,ikdb->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    lhe2e2cc_abbababb += -1.00 * einsum('kb,ijac->abjick', f_bb[ob, vb], l2_abab)
-    lhe2e2cc_abbababb += -1.00 * einsum('jc,ikab->abjick', f_bb[ob, vb], l2_abab)
-    return lhe2e2cc_abbababb
-
-
-def get_lhe2e2cc_abbabbab(
-    uhf_scf_data: Intermediates,
-    uhf_ccsd_data: UHF_CCSD_Data,
-) -> NDArray:
-    """ tensor_subscripts: ('a', 'b', 'j', 'i', 'c', 'd', 'l', 'k') """
-    f_aa = uhf_scf_data.f_aa
-    f_bb = uhf_scf_data.f_bb
-    g_aaaa = uhf_scf_data.g_aaaa
-    g_abab = uhf_scf_data.g_abab
-    g_bbbb = uhf_scf_data.g_bbbb
-    kd_aa =  uhf_scf_data.identity_aa
-    kd_bb =  uhf_scf_data.identity_bb
-    va = uhf_scf_data.va
-    vb = uhf_scf_data.vb
-    oa = uhf_scf_data.oa
-    ob = uhf_scf_data.ob
-    t1_aa = uhf_ccsd_data.t1_aa
-    t1_bb = uhf_ccsd_data.t1_bb
-    t2_aaaa = uhf_ccsd_data.t2_aaaa
-    t2_abab = uhf_ccsd_data.t2_abab
-    t2_bbbb = uhf_ccsd_data.t2_bbbb
-    if uhf_ccsd_data.lmbda is None:
-        raise RuntimeError("Lambda amplitues missing in UHF_CCSD_Data")
-    l1_aa = uhf_ccsd_data.lmbda.l1_aa
-    l1_bb = uhf_ccsd_data.lmbda.l1_bb
-    l2_aaaa = uhf_ccsd_data.lmbda.l2_aaaa
-    l2_abab = uhf_ccsd_data.lmbda.l2_abab
-    l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
-    
-    lhe2e2cc_abbabbab = -1.00 * einsum('ikab,jc->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_abbabbab += -1.00 * einsum('ijac,kb->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_abbabbab += -1.00 * einsum('kjbc,ia->abjick', g_bbbb[ob, ob, vb, vb], l1_aa)
-    lhe2e2cc_abbabbab +=  1.00 * einsum('ikac,jb->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_abbabbab +=  1.00 * einsum('iklb,ljac->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    lhe2e2cc_abbabbab +=  1.00 * einsum('ijlc,lkab->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    lhe2e2cc_abbabbab += -1.00 * einsum('iklc,ljab->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    lhe2e2cc_abbabbab +=  1.00 * einsum('jdbc,ikad->abjicdk', g_bbbb[ob, vb, vb, vb], l2_abab)
-    lhe2e2cc_abbabbab +=  1.00 * einsum('idac,kjdb->abjicdk', g_abab[oa, vb, va, vb], l2_bbbb)
-    lhe2e2cc_abbabbab += -1.00 * einsum('kdbc,ijad->abjicdk', g_bbbb[ob, vb, vb, vb], l2_abab)
-    lhe2e2cc_abbabbab += -1.00 * einsum('kb,ijac->abjick', f_bb[ob, vb], l2_abab)
-    lhe2e2cc_abbabbab += -1.00 * einsum('jc,ikab->abjick', f_bb[ob, vb], l2_abab)
-    return lhe2e2cc_abbabbab
+    lhe2e2cc_abbababa =  1.00 * einsum('kjab,ildc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbababa +=  1.00 * einsum('ilab,kjdc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbababa += -1.00 * einsum('klab,ijdc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbababa +=  1.00 * einsum('ijac,kldb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbababa += -1.00 * einsum('kjac,ildb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbababa += -1.00 * einsum('kiad,ljbc->abjicdlk', g_aaaa[oa, oa, va, va], l2_bbbb)
+    contracted_intermediate = -1.00 * einsum('ilac,kjdb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbababa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate) 
+    lhe2e2cc_abbababa +=  1.00 * einsum('ijdb,klac->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbababa += -1.00 * einsum('ljbc,kiad->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_aaaa)
+    lhe2e2cc_abbababa += -1.00 * einsum('kjdb,ilac->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate = -1.00 * einsum('ildb,kjac->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbababa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate) 
+    lhe2e2cc_abbababa += -1.00 * einsum('ijdc,klab->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbababa +=  1.00 * einsum('kjdc,ilab->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbababa +=  1.00 * einsum('ildc,kjab->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    return lhe2e2cc_abbababa
 
 
 def get_lhe2e2cc_abbabbbb(
@@ -1730,27 +1465,73 @@ def get_lhe2e2cc_abbabbbb(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    lhe2e2cc_abbabbbb = -1.00 * einsum('ikab,jc->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_abbabbbb += -1.00 * einsum('ijac,kb->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_abbabbbb += -1.00 * einsum('kjbc,ia->abjick', g_bbbb[ob, ob, vb, vb], l1_aa)
-    lhe2e2cc_abbabbbb +=  1.00 * einsum('ikac,jb->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_abbabbbb +=  1.00 * einsum('kjbl,ilac->abjiclk', g_bbbb[ob, ob, vb, ob], l2_abab)
-    lhe2e2cc_abbabbbb += -1.00 * einsum('ikal,jlbc->abjiclk', g_abab[oa, ob, va, ob], l2_bbbb)
-    lhe2e2cc_abbabbbb += -1.00 * einsum('kjcl,ilab->abjiclk', g_bbbb[ob, ob, vb, ob], l2_abab)
-    lhe2e2cc_abbabbbb +=  1.00 * einsum('jdbc,ikad->abjicdk', g_bbbb[ob, vb, vb, vb], l2_abab)
-    lhe2e2cc_abbabbbb +=  1.00 * einsum('idac,kjdb->abjicdk', g_abab[oa, vb, va, vb], l2_bbbb)
-    lhe2e2cc_abbabbbb += -1.00 * einsum('kdbc,ijad->abjicdk', g_bbbb[ob, vb, vb, vb], l2_abab)
-    lhe2e2cc_abbabbbb +=  1.00 * einsum('ljbc,dl,ikad->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abbabbbb +=  1.00 * einsum('ilac,dl,kjbd->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abbabbbb +=  1.00 * einsum('kjbd,dl,ilac->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abbabbbb +=  1.00 * einsum('ikad,dl,ljbc->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abbabbbb +=  1.00 * einsum('lkbd,dl,ijac->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abbabbbb += -1.00 * einsum('lkbc,dl,ijad->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abbabbbb += -1.00 * einsum('kjcd,dl,ilab->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abbabbbb +=  1.00 * einsum('ljcd,dl,ikab->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abbabbbb += -1.00 * einsum('kb,ijac->abjick', f_bb[ob, vb], l2_abab)
-    lhe2e2cc_abbabbbb += -1.00 * einsum('jc,ikab->abjick', f_bb[ob, vb], l2_abab)
+    contracted_intermediate = -1.00 * einsum('ilab,kjcd->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_abbabbbb =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjicdkl', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('ijac,klbd->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_abbabbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('ikac,ljbd->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_abbabbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('ilac,kjbd->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_abbabbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('ljbc,ikad->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_abbabbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('kjbc,ilad->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_abbabbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('lkbc,ijad->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_abbabbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    lhe2e2cc_abbabbbb +=  1.00 * einsum('ljcd,ikab->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_abbabbbb += -1.00 * einsum('kjcd,ilab->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
     return lhe2e2cc_abbabbbb
+
+
+def get_lhe2e2cc_abbbabaa(
+    uhf_scf_data: Intermediates,
+    uhf_ccsd_data: UHF_CCSD_Data,
+) -> NDArray:
+    """ tensor_subscripts: ('a', 'b', 'j', 'i', 'c', 'd', 'l', 'k') """
+    f_aa = uhf_scf_data.f_aa
+    f_bb = uhf_scf_data.f_bb
+    g_aaaa = uhf_scf_data.g_aaaa
+    g_abab = uhf_scf_data.g_abab
+    g_bbbb = uhf_scf_data.g_bbbb
+    kd_aa =  uhf_scf_data.identity_aa
+    kd_bb =  uhf_scf_data.identity_bb
+    va = uhf_scf_data.va
+    vb = uhf_scf_data.vb
+    oa = uhf_scf_data.oa
+    ob = uhf_scf_data.ob
+    t1_aa = uhf_ccsd_data.t1_aa
+    t1_bb = uhf_ccsd_data.t1_bb
+    t2_aaaa = uhf_ccsd_data.t2_aaaa
+    t2_abab = uhf_ccsd_data.t2_abab
+    t2_bbbb = uhf_ccsd_data.t2_bbbb
+    if uhf_ccsd_data.lmbda is None:
+        raise RuntimeError("Lambda amplitues missing in UHF_CCSD_Data")
+    l1_aa = uhf_ccsd_data.lmbda.l1_aa
+    l1_bb = uhf_ccsd_data.lmbda.l1_bb
+    l2_aaaa = uhf_ccsd_data.lmbda.l2_aaaa
+    l2_abab = uhf_ccsd_data.lmbda.l2_abab
+    l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
+    
+    contracted_intermediate = -1.00 * einsum('ljab,kicd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbbabaa =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjicdkl', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('liab,kjcd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbbabaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjicdkl', contracted_intermediate) 
+    lhe2e2cc_abbbabaa +=  1.00 * einsum('ljad,kicb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate = -1.00 * einsum('kjad,licb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbbabaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
+    lhe2e2cc_abbbabaa += -1.00 * einsum('liad,kjcb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbbabaa +=  1.00 * einsum('lkac,ijbd->abjicdlk', g_aaaa[oa, oa, va, va], l2_bbbb)
+    lhe2e2cc_abbbabaa += -1.00 * einsum('ijbd,klac->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_aaaa)
+    lhe2e2cc_abbbabaa +=  1.00 * einsum('ljcb,kiad->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate = -1.00 * einsum('kjcb,liad->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbbabaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
+    lhe2e2cc_abbbabaa += -1.00 * einsum('licb,kjad->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbbabaa += -1.00 * einsum('ljcd,kiab->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate =  1.00 * einsum('kjcd,liab->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbbabaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
+    lhe2e2cc_abbbabaa +=  1.00 * einsum('licd,kjab->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    return lhe2e2cc_abbbabaa
 
 
 def get_lhe2e2cc_abbbbaaa(
@@ -1782,33 +1563,28 @@ def get_lhe2e2cc_abbbbaaa(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    contracted_intermediate = -1.00 * einsum('kjab,ic->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_abbbbaaa =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
-    lhe2e2cc_abbbbaaa +=  1.00 * einsum('ijbc,ka->abjick', g_bbbb[ob, ob, vb, vb], l1_aa)
-    lhe2e2cc_abbbbaaa +=  1.00 * einsum('kjac,ib->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_abbbbaaa += -1.00 * einsum('kiac,jb->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    contracted_intermediate =  1.00 * einsum('kjlb,liac->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    lhe2e2cc_abbbbaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abijclk', contracted_intermediate) 
-    lhe2e2cc_abbbbaaa += -1.00 * einsum('kjlc,liab->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    lhe2e2cc_abbbbaaa +=  1.00 * einsum('kilc,ljab->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    contracted_intermediate =  1.00 * einsum('djac,kidb->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    lhe2e2cc_abbbbaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->abijcdk', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('ljac,dl,kidb->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
+    contracted_intermediate =  1.00 * einsum('ljab,kidc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbbbaaa =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjicdkl', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('liab,kjdc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbbbaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjicdkl', contracted_intermediate) 
+    lhe2e2cc_abbbbaaa += -1.00 * einsum('ljac,kidb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate =  1.00 * einsum('kjac,lidb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
     lhe2e2cc_abbbbaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('kjdb,dl,liac->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
+    lhe2e2cc_abbbbaaa +=  1.00 * einsum('liac,kjdb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbbbaaa += -1.00 * einsum('lkad,ijbc->abjicdlk', g_aaaa[oa, oa, va, va], l2_bbbb)
+    lhe2e2cc_abbbbaaa +=  1.00 * einsum('ijbc,klad->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_aaaa)
+    lhe2e2cc_abbbbaaa += -1.00 * einsum('ljdb,kiac->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate =  1.00 * einsum('kjdb,liac->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
     lhe2e2cc_abbbbaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
-    lhe2e2cc_abbbbaaa += -1.00 * einsum('lkad,dl,ijbc->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abbbbaaa += -1.00 * einsum('kjdc,dl,liab->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    contracted_intermediate =  1.00 * einsum('ljdc,dl,kiab->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
+    lhe2e2cc_abbbbaaa +=  1.00 * einsum('lidb,kjac->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_abbbbaaa +=  1.00 * einsum('ljdc,kiab->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate = -1.00 * einsum('kjdc,liab->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
     lhe2e2cc_abbbbaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
-    lhe2e2cc_abbbbaaa +=  1.00 * einsum('kidc,dl,ljab->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abbbbaaa +=  1.00 * einsum('ka,ijbc->abjick', f_aa[oa, va], l2_bbbb)
-    contracted_intermediate =  1.00 * einsum('jc,kiab->abjick', f_bb[ob, vb], l2_abab)
-    lhe2e2cc_abbbbaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
+    lhe2e2cc_abbbbaaa += -1.00 * einsum('lidc,kjab->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
     return lhe2e2cc_abbbbaaa
 
 
-def get_lhe2e2cc_abbbbaba(
+def get_lhe2e2cc_abbbbbab(
     uhf_scf_data: Intermediates,
     uhf_ccsd_data: UHF_CCSD_Data,
 ) -> NDArray:
@@ -1837,68 +1613,21 @@ def get_lhe2e2cc_abbbbaba(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    contracted_intermediate = -1.00 * einsum('kjab,ic->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_abbbbaba =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
-    lhe2e2cc_abbbbaba +=  1.00 * einsum('ijbc,ka->abjick', g_bbbb[ob, ob, vb, vb], l1_aa)
-    lhe2e2cc_abbbbaba +=  1.00 * einsum('kjac,ib->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_abbbbaba += -1.00 * einsum('kiac,jb->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    contracted_intermediate = -1.00 * einsum('kjal,ilbc->abjiclk', g_abab[oa, ob, va, ob], l2_bbbb)
-    lhe2e2cc_abbbbaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abijclk', contracted_intermediate) 
-    lhe2e2cc_abbbbaba +=  1.00 * einsum('ijcl,klab->abjiclk', g_bbbb[ob, ob, vb, ob], l2_abab)
-    contracted_intermediate =  1.00 * einsum('djac,kidb->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    lhe2e2cc_abbbbaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->abijcdk', contracted_intermediate) 
-    lhe2e2cc_abbbbaba +=  1.00 * einsum('ka,ijbc->abjick', f_aa[oa, va], l2_bbbb)
-    contracted_intermediate =  1.00 * einsum('jc,kiab->abjick', f_bb[ob, vb], l2_abab)
-    lhe2e2cc_abbbbaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
-    return lhe2e2cc_abbbbaba
-
-
-def get_lhe2e2cc_abbbbbaa(
-    uhf_scf_data: Intermediates,
-    uhf_ccsd_data: UHF_CCSD_Data,
-) -> NDArray:
-    """ tensor_subscripts: ('a', 'b', 'j', 'i', 'c', 'd', 'l', 'k') """
-    f_aa = uhf_scf_data.f_aa
-    f_bb = uhf_scf_data.f_bb
-    g_aaaa = uhf_scf_data.g_aaaa
-    g_abab = uhf_scf_data.g_abab
-    g_bbbb = uhf_scf_data.g_bbbb
-    kd_aa =  uhf_scf_data.identity_aa
-    kd_bb =  uhf_scf_data.identity_bb
-    va = uhf_scf_data.va
-    vb = uhf_scf_data.vb
-    oa = uhf_scf_data.oa
-    ob = uhf_scf_data.ob
-    t1_aa = uhf_ccsd_data.t1_aa
-    t1_bb = uhf_ccsd_data.t1_bb
-    t2_aaaa = uhf_ccsd_data.t2_aaaa
-    t2_abab = uhf_ccsd_data.t2_abab
-    t2_bbbb = uhf_ccsd_data.t2_bbbb
-    if uhf_ccsd_data.lmbda is None:
-        raise RuntimeError("Lambda amplitues missing in UHF_CCSD_Data")
-    l1_aa = uhf_ccsd_data.lmbda.l1_aa
-    l1_bb = uhf_ccsd_data.lmbda.l1_bb
-    l2_aaaa = uhf_ccsd_data.lmbda.l2_aaaa
-    l2_abab = uhf_ccsd_data.lmbda.l2_abab
-    l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
-    
-    contracted_intermediate = -1.00 * einsum('kjab,ic->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_abbbbbaa =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
-    lhe2e2cc_abbbbbaa +=  1.00 * einsum('ijbc,ka->abjick', g_bbbb[ob, ob, vb, vb], l1_aa)
-    lhe2e2cc_abbbbbaa +=  1.00 * einsum('kjac,ib->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_abbbbbaa += -1.00 * einsum('kiac,jb->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    contracted_intermediate =  1.00 * einsum('kjlb,liac->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    lhe2e2cc_abbbbbaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abijclk', contracted_intermediate) 
-    lhe2e2cc_abbbbbaa += -1.00 * einsum('kjlc,liab->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    lhe2e2cc_abbbbbaa +=  1.00 * einsum('kilc,ljab->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    contracted_intermediate =  1.00 * einsum('kdab,ijdc->abjicdk', g_abab[oa, vb, va, vb], l2_bbbb)
-    lhe2e2cc_abbbbbaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->acjibdk', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('jdbc,kiad->abjicdk', g_bbbb[ob, vb, vb, vb], l2_abab)
-    lhe2e2cc_abbbbbaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->abijcdk', contracted_intermediate) 
-    lhe2e2cc_abbbbbaa +=  1.00 * einsum('ka,ijbc->abjick', f_aa[oa, va], l2_bbbb)
-    contracted_intermediate =  1.00 * einsum('jc,kiab->abjick', f_bb[ob, vb], l2_abab)
-    lhe2e2cc_abbbbbaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
-    return lhe2e2cc_abbbbbaa
+    lhe2e2cc_abbbbbab = -1.00 * einsum('ljab,kicd->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_abbbbbab +=  1.00 * einsum('liab,kjcd->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_abbbbbab += -1.00 * einsum('lkab,ijcd->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    contracted_intermediate =  1.00 * einsum('ljac,kibd->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_abbbbbab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('liac,kjbd->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_abbbbbab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjkdcli', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('ijbc,lkad->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_abbbbbab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('kjbc,liad->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_abbbbbab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abijdclk', contracted_intermediate) 
+    lhe2e2cc_abbbbbab += -1.00 * einsum('ijcd,lkab->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    contracted_intermediate =  1.00 * einsum('kjcd,liab->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_abbbbbab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
+    return lhe2e2cc_abbbbbab
 
 
 def get_lhe2e2cc_abbbbbba(
@@ -1930,31 +1659,20 @@ def get_lhe2e2cc_abbbbbba(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    contracted_intermediate = -1.00 * einsum('kjab,ic->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_abbbbbba =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
-    lhe2e2cc_abbbbbba +=  1.00 * einsum('ijbc,ka->abjick', g_bbbb[ob, ob, vb, vb], l1_aa)
-    lhe2e2cc_abbbbbba +=  1.00 * einsum('kjac,ib->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_abbbbbba += -1.00 * einsum('kiac,jb->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    contracted_intermediate = -1.00 * einsum('kjal,ilbc->abjiclk', g_abab[oa, ob, va, ob], l2_bbbb)
-    lhe2e2cc_abbbbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abijclk', contracted_intermediate) 
-    lhe2e2cc_abbbbbba +=  1.00 * einsum('ijcl,klab->abjiclk', g_bbbb[ob, ob, vb, ob], l2_abab)
-    contracted_intermediate =  1.00 * einsum('kdab,ijdc->abjicdk', g_abab[oa, vb, va, vb], l2_bbbb)
-    lhe2e2cc_abbbbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->acjibdk', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('jdbc,kiad->abjicdk', g_bbbb[ob, vb, vb, vb], l2_abab)
-    lhe2e2cc_abbbbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->abijcdk', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('klab,dl,ijcd->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abbbbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->acjibdlk', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('ljbc,dl,kiad->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abbbbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('kjad,dl,libc->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abbbbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
-    lhe2e2cc_abbbbbba +=  1.00 * einsum('klad,dl,ijbc->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abbbbbba +=  1.00 * einsum('ijcd,dl,klab->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    contracted_intermediate = -1.00 * einsum('ljcd,dl,kiab->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_abbbbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
-    lhe2e2cc_abbbbbba +=  1.00 * einsum('ka,ijbc->abjick', f_aa[oa, va], l2_bbbb)
-    contracted_intermediate =  1.00 * einsum('jc,kiab->abjick', f_bb[ob, vb], l2_abab)
-    lhe2e2cc_abbbbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
+    lhe2e2cc_abbbbbba =  1.00 * einsum('kjab,licd->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_abbbbbba += -1.00 * einsum('kiab,ljcd->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_abbbbbba +=  1.00 * einsum('klab,ijcd->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    contracted_intermediate = -1.00 * einsum('kjac,libd->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_abbbbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abijdclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('klac,ijbd->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_abbbbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('ijbc,klad->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_abbbbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjldcik', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('libc,kjad->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_abbbbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('ijcd,klab->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_abbbbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_abbbbbba +=  1.00 * einsum('licd,kjab->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
     return lhe2e2cc_abbbbbba
 
 
@@ -1987,35 +1705,24 @@ def get_lhe2e2cc_baaaaaab(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    contracted_intermediate = -1.00 * einsum('jkba,ic->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_baaaaaab =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
-    lhe2e2cc_baaaaaab +=  1.00 * einsum('ijbc,ka->abjick', g_aaaa[oa, oa, va, va], l1_bb)
-    lhe2e2cc_baaaaaab +=  1.00 * einsum('jkca,ib->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_baaaaaab += -1.00 * einsum('ikca,jb->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    contracted_intermediate = -1.00 * einsum('jkla,ilbc->abjiclk', g_abab[oa, ob, oa, vb], l2_aaaa)
-    lhe2e2cc_baaaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abijclk', contracted_intermediate) 
-    lhe2e2cc_baaaaaab +=  1.00 * einsum('ijcl,lkba->abjiclk', g_aaaa[oa, oa, va, oa], l2_abab)
-    contracted_intermediate =  1.00 * einsum('dkba,ijdc->abjicdk', g_abab[va, ob, va, vb], l2_aaaa)
-    lhe2e2cc_baaaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->acjibdk', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('jdbc,ikda->abjicdk', g_aaaa[oa, va, va, va], l2_abab)
-    lhe2e2cc_baaaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->abijcdk', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('lkba,dl,ijcd->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_baaaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->acjibdlk', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('ljbc,dl,ikda->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_baaaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('jkda,dl,libc->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_baaaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
-    lhe2e2cc_baaaaaab +=  1.00 * einsum('lkda,dl,ijbc->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_baaaaaab +=  1.00 * einsum('ijcd,dl,lkba->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    contracted_intermediate = -1.00 * einsum('ljcd,dl,ikba->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_baaaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
-    lhe2e2cc_baaaaaab +=  1.00 * einsum('ka,ijbc->abjick', f_bb[ob, vb], l2_aaaa)
-    contracted_intermediate =  1.00 * einsum('jc,ikba->abjick', f_aa[oa, va], l2_abab)
-    lhe2e2cc_baaaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
+    lhe2e2cc_baaaaaab =  1.00 * einsum('jkba,licd->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_baaaaaab += -1.00 * einsum('ikba,ljcd->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_baaaaaab +=  1.00 * einsum('lkba,ijcd->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    contracted_intermediate = -1.00 * einsum('jkca,libd->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_baaaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abijdclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('lkca,ijbd->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_baaaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('ijbc,lkda->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_baaaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjldcik', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('libc,jkda->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_baaaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('ijcd,lkba->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_baaaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_baaaaaab +=  1.00 * einsum('licd,jkba->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
     return lhe2e2cc_baaaaaab
 
 
-def get_lhe2e2cc_baaaaabb(
+def get_lhe2e2cc_baaaaaba(
     uhf_scf_data: Intermediates,
     uhf_ccsd_data: UHF_CCSD_Data,
 ) -> NDArray:
@@ -2044,68 +1751,21 @@ def get_lhe2e2cc_baaaaabb(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    contracted_intermediate = -1.00 * einsum('jkba,ic->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_baaaaabb =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
-    lhe2e2cc_baaaaabb +=  1.00 * einsum('ijbc,ka->abjick', g_aaaa[oa, oa, va, va], l1_bb)
-    lhe2e2cc_baaaaabb +=  1.00 * einsum('jkca,ib->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_baaaaabb += -1.00 * einsum('ikca,jb->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    contracted_intermediate =  1.00 * einsum('jkbl,ilca->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    lhe2e2cc_baaaaabb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abijclk', contracted_intermediate) 
-    lhe2e2cc_baaaaabb += -1.00 * einsum('jkcl,ilba->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    lhe2e2cc_baaaaabb +=  1.00 * einsum('ikcl,jlba->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    contracted_intermediate =  1.00 * einsum('dkba,ijdc->abjicdk', g_abab[va, ob, va, vb], l2_aaaa)
-    lhe2e2cc_baaaaabb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->acjibdk', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('jdbc,ikda->abjicdk', g_aaaa[oa, va, va, va], l2_abab)
-    lhe2e2cc_baaaaabb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->abijcdk', contracted_intermediate) 
-    lhe2e2cc_baaaaabb +=  1.00 * einsum('ka,ijbc->abjick', f_bb[ob, vb], l2_aaaa)
-    contracted_intermediate =  1.00 * einsum('jc,ikba->abjick', f_aa[oa, va], l2_abab)
-    lhe2e2cc_baaaaabb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
-    return lhe2e2cc_baaaaabb
-
-
-def get_lhe2e2cc_baaaabab(
-    uhf_scf_data: Intermediates,
-    uhf_ccsd_data: UHF_CCSD_Data,
-) -> NDArray:
-    """ tensor_subscripts: ('a', 'b', 'j', 'i', 'c', 'd', 'l', 'k') """
-    f_aa = uhf_scf_data.f_aa
-    f_bb = uhf_scf_data.f_bb
-    g_aaaa = uhf_scf_data.g_aaaa
-    g_abab = uhf_scf_data.g_abab
-    g_bbbb = uhf_scf_data.g_bbbb
-    kd_aa =  uhf_scf_data.identity_aa
-    kd_bb =  uhf_scf_data.identity_bb
-    va = uhf_scf_data.va
-    vb = uhf_scf_data.vb
-    oa = uhf_scf_data.oa
-    ob = uhf_scf_data.ob
-    t1_aa = uhf_ccsd_data.t1_aa
-    t1_bb = uhf_ccsd_data.t1_bb
-    t2_aaaa = uhf_ccsd_data.t2_aaaa
-    t2_abab = uhf_ccsd_data.t2_abab
-    t2_bbbb = uhf_ccsd_data.t2_bbbb
-    if uhf_ccsd_data.lmbda is None:
-        raise RuntimeError("Lambda amplitues missing in UHF_CCSD_Data")
-    l1_aa = uhf_ccsd_data.lmbda.l1_aa
-    l1_bb = uhf_ccsd_data.lmbda.l1_bb
-    l2_aaaa = uhf_ccsd_data.lmbda.l2_aaaa
-    l2_abab = uhf_ccsd_data.lmbda.l2_abab
-    l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
-    
-    contracted_intermediate = -1.00 * einsum('jkba,ic->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_baaaabab =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
-    lhe2e2cc_baaaabab +=  1.00 * einsum('ijbc,ka->abjick', g_aaaa[oa, oa, va, va], l1_bb)
-    lhe2e2cc_baaaabab +=  1.00 * einsum('jkca,ib->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_baaaabab += -1.00 * einsum('ikca,jb->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    contracted_intermediate = -1.00 * einsum('jkla,ilbc->abjiclk', g_abab[oa, ob, oa, vb], l2_aaaa)
-    lhe2e2cc_baaaabab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abijclk', contracted_intermediate) 
-    lhe2e2cc_baaaabab +=  1.00 * einsum('ijcl,lkba->abjiclk', g_aaaa[oa, oa, va, oa], l2_abab)
-    contracted_intermediate =  1.00 * einsum('jdca,ikbd->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    lhe2e2cc_baaaabab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->abijcdk', contracted_intermediate) 
-    lhe2e2cc_baaaabab +=  1.00 * einsum('ka,ijbc->abjick', f_bb[ob, vb], l2_aaaa)
-    contracted_intermediate =  1.00 * einsum('jc,ikba->abjick', f_aa[oa, va], l2_abab)
-    lhe2e2cc_baaaabab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
-    return lhe2e2cc_baaaabab
+    lhe2e2cc_baaaaaba = -1.00 * einsum('jlba,kicd->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_baaaaaba +=  1.00 * einsum('ilba,kjcd->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_baaaaaba += -1.00 * einsum('klba,ijcd->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    contracted_intermediate =  1.00 * einsum('jlca,kibd->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_baaaaaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('ilca,kjbd->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_baaaaaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjkdcli', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('ijbc,klda->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_baaaaaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('kjbc,ilda->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_baaaaaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abijdclk', contracted_intermediate) 
+    lhe2e2cc_baaaaaba += -1.00 * einsum('ijcd,klba->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    contracted_intermediate =  1.00 * einsum('kjcd,ilba->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_baaaaaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
+    return lhe2e2cc_baaaaaba
 
 
 def get_lhe2e2cc_baaaabbb(
@@ -2137,30 +1797,75 @@ def get_lhe2e2cc_baaaabbb(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    contracted_intermediate = -1.00 * einsum('jkba,ic->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_baaaabbb =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
-    lhe2e2cc_baaaabbb +=  1.00 * einsum('ijbc,ka->abjick', g_aaaa[oa, oa, va, va], l1_bb)
-    lhe2e2cc_baaaabbb +=  1.00 * einsum('jkca,ib->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_baaaabbb += -1.00 * einsum('ikca,jb->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    contracted_intermediate =  1.00 * einsum('jkbl,ilca->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    lhe2e2cc_baaaabbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abijclk', contracted_intermediate) 
-    lhe2e2cc_baaaabbb += -1.00 * einsum('jkcl,ilba->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    lhe2e2cc_baaaabbb +=  1.00 * einsum('ikcl,jlba->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    contracted_intermediate =  1.00 * einsum('jdca,ikbd->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    lhe2e2cc_baaaabbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->abijcdk', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('jlca,dl,ikbd->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
+    contracted_intermediate =  1.00 * einsum('jlba,ikcd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baaaabbb =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjicdkl', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('ilba,jkcd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baaaabbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjicdkl', contracted_intermediate) 
+    lhe2e2cc_baaaabbb += -1.00 * einsum('jlca,ikbd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate =  1.00 * einsum('jkca,ilbd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
     lhe2e2cc_baaaabbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('jkbd,dl,ilca->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
+    lhe2e2cc_baaaabbb +=  1.00 * einsum('ilca,jkbd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baaaabbb += -1.00 * einsum('lkad,ijbc->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_aaaa)
+    lhe2e2cc_baaaabbb +=  1.00 * einsum('ijbc,klad->abjicdlk', g_aaaa[oa, oa, va, va], l2_bbbb)
+    lhe2e2cc_baaaabbb += -1.00 * einsum('jlbd,ikca->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate =  1.00 * einsum('jkbd,ilca->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
     lhe2e2cc_baaaabbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
-    lhe2e2cc_baaaabbb += -1.00 * einsum('lkad,dl,ijbc->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_baaaabbb += -1.00 * einsum('jkcd,dl,ilba->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    contracted_intermediate =  1.00 * einsum('jlcd,dl,ikba->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
+    lhe2e2cc_baaaabbb +=  1.00 * einsum('ilbd,jkca->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baaaabbb +=  1.00 * einsum('jlcd,ikba->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate = -1.00 * einsum('jkcd,ilba->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
     lhe2e2cc_baaaabbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
-    lhe2e2cc_baaaabbb +=  1.00 * einsum('ikcd,dl,jlba->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_baaaabbb +=  1.00 * einsum('ka,ijbc->abjick', f_bb[ob, vb], l2_aaaa)
-    contracted_intermediate =  1.00 * einsum('jc,ikba->abjick', f_aa[oa, va], l2_abab)
-    lhe2e2cc_baaaabbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
+    lhe2e2cc_baaaabbb += -1.00 * einsum('ilcd,jkba->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
     return lhe2e2cc_baaaabbb
+
+
+def get_lhe2e2cc_baaababb(
+    uhf_scf_data: Intermediates,
+    uhf_ccsd_data: UHF_CCSD_Data,
+) -> NDArray:
+    """ tensor_subscripts: ('a', 'b', 'j', 'i', 'c', 'd', 'l', 'k') """
+    f_aa = uhf_scf_data.f_aa
+    f_bb = uhf_scf_data.f_bb
+    g_aaaa = uhf_scf_data.g_aaaa
+    g_abab = uhf_scf_data.g_abab
+    g_bbbb = uhf_scf_data.g_bbbb
+    kd_aa =  uhf_scf_data.identity_aa
+    kd_bb =  uhf_scf_data.identity_bb
+    va = uhf_scf_data.va
+    vb = uhf_scf_data.vb
+    oa = uhf_scf_data.oa
+    ob = uhf_scf_data.ob
+    t1_aa = uhf_ccsd_data.t1_aa
+    t1_bb = uhf_ccsd_data.t1_bb
+    t2_aaaa = uhf_ccsd_data.t2_aaaa
+    t2_abab = uhf_ccsd_data.t2_abab
+    t2_bbbb = uhf_ccsd_data.t2_bbbb
+    if uhf_ccsd_data.lmbda is None:
+        raise RuntimeError("Lambda amplitues missing in UHF_CCSD_Data")
+    l1_aa = uhf_ccsd_data.lmbda.l1_aa
+    l1_bb = uhf_ccsd_data.lmbda.l1_bb
+    l2_aaaa = uhf_ccsd_data.lmbda.l2_aaaa
+    l2_abab = uhf_ccsd_data.lmbda.l2_abab
+    l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
+    
+    contracted_intermediate = -1.00 * einsum('jlba,ikdc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baaababb =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjicdkl', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('ilba,jkdc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baaababb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjicdkl', contracted_intermediate) 
+    lhe2e2cc_baaababb +=  1.00 * einsum('jlda,ikbc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate = -1.00 * einsum('jkda,ilbc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baaababb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
+    lhe2e2cc_baaababb += -1.00 * einsum('ilda,jkbc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baaababb +=  1.00 * einsum('lkac,ijbd->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_aaaa)
+    lhe2e2cc_baaababb += -1.00 * einsum('ijbd,klac->abjicdlk', g_aaaa[oa, oa, va, va], l2_bbbb)
+    lhe2e2cc_baaababb +=  1.00 * einsum('jlbc,ikda->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate = -1.00 * einsum('jkbc,ilda->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baaababb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
+    lhe2e2cc_baaababb += -1.00 * einsum('ilbc,jkda->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baaababb += -1.00 * einsum('jldc,ikba->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate =  1.00 * einsum('jkdc,ilba->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baaababb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
+    lhe2e2cc_baaababb +=  1.00 * einsum('ildc,jkba->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    return lhe2e2cc_baaababb
 
 
 def get_lhe2e2cc_baabaaaa(
@@ -2192,30 +1897,26 @@ def get_lhe2e2cc_baabaaaa(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    lhe2e2cc_baabaaaa = -1.00 * einsum('kiba,jc->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_baabaaaa += -1.00 * einsum('jica,kb->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_baabaaaa += -1.00 * einsum('kjbc,ia->abjick', g_aaaa[oa, oa, va, va], l1_bb)
-    lhe2e2cc_baabaaaa +=  1.00 * einsum('kica,jb->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_baabaaaa +=  1.00 * einsum('kjbl,lica->abjiclk', g_aaaa[oa, oa, va, oa], l2_abab)
-    lhe2e2cc_baabaaaa += -1.00 * einsum('kila,jlbc->abjiclk', g_abab[oa, ob, oa, vb], l2_aaaa)
-    lhe2e2cc_baabaaaa += -1.00 * einsum('kjcl,liba->abjiclk', g_aaaa[oa, oa, va, oa], l2_abab)
-    lhe2e2cc_baabaaaa +=  1.00 * einsum('jdbc,kida->abjicdk', g_aaaa[oa, va, va, va], l2_abab)
-    lhe2e2cc_baabaaaa +=  1.00 * einsum('dica,kjdb->abjicdk', g_abab[va, ob, va, vb], l2_aaaa)
-    lhe2e2cc_baabaaaa += -1.00 * einsum('kdbc,jida->abjicdk', g_aaaa[oa, va, va, va], l2_abab)
-    lhe2e2cc_baabaaaa +=  1.00 * einsum('ljbc,dl,kida->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_baabaaaa +=  1.00 * einsum('lica,dl,kjbd->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_baabaaaa +=  1.00 * einsum('kjbd,dl,lica->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_baabaaaa +=  1.00 * einsum('kida,dl,ljbc->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_baabaaaa +=  1.00 * einsum('lkbd,dl,jica->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_baabaaaa += -1.00 * einsum('lkbc,dl,jida->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_baabaaaa += -1.00 * einsum('kjcd,dl,liba->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_baabaaaa +=  1.00 * einsum('ljcd,dl,kiba->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_baabaaaa += -1.00 * einsum('kb,jica->abjick', f_aa[oa, va], l2_abab)
-    lhe2e2cc_baabaaaa += -1.00 * einsum('jc,kiba->abjick', f_aa[oa, va], l2_abab)
+    contracted_intermediate = -1.00 * einsum('liba,kjcd->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_baabaaaa =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjicdkl', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('jica,klbd->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_baabaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('kica,ljbd->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_baabaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('lica,kjbd->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_baabaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('ljbc,kida->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_baabaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('kjbc,lida->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_baabaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('lkbc,jida->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_baabaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    lhe2e2cc_baabaaaa +=  1.00 * einsum('ljcd,kiba->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_baabaaaa += -1.00 * einsum('kjcd,liba->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
     return lhe2e2cc_baabaaaa
 
 
-def get_lhe2e2cc_baabaaba(
+def get_lhe2e2cc_baababab(
     uhf_scf_data: Intermediates,
     uhf_ccsd_data: UHF_CCSD_Data,
 ) -> NDArray:
@@ -2244,63 +1945,23 @@ def get_lhe2e2cc_baabaaba(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    lhe2e2cc_baabaaba = -1.00 * einsum('kiba,jc->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_baabaaba += -1.00 * einsum('jica,kb->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_baabaaba += -1.00 * einsum('kjbc,ia->abjick', g_aaaa[oa, oa, va, va], l1_bb)
-    lhe2e2cc_baabaaba +=  1.00 * einsum('kica,jb->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_baabaaba +=  1.00 * einsum('kibl,jlca->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    lhe2e2cc_baabaaba +=  1.00 * einsum('jicl,klba->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    lhe2e2cc_baabaaba += -1.00 * einsum('kicl,jlba->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    lhe2e2cc_baabaaba +=  1.00 * einsum('jdbc,kida->abjicdk', g_aaaa[oa, va, va, va], l2_abab)
-    lhe2e2cc_baabaaba +=  1.00 * einsum('dica,kjdb->abjicdk', g_abab[va, ob, va, vb], l2_aaaa)
-    lhe2e2cc_baabaaba += -1.00 * einsum('kdbc,jida->abjicdk', g_aaaa[oa, va, va, va], l2_abab)
-    lhe2e2cc_baabaaba += -1.00 * einsum('kb,jica->abjick', f_aa[oa, va], l2_abab)
-    lhe2e2cc_baabaaba += -1.00 * einsum('jc,kiba->abjick', f_aa[oa, va], l2_abab)
-    return lhe2e2cc_baabaaba
-
-
-def get_lhe2e2cc_baababaa(
-    uhf_scf_data: Intermediates,
-    uhf_ccsd_data: UHF_CCSD_Data,
-) -> NDArray:
-    """ tensor_subscripts: ('a', 'b', 'j', 'i', 'c', 'd', 'l', 'k') """
-    f_aa = uhf_scf_data.f_aa
-    f_bb = uhf_scf_data.f_bb
-    g_aaaa = uhf_scf_data.g_aaaa
-    g_abab = uhf_scf_data.g_abab
-    g_bbbb = uhf_scf_data.g_bbbb
-    kd_aa =  uhf_scf_data.identity_aa
-    kd_bb =  uhf_scf_data.identity_bb
-    va = uhf_scf_data.va
-    vb = uhf_scf_data.vb
-    oa = uhf_scf_data.oa
-    ob = uhf_scf_data.ob
-    t1_aa = uhf_ccsd_data.t1_aa
-    t1_bb = uhf_ccsd_data.t1_bb
-    t2_aaaa = uhf_ccsd_data.t2_aaaa
-    t2_abab = uhf_ccsd_data.t2_abab
-    t2_bbbb = uhf_ccsd_data.t2_bbbb
-    if uhf_ccsd_data.lmbda is None:
-        raise RuntimeError("Lambda amplitues missing in UHF_CCSD_Data")
-    l1_aa = uhf_ccsd_data.lmbda.l1_aa
-    l1_bb = uhf_ccsd_data.lmbda.l1_bb
-    l2_aaaa = uhf_ccsd_data.lmbda.l2_aaaa
-    l2_abab = uhf_ccsd_data.lmbda.l2_abab
-    l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
-    
-    lhe2e2cc_baababaa = -1.00 * einsum('kiba,jc->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_baababaa += -1.00 * einsum('jica,kb->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_baababaa += -1.00 * einsum('kjbc,ia->abjick', g_aaaa[oa, oa, va, va], l1_bb)
-    lhe2e2cc_baababaa +=  1.00 * einsum('kica,jb->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_baababaa +=  1.00 * einsum('kjbl,lica->abjiclk', g_aaaa[oa, oa, va, oa], l2_abab)
-    lhe2e2cc_baababaa += -1.00 * einsum('kila,jlbc->abjiclk', g_abab[oa, ob, oa, vb], l2_aaaa)
-    lhe2e2cc_baababaa += -1.00 * einsum('kjcl,liba->abjiclk', g_aaaa[oa, oa, va, oa], l2_abab)
-    contracted_intermediate = -1.00 * einsum('kdba,jicd->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    lhe2e2cc_baababaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->acjibdk', contracted_intermediate) 
-    lhe2e2cc_baababaa += -1.00 * einsum('jdca,kibd->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    lhe2e2cc_baababaa += -1.00 * einsum('kb,jica->abjick', f_aa[oa, va], l2_abab)
-    lhe2e2cc_baababaa += -1.00 * einsum('jc,kiba->abjick', f_aa[oa, va], l2_abab)
-    return lhe2e2cc_baababaa
+    lhe2e2cc_baababab =  1.00 * einsum('jkba,licd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baababab +=  1.00 * einsum('liba,jkcd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baababab += -1.00 * einsum('lkba,jicd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baababab +=  1.00 * einsum('jica,lkbd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baababab += -1.00 * einsum('jkca,libd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baababab += -1.00 * einsum('kiad,ljbc->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_aaaa)
+    contracted_intermediate = -1.00 * einsum('lica,jkbd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baababab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate) 
+    lhe2e2cc_baababab +=  1.00 * einsum('jibd,lkca->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baababab += -1.00 * einsum('ljbc,kiad->abjicdlk', g_aaaa[oa, oa, va, va], l2_bbbb)
+    lhe2e2cc_baababab += -1.00 * einsum('jkbd,lica->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate = -1.00 * einsum('libd,jkca->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baababab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate) 
+    lhe2e2cc_baababab += -1.00 * einsum('jicd,lkba->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baababab +=  1.00 * einsum('jkcd,liba->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baababab +=  1.00 * einsum('licd,jkba->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    return lhe2e2cc_baababab
 
 
 def get_lhe2e2cc_baababba(
@@ -2332,26 +1993,22 @@ def get_lhe2e2cc_baababba(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    lhe2e2cc_baababba = -1.00 * einsum('kiba,jc->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_baababba += -1.00 * einsum('jica,kb->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_baababba += -1.00 * einsum('kjbc,ia->abjick', g_aaaa[oa, oa, va, va], l1_bb)
-    lhe2e2cc_baababba +=  1.00 * einsum('kica,jb->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_baababba +=  1.00 * einsum('kibl,jlca->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    lhe2e2cc_baababba +=  1.00 * einsum('jicl,klba->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    lhe2e2cc_baababba += -1.00 * einsum('kicl,jlba->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    contracted_intermediate = -1.00 * einsum('kdba,jicd->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    lhe2e2cc_baababba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->acjibdk', contracted_intermediate) 
-    lhe2e2cc_baababba += -1.00 * einsum('jdca,kibd->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    contracted_intermediate =  1.00 * einsum('klba,dl,jicd->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_baababba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->acjibdlk', contracted_intermediate) 
-    lhe2e2cc_baababba +=  1.00 * einsum('jlca,dl,kibd->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_baababba +=  1.00 * einsum('kibd,dl,jlca->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_baababba += -1.00 * einsum('klbd,dl,jica->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_baababba +=  1.00 * einsum('jicd,dl,klba->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_baababba += -1.00 * einsum('jlcd,dl,kiba->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_baababba += -1.00 * einsum('kicd,dl,jlba->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_baababba += -1.00 * einsum('kb,jica->abjick', f_aa[oa, va], l2_abab)
-    lhe2e2cc_baababba += -1.00 * einsum('jc,kiba->abjick', f_aa[oa, va], l2_abab)
+    lhe2e2cc_baababba = -1.00 * einsum('jlba,kicd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baababba += -1.00 * einsum('kiba,jlcd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baababba +=  1.00 * einsum('klba,jicd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate = -1.00 * einsum('jica,klbd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baababba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_baababba +=  1.00 * einsum('kica,jlbd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baababba +=  1.00 * einsum('liad,kjbc->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_aaaa)
+    lhe2e2cc_baababba += -1.00 * einsum('klca,jibd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate = -1.00 * einsum('jibd,klca->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baababba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_baababba +=  1.00 * einsum('kjbc,liad->abjicdlk', g_aaaa[oa, oa, va, va], l2_bbbb)
+    lhe2e2cc_baababba +=  1.00 * einsum('kibd,jlca->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baababba += -1.00 * einsum('klbd,jica->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate =  1.00 * einsum('jicd,klba->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baababba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_baababba += -1.00 * einsum('kicd,jlba->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
     return lhe2e2cc_baababba
 
 
@@ -2384,30 +2041,26 @@ def get_lhe2e2cc_baabbaab(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    lhe2e2cc_baabbaab = -1.00 * einsum('jkba,ic->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    contracted_intermediate = -1.00 * einsum('jibc,ka->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_baabbaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abjkci', contracted_intermediate) 
-    lhe2e2cc_baabbaab += -1.00 * einsum('kiac,jb->abjick', g_bbbb[ob, ob, vb, vb], l1_aa)
-    lhe2e2cc_baabbaab +=  1.00 * einsum('jkla,libc->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    contracted_intermediate =  1.00 * einsum('jilc,lkba->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    lhe2e2cc_baabbaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abjkcli', contracted_intermediate) 
-    lhe2e2cc_baabbaab += -1.00 * einsum('dkba,jidc->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    lhe2e2cc_baabbaab += -1.00 * einsum('dibc,jkda->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    lhe2e2cc_baabbaab +=  1.00 * einsum('dkbc,jida->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    lhe2e2cc_baabbaab +=  1.00 * einsum('lkba,dl,jidc->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_baabbaab +=  1.00 * einsum('libc,dl,jkda->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_baabbaab +=  1.00 * einsum('jkda,dl,libc->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_baabbaab += -1.00 * einsum('lkda,dl,jibc->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_baabbaab += -1.00 * einsum('lkbc,dl,jida->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    contracted_intermediate =  1.00 * einsum('jidc,dl,lkba->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
+    lhe2e2cc_baabbaab = -1.00 * einsum('jkba,lidc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baabbaab += -1.00 * einsum('liba,jkdc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baabbaab +=  1.00 * einsum('lkba,jidc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baabbaab += -1.00 * einsum('jida,lkbc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baabbaab +=  1.00 * einsum('jkda,libc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baabbaab +=  1.00 * einsum('kiac,ljbd->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_aaaa)
+    contracted_intermediate =  1.00 * einsum('lida,jkbc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
     lhe2e2cc_baabbaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate) 
-    lhe2e2cc_baabbaab += -1.00 * einsum('lidc,dl,jkba->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_baabbaab += -1.00 * einsum('ka,jibc->abjick', f_bb[ob, vb], l2_abab)
-    lhe2e2cc_baabbaab += -1.00 * einsum('ic,jkba->abjick', f_bb[ob, vb], l2_abab)
+    lhe2e2cc_baabbaab += -1.00 * einsum('jibc,lkda->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baabbaab +=  1.00 * einsum('ljbd,kiac->abjicdlk', g_aaaa[oa, oa, va, va], l2_bbbb)
+    lhe2e2cc_baabbaab +=  1.00 * einsum('jkbc,lida->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate =  1.00 * einsum('libc,jkda->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baabbaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate) 
+    lhe2e2cc_baabbaab +=  1.00 * einsum('jidc,lkba->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baabbaab += -1.00 * einsum('jkdc,liba->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baabbaab += -1.00 * einsum('lidc,jkba->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
     return lhe2e2cc_baabbaab
 
 
-def get_lhe2e2cc_baabbabb(
+def get_lhe2e2cc_baabbaba(
     uhf_scf_data: Intermediates,
     uhf_ccsd_data: UHF_CCSD_Data,
 ) -> NDArray:
@@ -2436,63 +2089,23 @@ def get_lhe2e2cc_baabbabb(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    lhe2e2cc_baabbabb = -1.00 * einsum('jkba,ic->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    contracted_intermediate = -1.00 * einsum('jibc,ka->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_baabbabb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abjkci', contracted_intermediate) 
-    lhe2e2cc_baabbabb += -1.00 * einsum('kiac,jb->abjick', g_bbbb[ob, ob, vb, vb], l1_aa)
-    lhe2e2cc_baabbabb += -1.00 * einsum('jkbl,ilac->abjiclk', g_abab[oa, ob, va, ob], l2_bbbb)
-    lhe2e2cc_baabbabb +=  1.00 * einsum('kial,jlbc->abjiclk', g_bbbb[ob, ob, vb, ob], l2_abab)
-    lhe2e2cc_baabbabb += -1.00 * einsum('kicl,jlba->abjiclk', g_bbbb[ob, ob, vb, ob], l2_abab)
-    lhe2e2cc_baabbabb += -1.00 * einsum('dkba,jidc->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    lhe2e2cc_baabbabb += -1.00 * einsum('dibc,jkda->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    lhe2e2cc_baabbabb +=  1.00 * einsum('dkbc,jida->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    lhe2e2cc_baabbabb += -1.00 * einsum('ka,jibc->abjick', f_bb[ob, vb], l2_abab)
-    lhe2e2cc_baabbabb += -1.00 * einsum('ic,jkba->abjick', f_bb[ob, vb], l2_abab)
-    return lhe2e2cc_baabbabb
-
-
-def get_lhe2e2cc_baabbbab(
-    uhf_scf_data: Intermediates,
-    uhf_ccsd_data: UHF_CCSD_Data,
-) -> NDArray:
-    """ tensor_subscripts: ('a', 'b', 'j', 'i', 'c', 'd', 'l', 'k') """
-    f_aa = uhf_scf_data.f_aa
-    f_bb = uhf_scf_data.f_bb
-    g_aaaa = uhf_scf_data.g_aaaa
-    g_abab = uhf_scf_data.g_abab
-    g_bbbb = uhf_scf_data.g_bbbb
-    kd_aa =  uhf_scf_data.identity_aa
-    kd_bb =  uhf_scf_data.identity_bb
-    va = uhf_scf_data.va
-    vb = uhf_scf_data.vb
-    oa = uhf_scf_data.oa
-    ob = uhf_scf_data.ob
-    t1_aa = uhf_ccsd_data.t1_aa
-    t1_bb = uhf_ccsd_data.t1_bb
-    t2_aaaa = uhf_ccsd_data.t2_aaaa
-    t2_abab = uhf_ccsd_data.t2_abab
-    t2_bbbb = uhf_ccsd_data.t2_bbbb
-    if uhf_ccsd_data.lmbda is None:
-        raise RuntimeError("Lambda amplitues missing in UHF_CCSD_Data")
-    l1_aa = uhf_ccsd_data.lmbda.l1_aa
-    l1_bb = uhf_ccsd_data.lmbda.l1_bb
-    l2_aaaa = uhf_ccsd_data.lmbda.l2_aaaa
-    l2_abab = uhf_ccsd_data.lmbda.l2_abab
-    l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
-    
-    lhe2e2cc_baabbbab = -1.00 * einsum('jkba,ic->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    contracted_intermediate = -1.00 * einsum('jibc,ka->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_baabbbab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abjkci', contracted_intermediate) 
-    lhe2e2cc_baabbbab += -1.00 * einsum('kiac,jb->abjick', g_bbbb[ob, ob, vb, vb], l1_aa)
-    lhe2e2cc_baabbbab +=  1.00 * einsum('jkla,libc->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    contracted_intermediate =  1.00 * einsum('jilc,lkba->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    lhe2e2cc_baabbbab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abjkcli', contracted_intermediate) 
-    lhe2e2cc_baabbbab += -1.00 * einsum('kdac,jibd->abjicdk', g_bbbb[ob, vb, vb, vb], l2_abab)
-    lhe2e2cc_baabbbab +=  1.00 * einsum('jdbc,kida->abjicdk', g_abab[oa, vb, va, vb], l2_bbbb)
-    lhe2e2cc_baabbbab +=  1.00 * einsum('idac,jkbd->abjicdk', g_bbbb[ob, vb, vb, vb], l2_abab)
-    lhe2e2cc_baabbbab += -1.00 * einsum('ka,jibc->abjick', f_bb[ob, vb], l2_abab)
-    lhe2e2cc_baabbbab += -1.00 * einsum('ic,jkba->abjick', f_bb[ob, vb], l2_abab)
-    return lhe2e2cc_baabbbab
+    lhe2e2cc_baabbaba =  1.00 * einsum('jlba,kidc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baabbaba +=  1.00 * einsum('kiba,jldc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baabbaba += -1.00 * einsum('klba,jidc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate =  1.00 * einsum('jida,klbc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baabbaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_baabbaba += -1.00 * einsum('kida,jlbc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baabbaba += -1.00 * einsum('liac,kjbd->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_aaaa)
+    lhe2e2cc_baabbaba +=  1.00 * einsum('klda,jibc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate =  1.00 * einsum('jibc,klda->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baabbaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_baabbaba += -1.00 * einsum('kjbd,liac->abjicdlk', g_aaaa[oa, oa, va, va], l2_bbbb)
+    lhe2e2cc_baabbaba += -1.00 * einsum('kibc,jlda->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baabbaba +=  1.00 * einsum('klbc,jida->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate = -1.00 * einsum('jidc,klba->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_baabbaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_baabbaba +=  1.00 * einsum('kidc,jlba->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    return lhe2e2cc_baabbaba
 
 
 def get_lhe2e2cc_baabbbbb(
@@ -2524,26 +2137,18 @@ def get_lhe2e2cc_baabbbbb(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    lhe2e2cc_baabbbbb = -1.00 * einsum('jkba,ic->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    contracted_intermediate = -1.00 * einsum('jibc,ka->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_baabbbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abjkci', contracted_intermediate) 
-    lhe2e2cc_baabbbbb += -1.00 * einsum('kiac,jb->abjick', g_bbbb[ob, ob, vb, vb], l1_aa)
-    lhe2e2cc_baabbbbb += -1.00 * einsum('jkbl,ilac->abjiclk', g_abab[oa, ob, va, ob], l2_bbbb)
-    lhe2e2cc_baabbbbb +=  1.00 * einsum('kial,jlbc->abjiclk', g_bbbb[ob, ob, vb, ob], l2_abab)
-    lhe2e2cc_baabbbbb += -1.00 * einsum('kicl,jlba->abjiclk', g_bbbb[ob, ob, vb, ob], l2_abab)
-    lhe2e2cc_baabbbbb += -1.00 * einsum('kdac,jibd->abjicdk', g_bbbb[ob, vb, vb, vb], l2_abab)
-    lhe2e2cc_baabbbbb +=  1.00 * einsum('jdbc,kida->abjicdk', g_abab[oa, vb, va, vb], l2_bbbb)
-    lhe2e2cc_baabbbbb +=  1.00 * einsum('idac,jkbd->abjicdk', g_bbbb[ob, vb, vb, vb], l2_abab)
-    lhe2e2cc_baabbbbb += -1.00 * einsum('lkac,dl,jibd->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_baabbbbb +=  1.00 * einsum('jlbc,dl,kiad->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_baabbbbb +=  1.00 * einsum('liac,dl,jkbd->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_baabbbbb +=  1.00 * einsum('jkbd,dl,liac->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_baabbbbb +=  1.00 * einsum('kiad,dl,jlbc->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_baabbbbb +=  1.00 * einsum('lkad,dl,jibc->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_baabbbbb +=  1.00 * einsum('licd,dl,jkba->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_baabbbbb += -1.00 * einsum('kicd,dl,jlba->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_baabbbbb += -1.00 * einsum('ka,jibc->abjick', f_bb[ob, vb], l2_abab)
-    lhe2e2cc_baabbbbb += -1.00 * einsum('ic,jkba->abjick', f_bb[ob, vb], l2_abab)
+    contracted_intermediate = -1.00 * einsum('jlba,kicd->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_baabbbbb =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjicdkl', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('kiac,jlbd->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_baabbbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('liac,jkbd->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_baabbbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjkdcli', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('jibc,klad->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_baabbbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjldcik', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('jkbc,liad->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_baabbbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    lhe2e2cc_baabbbbb += -1.00 * einsum('kicd,jlba->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_baabbbbb +=  1.00 * einsum('licd,jkba->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
     return lhe2e2cc_baabbbbb
 
 
@@ -2576,30 +2181,22 @@ def get_lhe2e2cc_babaaaaa(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    lhe2e2cc_babaaaaa =  1.00 * einsum('kjba,ic->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    contracted_intermediate =  1.00 * einsum('ijca,kb->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_babaaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abjkci', contracted_intermediate) 
-    lhe2e2cc_babaaaaa +=  1.00 * einsum('kibc,ja->abjick', g_aaaa[oa, oa, va, va], l1_bb)
-    lhe2e2cc_babaaaaa +=  1.00 * einsum('kjla,ilbc->abjiclk', g_abab[oa, ob, oa, vb], l2_aaaa)
-    lhe2e2cc_babaaaaa += -1.00 * einsum('kibl,ljca->abjiclk', g_aaaa[oa, oa, va, oa], l2_abab)
-    lhe2e2cc_babaaaaa +=  1.00 * einsum('kicl,ljba->abjiclk', g_aaaa[oa, oa, va, oa], l2_abab)
-    lhe2e2cc_babaaaaa += -1.00 * einsum('djca,kidb->abjicdk', g_abab[va, ob, va, vb], l2_aaaa)
-    lhe2e2cc_babaaaaa += -1.00 * einsum('idbc,kjda->abjicdk', g_aaaa[oa, va, va, va], l2_abab)
-    lhe2e2cc_babaaaaa +=  1.00 * einsum('kdbc,ijda->abjicdk', g_aaaa[oa, va, va, va], l2_abab)
-    lhe2e2cc_babaaaaa += -1.00 * einsum('ljca,dl,kibd->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_babaaaaa += -1.00 * einsum('libc,dl,kjda->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_babaaaaa += -1.00 * einsum('kjda,dl,libc->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_aaaa, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_babaaaaa += -1.00 * einsum('kibd,dl,ljca->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_babaaaaa += -1.00 * einsum('lkbd,dl,ijca->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_babaaaaa +=  1.00 * einsum('lkbc,dl,ijda->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_babaaaaa += -1.00 * einsum('licd,dl,kjba->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_babaaaaa +=  1.00 * einsum('kicd,dl,ljba->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_babaaaaa +=  1.00 * einsum('kb,ijca->abjick', f_aa[oa, va], l2_abab)
-    lhe2e2cc_babaaaaa +=  1.00 * einsum('ic,kjba->abjick', f_aa[oa, va], l2_abab)
+    contracted_intermediate =  1.00 * einsum('ljba,kicd->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_babaaaaa =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjicdkl', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('ijca,klbd->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_babaaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjldcik', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('kjca,libd->abjicdlk', g_abab[oa, ob, va, vb], l2_aaaa)
+    lhe2e2cc_babaaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('kibc,ljda->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_babaaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('libc,kjda->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_babaaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjkdcli', contracted_intermediate) 
+    lhe2e2cc_babaaaaa +=  1.00 * einsum('kicd,ljba->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
+    lhe2e2cc_babaaaaa += -1.00 * einsum('licd,kjba->abjicdlk', g_aaaa[oa, oa, va, va], l2_abab)
     return lhe2e2cc_babaaaaa
 
 
-def get_lhe2e2cc_babaaaba(
+def get_lhe2e2cc_babaabab(
     uhf_scf_data: Intermediates,
     uhf_ccsd_data: UHF_CCSD_Data,
 ) -> NDArray:
@@ -2628,63 +2225,23 @@ def get_lhe2e2cc_babaaaba(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    lhe2e2cc_babaaaba =  1.00 * einsum('kjba,ic->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    contracted_intermediate =  1.00 * einsum('ijca,kb->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_babaaaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abjkci', contracted_intermediate) 
-    lhe2e2cc_babaaaba +=  1.00 * einsum('kibc,ja->abjick', g_aaaa[oa, oa, va, va], l1_bb)
-    lhe2e2cc_babaaaba += -1.00 * einsum('kjbl,ilca->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    contracted_intermediate = -1.00 * einsum('ijcl,klba->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    lhe2e2cc_babaaaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abjkcli', contracted_intermediate) 
-    lhe2e2cc_babaaaba += -1.00 * einsum('djca,kidb->abjicdk', g_abab[va, ob, va, vb], l2_aaaa)
-    lhe2e2cc_babaaaba += -1.00 * einsum('idbc,kjda->abjicdk', g_aaaa[oa, va, va, va], l2_abab)
-    lhe2e2cc_babaaaba +=  1.00 * einsum('kdbc,ijda->abjicdk', g_aaaa[oa, va, va, va], l2_abab)
-    lhe2e2cc_babaaaba +=  1.00 * einsum('kb,ijca->abjick', f_aa[oa, va], l2_abab)
-    lhe2e2cc_babaaaba +=  1.00 * einsum('ic,kjba->abjick', f_aa[oa, va], l2_abab)
-    return lhe2e2cc_babaaaba
-
-
-def get_lhe2e2cc_babaabaa(
-    uhf_scf_data: Intermediates,
-    uhf_ccsd_data: UHF_CCSD_Data,
-) -> NDArray:
-    """ tensor_subscripts: ('a', 'b', 'j', 'i', 'c', 'd', 'l', 'k') """
-    f_aa = uhf_scf_data.f_aa
-    f_bb = uhf_scf_data.f_bb
-    g_aaaa = uhf_scf_data.g_aaaa
-    g_abab = uhf_scf_data.g_abab
-    g_bbbb = uhf_scf_data.g_bbbb
-    kd_aa =  uhf_scf_data.identity_aa
-    kd_bb =  uhf_scf_data.identity_bb
-    va = uhf_scf_data.va
-    vb = uhf_scf_data.vb
-    oa = uhf_scf_data.oa
-    ob = uhf_scf_data.ob
-    t1_aa = uhf_ccsd_data.t1_aa
-    t1_bb = uhf_ccsd_data.t1_bb
-    t2_aaaa = uhf_ccsd_data.t2_aaaa
-    t2_abab = uhf_ccsd_data.t2_abab
-    t2_bbbb = uhf_ccsd_data.t2_bbbb
-    if uhf_ccsd_data.lmbda is None:
-        raise RuntimeError("Lambda amplitues missing in UHF_CCSD_Data")
-    l1_aa = uhf_ccsd_data.lmbda.l1_aa
-    l1_bb = uhf_ccsd_data.lmbda.l1_bb
-    l2_aaaa = uhf_ccsd_data.lmbda.l2_aaaa
-    l2_abab = uhf_ccsd_data.lmbda.l2_abab
-    l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
-    
-    lhe2e2cc_babaabaa =  1.00 * einsum('kjba,ic->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    contracted_intermediate =  1.00 * einsum('ijca,kb->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_babaabaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abjkci', contracted_intermediate) 
-    lhe2e2cc_babaabaa +=  1.00 * einsum('kibc,ja->abjick', g_aaaa[oa, oa, va, va], l1_bb)
-    lhe2e2cc_babaabaa +=  1.00 * einsum('kjla,ilbc->abjiclk', g_abab[oa, ob, oa, vb], l2_aaaa)
-    lhe2e2cc_babaabaa += -1.00 * einsum('kibl,ljca->abjiclk', g_aaaa[oa, oa, va, oa], l2_abab)
-    lhe2e2cc_babaabaa +=  1.00 * einsum('kicl,ljba->abjiclk', g_aaaa[oa, oa, va, oa], l2_abab)
-    contracted_intermediate =  1.00 * einsum('kdba,ijcd->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    lhe2e2cc_babaabaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->acjibdk', contracted_intermediate) 
-    lhe2e2cc_babaabaa +=  1.00 * einsum('idca,kjbd->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    lhe2e2cc_babaabaa +=  1.00 * einsum('kb,ijca->abjick', f_aa[oa, va], l2_abab)
-    lhe2e2cc_babaabaa +=  1.00 * einsum('ic,kjba->abjick', f_aa[oa, va], l2_abab)
-    return lhe2e2cc_babaabaa
+    lhe2e2cc_babaabab = -1.00 * einsum('ljba,ikcd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_babaabab += -1.00 * einsum('ikba,ljcd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_babaabab +=  1.00 * einsum('lkba,ijcd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate = -1.00 * einsum('ijca,lkbd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_babaabab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_babaabab +=  1.00 * einsum('kjad,libc->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_aaaa)
+    lhe2e2cc_babaabab +=  1.00 * einsum('ikca,ljbd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_babaabab += -1.00 * einsum('lkca,ijbd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate = -1.00 * einsum('ijbd,lkca->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_babaabab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_babaabab +=  1.00 * einsum('ikbd,ljca->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_babaabab +=  1.00 * einsum('libc,kjad->abjicdlk', g_aaaa[oa, oa, va, va], l2_bbbb)
+    lhe2e2cc_babaabab += -1.00 * einsum('lkbd,ijca->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate =  1.00 * einsum('ijcd,lkba->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_babaabab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_babaabab += -1.00 * einsum('ikcd,ljba->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    return lhe2e2cc_babaabab
 
 
 def get_lhe2e2cc_babaabba(
@@ -2716,26 +2273,22 @@ def get_lhe2e2cc_babaabba(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    lhe2e2cc_babaabba =  1.00 * einsum('kjba,ic->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    contracted_intermediate =  1.00 * einsum('ijca,kb->abjick', g_abab[oa, ob, va, vb], l1_aa)
-    lhe2e2cc_babaabba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abjkci', contracted_intermediate) 
-    lhe2e2cc_babaabba +=  1.00 * einsum('kibc,ja->abjick', g_aaaa[oa, oa, va, va], l1_bb)
-    lhe2e2cc_babaabba += -1.00 * einsum('kjbl,ilca->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    contracted_intermediate = -1.00 * einsum('ijcl,klba->abjiclk', g_abab[oa, ob, va, ob], l2_abab)
-    lhe2e2cc_babaabba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abjkcli', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('kdba,ijcd->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    lhe2e2cc_babaabba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->acjibdk', contracted_intermediate) 
-    lhe2e2cc_babaabba +=  1.00 * einsum('idca,kjbd->abjicdk', g_abab[oa, vb, va, vb], l2_abab)
-    contracted_intermediate = -1.00 * einsum('klba,dl,ijcd->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_babaabba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->acjibdlk', contracted_intermediate) 
-    lhe2e2cc_babaabba += -1.00 * einsum('ilca,dl,kjbd->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_babaabba += -1.00 * einsum('kjbd,dl,ilca->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_babaabba +=  1.00 * einsum('klbd,dl,ijca->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    contracted_intermediate = -1.00 * einsum('ijcd,dl,klba->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
+    lhe2e2cc_babaabba =  1.00 * einsum('kjba,ilcd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_babaabba +=  1.00 * einsum('ilba,kjcd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_babaabba += -1.00 * einsum('klba,ijcd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_babaabba +=  1.00 * einsum('ijca,klbd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_babaabba += -1.00 * einsum('ljad,kibc->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_aaaa)
+    lhe2e2cc_babaabba += -1.00 * einsum('kjca,ilbd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate = -1.00 * einsum('ilca,kjbd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
     lhe2e2cc_babaabba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate) 
-    lhe2e2cc_babaabba +=  1.00 * einsum('ilcd,dl,kjba->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_babaabba +=  1.00 * einsum('kb,ijca->abjick', f_aa[oa, va], l2_abab)
-    lhe2e2cc_babaabba +=  1.00 * einsum('ic,kjba->abjick', f_aa[oa, va], l2_abab)
+    lhe2e2cc_babaabba +=  1.00 * einsum('ijbd,klca->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_babaabba += -1.00 * einsum('kjbd,ilca->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_babaabba += -1.00 * einsum('kibc,ljad->abjicdlk', g_aaaa[oa, oa, va, va], l2_bbbb)
+    contracted_intermediate = -1.00 * einsum('ilbd,kjca->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_babaabba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate) 
+    lhe2e2cc_babaabba += -1.00 * einsum('ijcd,klba->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_babaabba +=  1.00 * einsum('kjcd,ilba->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_babaabba +=  1.00 * einsum('ilcd,kjba->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
     return lhe2e2cc_babaabba
 
 
@@ -2768,30 +2321,26 @@ def get_lhe2e2cc_bababaab(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    lhe2e2cc_bababaab =  1.00 * einsum('ikba,jc->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_bababaab +=  1.00 * einsum('ijbc,ka->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_bababaab +=  1.00 * einsum('kjac,ib->abjick', g_bbbb[ob, ob, vb, vb], l1_aa)
-    lhe2e2cc_bababaab += -1.00 * einsum('ikbc,ja->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_bababaab += -1.00 * einsum('ikla,ljbc->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    lhe2e2cc_bababaab += -1.00 * einsum('ijlc,lkba->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    lhe2e2cc_bababaab +=  1.00 * einsum('iklc,ljba->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    lhe2e2cc_bababaab +=  1.00 * einsum('dkba,ijdc->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    lhe2e2cc_bababaab +=  1.00 * einsum('djbc,ikda->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    lhe2e2cc_bababaab += -1.00 * einsum('dkbc,ijda->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    lhe2e2cc_bababaab += -1.00 * einsum('lkba,dl,ijdc->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bababaab += -1.00 * einsum('ljbc,dl,ikda->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bababaab += -1.00 * einsum('ikda,dl,ljbc->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bababaab +=  1.00 * einsum('lkda,dl,ijbc->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bababaab +=  1.00 * einsum('lkbc,dl,ijda->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bababaab += -1.00 * einsum('ijdc,dl,lkba->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bababaab +=  1.00 * einsum('ljdc,dl,ikba->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bababaab +=  1.00 * einsum('ikdc,dl,ljba->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bababaab +=  1.00 * einsum('ka,ijbc->abjick', f_bb[ob, vb], l2_abab)
-    lhe2e2cc_bababaab +=  1.00 * einsum('jc,ikba->abjick', f_bb[ob, vb], l2_abab)
+    lhe2e2cc_bababaab =  1.00 * einsum('ljba,ikdc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bababaab +=  1.00 * einsum('ikba,ljdc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bababaab += -1.00 * einsum('lkba,ijdc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate =  1.00 * einsum('ijda,lkbc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bababaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_bababaab += -1.00 * einsum('kjac,libd->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_aaaa)
+    lhe2e2cc_bababaab += -1.00 * einsum('ikda,ljbc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bababaab +=  1.00 * einsum('lkda,ijbc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate =  1.00 * einsum('ijbc,lkda->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bababaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_bababaab += -1.00 * einsum('ikbc,ljda->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bababaab += -1.00 * einsum('libd,kjac->abjicdlk', g_aaaa[oa, oa, va, va], l2_bbbb)
+    lhe2e2cc_bababaab +=  1.00 * einsum('lkbc,ijda->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate = -1.00 * einsum('ijdc,lkba->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bababaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_bababaab +=  1.00 * einsum('ikdc,ljba->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
     return lhe2e2cc_bababaab
 
 
-def get_lhe2e2cc_babababb(
+def get_lhe2e2cc_babababa(
     uhf_scf_data: Intermediates,
     uhf_ccsd_data: UHF_CCSD_Data,
 ) -> NDArray:
@@ -2820,63 +2369,23 @@ def get_lhe2e2cc_babababb(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    lhe2e2cc_babababb =  1.00 * einsum('ikba,jc->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_babababb +=  1.00 * einsum('ijbc,ka->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_babababb +=  1.00 * einsum('kjac,ib->abjick', g_bbbb[ob, ob, vb, vb], l1_aa)
-    lhe2e2cc_babababb += -1.00 * einsum('ikbc,ja->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_babababb += -1.00 * einsum('kjal,ilbc->abjiclk', g_bbbb[ob, ob, vb, ob], l2_abab)
-    lhe2e2cc_babababb +=  1.00 * einsum('ikbl,jlac->abjiclk', g_abab[oa, ob, va, ob], l2_bbbb)
-    lhe2e2cc_babababb +=  1.00 * einsum('kjcl,ilba->abjiclk', g_bbbb[ob, ob, vb, ob], l2_abab)
-    lhe2e2cc_babababb +=  1.00 * einsum('dkba,ijdc->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    lhe2e2cc_babababb +=  1.00 * einsum('djbc,ikda->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    lhe2e2cc_babababb += -1.00 * einsum('dkbc,ijda->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    lhe2e2cc_babababb +=  1.00 * einsum('ka,ijbc->abjick', f_bb[ob, vb], l2_abab)
-    lhe2e2cc_babababb +=  1.00 * einsum('jc,ikba->abjick', f_bb[ob, vb], l2_abab)
-    return lhe2e2cc_babababb
-
-
-def get_lhe2e2cc_bababbab(
-    uhf_scf_data: Intermediates,
-    uhf_ccsd_data: UHF_CCSD_Data,
-) -> NDArray:
-    """ tensor_subscripts: ('a', 'b', 'j', 'i', 'c', 'd', 'l', 'k') """
-    f_aa = uhf_scf_data.f_aa
-    f_bb = uhf_scf_data.f_bb
-    g_aaaa = uhf_scf_data.g_aaaa
-    g_abab = uhf_scf_data.g_abab
-    g_bbbb = uhf_scf_data.g_bbbb
-    kd_aa =  uhf_scf_data.identity_aa
-    kd_bb =  uhf_scf_data.identity_bb
-    va = uhf_scf_data.va
-    vb = uhf_scf_data.vb
-    oa = uhf_scf_data.oa
-    ob = uhf_scf_data.ob
-    t1_aa = uhf_ccsd_data.t1_aa
-    t1_bb = uhf_ccsd_data.t1_bb
-    t2_aaaa = uhf_ccsd_data.t2_aaaa
-    t2_abab = uhf_ccsd_data.t2_abab
-    t2_bbbb = uhf_ccsd_data.t2_bbbb
-    if uhf_ccsd_data.lmbda is None:
-        raise RuntimeError("Lambda amplitues missing in UHF_CCSD_Data")
-    l1_aa = uhf_ccsd_data.lmbda.l1_aa
-    l1_bb = uhf_ccsd_data.lmbda.l1_bb
-    l2_aaaa = uhf_ccsd_data.lmbda.l2_aaaa
-    l2_abab = uhf_ccsd_data.lmbda.l2_abab
-    l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
-    
-    lhe2e2cc_bababbab =  1.00 * einsum('ikba,jc->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_bababbab +=  1.00 * einsum('ijbc,ka->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_bababbab +=  1.00 * einsum('kjac,ib->abjick', g_bbbb[ob, ob, vb, vb], l1_aa)
-    lhe2e2cc_bababbab += -1.00 * einsum('ikbc,ja->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_bababbab += -1.00 * einsum('ikla,ljbc->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    lhe2e2cc_bababbab += -1.00 * einsum('ijlc,lkba->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    lhe2e2cc_bababbab +=  1.00 * einsum('iklc,ljba->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    lhe2e2cc_bababbab +=  1.00 * einsum('kdac,ijbd->abjicdk', g_bbbb[ob, vb, vb, vb], l2_abab)
-    lhe2e2cc_bababbab += -1.00 * einsum('jdac,ikbd->abjicdk', g_bbbb[ob, vb, vb, vb], l2_abab)
-    lhe2e2cc_bababbab += -1.00 * einsum('idbc,kjda->abjicdk', g_abab[oa, vb, va, vb], l2_bbbb)
-    lhe2e2cc_bababbab +=  1.00 * einsum('ka,ijbc->abjick', f_bb[ob, vb], l2_abab)
-    lhe2e2cc_bababbab +=  1.00 * einsum('jc,ikba->abjick', f_bb[ob, vb], l2_abab)
-    return lhe2e2cc_bababbab
+    lhe2e2cc_babababa = -1.00 * einsum('kjba,ildc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_babababa += -1.00 * einsum('ilba,kjdc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_babababa +=  1.00 * einsum('klba,ijdc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_babababa += -1.00 * einsum('ijda,klbc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_babababa +=  1.00 * einsum('ljac,kibd->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_aaaa)
+    lhe2e2cc_babababa +=  1.00 * einsum('kjda,ilbc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate =  1.00 * einsum('ilda,kjbc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_babababa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate) 
+    lhe2e2cc_babababa += -1.00 * einsum('ijbc,klda->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_babababa +=  1.00 * einsum('kjbc,ilda->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_babababa +=  1.00 * einsum('kibd,ljac->abjicdlk', g_aaaa[oa, oa, va, va], l2_bbbb)
+    contracted_intermediate =  1.00 * einsum('ilbc,kjda->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_babababa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate) 
+    lhe2e2cc_babababa +=  1.00 * einsum('ijdc,klba->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_babababa += -1.00 * einsum('kjdc,ilba->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_babababa += -1.00 * einsum('ildc,kjba->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    return lhe2e2cc_babababa
 
 
 def get_lhe2e2cc_bababbbb(
@@ -2908,27 +2417,73 @@ def get_lhe2e2cc_bababbbb(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    lhe2e2cc_bababbbb =  1.00 * einsum('ikba,jc->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_bababbbb +=  1.00 * einsum('ijbc,ka->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_bababbbb +=  1.00 * einsum('kjac,ib->abjick', g_bbbb[ob, ob, vb, vb], l1_aa)
-    lhe2e2cc_bababbbb += -1.00 * einsum('ikbc,ja->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_bababbbb += -1.00 * einsum('kjal,ilbc->abjiclk', g_bbbb[ob, ob, vb, ob], l2_abab)
-    lhe2e2cc_bababbbb +=  1.00 * einsum('ikbl,jlac->abjiclk', g_abab[oa, ob, va, ob], l2_bbbb)
-    lhe2e2cc_bababbbb +=  1.00 * einsum('kjcl,ilba->abjiclk', g_bbbb[ob, ob, vb, ob], l2_abab)
-    lhe2e2cc_bababbbb +=  1.00 * einsum('kdac,ijbd->abjicdk', g_bbbb[ob, vb, vb, vb], l2_abab)
-    lhe2e2cc_bababbbb += -1.00 * einsum('jdac,ikbd->abjicdk', g_bbbb[ob, vb, vb, vb], l2_abab)
-    lhe2e2cc_bababbbb += -1.00 * einsum('idbc,kjda->abjicdk', g_abab[oa, vb, va, vb], l2_bbbb)
-    lhe2e2cc_bababbbb +=  1.00 * einsum('lkac,dl,ijbd->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bababbbb += -1.00 * einsum('ljac,dl,ikbd->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bababbbb += -1.00 * einsum('ilbc,dl,kjad->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bababbbb += -1.00 * einsum('kjad,dl,ilbc->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bababbbb += -1.00 * einsum('ikbd,dl,ljac->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bababbbb += -1.00 * einsum('lkad,dl,ijbc->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bababbbb +=  1.00 * einsum('kjcd,dl,ilba->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bababbbb += -1.00 * einsum('ljcd,dl,ikba->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bababbbb +=  1.00 * einsum('ka,ijbc->abjick', f_bb[ob, vb], l2_abab)
-    lhe2e2cc_bababbbb +=  1.00 * einsum('jc,ikba->abjick', f_bb[ob, vb], l2_abab)
+    contracted_intermediate =  1.00 * einsum('ilba,kjcd->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bababbbb =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjicdkl', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('ljac,ikbd->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bababbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('kjac,ilbd->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bababbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('lkac,ijbd->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bababbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('ijbc,klad->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bababbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('ikbc,ljad->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bababbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('ilbc,kjad->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bababbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    lhe2e2cc_bababbbb += -1.00 * einsum('ljcd,ikba->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bababbbb +=  1.00 * einsum('kjcd,ilba->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
     return lhe2e2cc_bababbbb
+
+
+def get_lhe2e2cc_babbabaa(
+    uhf_scf_data: Intermediates,
+    uhf_ccsd_data: UHF_CCSD_Data,
+) -> NDArray:
+    """ tensor_subscripts: ('a', 'b', 'j', 'i', 'c', 'd', 'l', 'k') """
+    f_aa = uhf_scf_data.f_aa
+    f_bb = uhf_scf_data.f_bb
+    g_aaaa = uhf_scf_data.g_aaaa
+    g_abab = uhf_scf_data.g_abab
+    g_bbbb = uhf_scf_data.g_bbbb
+    kd_aa =  uhf_scf_data.identity_aa
+    kd_bb =  uhf_scf_data.identity_bb
+    va = uhf_scf_data.va
+    vb = uhf_scf_data.vb
+    oa = uhf_scf_data.oa
+    ob = uhf_scf_data.ob
+    t1_aa = uhf_ccsd_data.t1_aa
+    t1_bb = uhf_ccsd_data.t1_bb
+    t2_aaaa = uhf_ccsd_data.t2_aaaa
+    t2_abab = uhf_ccsd_data.t2_abab
+    t2_bbbb = uhf_ccsd_data.t2_bbbb
+    if uhf_ccsd_data.lmbda is None:
+        raise RuntimeError("Lambda amplitues missing in UHF_CCSD_Data")
+    l1_aa = uhf_ccsd_data.lmbda.l1_aa
+    l1_bb = uhf_ccsd_data.lmbda.l1_bb
+    l2_aaaa = uhf_ccsd_data.lmbda.l2_aaaa
+    l2_abab = uhf_ccsd_data.lmbda.l2_abab
+    l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
+    
+    contracted_intermediate =  1.00 * einsum('ljba,kicd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_babbabaa =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjicdkl', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('liba,kjcd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_babbabaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjicdkl', contracted_intermediate) 
+    lhe2e2cc_babbabaa +=  1.00 * einsum('ijad,klbc->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_aaaa)
+    lhe2e2cc_babbabaa += -1.00 * einsum('ljca,kibd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate =  1.00 * einsum('kjca,libd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_babbabaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
+    lhe2e2cc_babbabaa +=  1.00 * einsum('lica,kjbd->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_babbabaa += -1.00 * einsum('ljbd,kica->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate =  1.00 * einsum('kjbd,lica->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_babbabaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
+    lhe2e2cc_babbabaa +=  1.00 * einsum('libd,kjca->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_babbabaa += -1.00 * einsum('lkbc,ijad->abjicdlk', g_aaaa[oa, oa, va, va], l2_bbbb)
+    lhe2e2cc_babbabaa +=  1.00 * einsum('ljcd,kiba->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate = -1.00 * einsum('kjcd,liba->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_babbabaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
+    lhe2e2cc_babbabaa += -1.00 * einsum('licd,kjba->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    return lhe2e2cc_babbabaa
 
 
 def get_lhe2e2cc_babbbaaa(
@@ -2960,33 +2515,28 @@ def get_lhe2e2cc_babbbaaa(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    contracted_intermediate =  1.00 * einsum('kjba,ic->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_babbbaaa =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
-    lhe2e2cc_babbbaaa += -1.00 * einsum('ijac,kb->abjick', g_bbbb[ob, ob, vb, vb], l1_aa)
-    lhe2e2cc_babbbaaa += -1.00 * einsum('kjbc,ia->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_babbbaaa +=  1.00 * einsum('kibc,ja->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    contracted_intermediate = -1.00 * einsum('kjla,libc->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    lhe2e2cc_babbbaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abijclk', contracted_intermediate) 
-    lhe2e2cc_babbbaaa +=  1.00 * einsum('kjlc,liba->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    lhe2e2cc_babbbaaa += -1.00 * einsum('kilc,ljba->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    contracted_intermediate = -1.00 * einsum('djbc,kida->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    lhe2e2cc_babbbaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->abijcdk', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('ljbc,dl,kida->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
+    contracted_intermediate = -1.00 * einsum('ljba,kidc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_babbbaaa =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjicdkl', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('liba,kjdc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_babbbaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjicdkl', contracted_intermediate) 
+    lhe2e2cc_babbbaaa += -1.00 * einsum('ijac,klbd->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_aaaa)
+    lhe2e2cc_babbbaaa +=  1.00 * einsum('ljda,kibc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate = -1.00 * einsum('kjda,libc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
     lhe2e2cc_babbbaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('kjda,dl,libc->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
+    lhe2e2cc_babbbaaa += -1.00 * einsum('lida,kjbc->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_babbbaaa +=  1.00 * einsum('ljbc,kida->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate = -1.00 * einsum('kjbc,lida->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
     lhe2e2cc_babbbaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
-    lhe2e2cc_babbbaaa +=  1.00 * einsum('lkbd,dl,ijac->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_babbbaaa +=  1.00 * einsum('kjdc,dl,liba->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    contracted_intermediate = -1.00 * einsum('ljdc,dl,kiba->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
+    lhe2e2cc_babbbaaa += -1.00 * einsum('libc,kjda->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_babbbaaa +=  1.00 * einsum('lkbd,ijac->abjicdlk', g_aaaa[oa, oa, va, va], l2_bbbb)
+    lhe2e2cc_babbbaaa += -1.00 * einsum('ljdc,kiba->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    contracted_intermediate =  1.00 * einsum('kjdc,liba->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
     lhe2e2cc_babbbaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
-    lhe2e2cc_babbbaaa += -1.00 * einsum('kidc,dl,ljba->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_babbbaaa += -1.00 * einsum('kb,ijac->abjick', f_aa[oa, va], l2_bbbb)
-    contracted_intermediate = -1.00 * einsum('jc,kiba->abjick', f_bb[ob, vb], l2_abab)
-    lhe2e2cc_babbbaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
+    lhe2e2cc_babbbaaa +=  1.00 * einsum('lidc,kjba->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
     return lhe2e2cc_babbbaaa
 
 
-def get_lhe2e2cc_babbbaba(
+def get_lhe2e2cc_babbbbab(
     uhf_scf_data: Intermediates,
     uhf_ccsd_data: UHF_CCSD_Data,
 ) -> NDArray:
@@ -3015,68 +2565,21 @@ def get_lhe2e2cc_babbbaba(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    contracted_intermediate =  1.00 * einsum('kjba,ic->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_babbbaba =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
-    lhe2e2cc_babbbaba += -1.00 * einsum('ijac,kb->abjick', g_bbbb[ob, ob, vb, vb], l1_aa)
-    lhe2e2cc_babbbaba += -1.00 * einsum('kjbc,ia->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_babbbaba +=  1.00 * einsum('kibc,ja->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    contracted_intermediate =  1.00 * einsum('kjbl,ilac->abjiclk', g_abab[oa, ob, va, ob], l2_bbbb)
-    lhe2e2cc_babbbaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abijclk', contracted_intermediate) 
-    lhe2e2cc_babbbaba += -1.00 * einsum('ijcl,klba->abjiclk', g_bbbb[ob, ob, vb, ob], l2_abab)
-    contracted_intermediate = -1.00 * einsum('djbc,kida->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    lhe2e2cc_babbbaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->abijcdk', contracted_intermediate) 
-    lhe2e2cc_babbbaba += -1.00 * einsum('kb,ijac->abjick', f_aa[oa, va], l2_bbbb)
-    contracted_intermediate = -1.00 * einsum('jc,kiba->abjick', f_bb[ob, vb], l2_abab)
-    lhe2e2cc_babbbaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
-    return lhe2e2cc_babbbaba
-
-
-def get_lhe2e2cc_babbbbaa(
-    uhf_scf_data: Intermediates,
-    uhf_ccsd_data: UHF_CCSD_Data,
-) -> NDArray:
-    """ tensor_subscripts: ('a', 'b', 'j', 'i', 'c', 'd', 'l', 'k') """
-    f_aa = uhf_scf_data.f_aa
-    f_bb = uhf_scf_data.f_bb
-    g_aaaa = uhf_scf_data.g_aaaa
-    g_abab = uhf_scf_data.g_abab
-    g_bbbb = uhf_scf_data.g_bbbb
-    kd_aa =  uhf_scf_data.identity_aa
-    kd_bb =  uhf_scf_data.identity_bb
-    va = uhf_scf_data.va
-    vb = uhf_scf_data.vb
-    oa = uhf_scf_data.oa
-    ob = uhf_scf_data.ob
-    t1_aa = uhf_ccsd_data.t1_aa
-    t1_bb = uhf_ccsd_data.t1_bb
-    t2_aaaa = uhf_ccsd_data.t2_aaaa
-    t2_abab = uhf_ccsd_data.t2_abab
-    t2_bbbb = uhf_ccsd_data.t2_bbbb
-    if uhf_ccsd_data.lmbda is None:
-        raise RuntimeError("Lambda amplitues missing in UHF_CCSD_Data")
-    l1_aa = uhf_ccsd_data.lmbda.l1_aa
-    l1_bb = uhf_ccsd_data.lmbda.l1_bb
-    l2_aaaa = uhf_ccsd_data.lmbda.l2_aaaa
-    l2_abab = uhf_ccsd_data.lmbda.l2_abab
-    l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
-    
-    contracted_intermediate =  1.00 * einsum('kjba,ic->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_babbbbaa =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
-    lhe2e2cc_babbbbaa += -1.00 * einsum('ijac,kb->abjick', g_bbbb[ob, ob, vb, vb], l1_aa)
-    lhe2e2cc_babbbbaa += -1.00 * einsum('kjbc,ia->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_babbbbaa +=  1.00 * einsum('kibc,ja->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    contracted_intermediate = -1.00 * einsum('kjla,libc->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    lhe2e2cc_babbbbaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abijclk', contracted_intermediate) 
-    lhe2e2cc_babbbbaa +=  1.00 * einsum('kjlc,liba->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    lhe2e2cc_babbbbaa += -1.00 * einsum('kilc,ljba->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    lhe2e2cc_babbbbaa += -1.00 * einsum('kdba,ijdc->abjicdk', g_abab[oa, vb, va, vb], l2_bbbb)
-    contracted_intermediate =  1.00 * einsum('jdac,kibd->abjicdk', g_bbbb[ob, vb, vb, vb], l2_abab)
-    lhe2e2cc_babbbbaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->abijcdk', contracted_intermediate) 
-    lhe2e2cc_babbbbaa +=  1.00 * einsum('kdbc,ijda->abjicdk', g_abab[oa, vb, va, vb], l2_bbbb)
-    lhe2e2cc_babbbbaa += -1.00 * einsum('kb,ijac->abjick', f_aa[oa, va], l2_bbbb)
-    contracted_intermediate = -1.00 * einsum('jc,kiba->abjick', f_bb[ob, vb], l2_abab)
-    lhe2e2cc_babbbbaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
-    return lhe2e2cc_babbbbaa
+    lhe2e2cc_babbbbab =  1.00 * einsum('ljba,kicd->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_babbbbab += -1.00 * einsum('liba,kjcd->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_babbbbab +=  1.00 * einsum('lkba,ijcd->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    contracted_intermediate =  1.00 * einsum('ijac,lkbd->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_babbbbab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('kjac,libd->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_babbbbab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abijdclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('ljbc,kiad->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_babbbbab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('libc,kjad->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_babbbbab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjkdcli', contracted_intermediate) 
+    lhe2e2cc_babbbbab +=  1.00 * einsum('ijcd,lkba->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    contracted_intermediate = -1.00 * einsum('kjcd,liba->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_babbbbab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
+    return lhe2e2cc_babbbbab
 
 
 def get_lhe2e2cc_babbbbba(
@@ -3108,32 +2611,67 @@ def get_lhe2e2cc_babbbbba(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    contracted_intermediate =  1.00 * einsum('kjba,ic->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_babbbbba =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
-    lhe2e2cc_babbbbba += -1.00 * einsum('ijac,kb->abjick', g_bbbb[ob, ob, vb, vb], l1_aa)
-    lhe2e2cc_babbbbba += -1.00 * einsum('kjbc,ia->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_babbbbba +=  1.00 * einsum('kibc,ja->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    contracted_intermediate =  1.00 * einsum('kjbl,ilac->abjiclk', g_abab[oa, ob, va, ob], l2_bbbb)
-    lhe2e2cc_babbbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abijclk', contracted_intermediate) 
-    lhe2e2cc_babbbbba += -1.00 * einsum('ijcl,klba->abjiclk', g_bbbb[ob, ob, vb, ob], l2_abab)
-    lhe2e2cc_babbbbba += -1.00 * einsum('kdba,ijdc->abjicdk', g_abab[oa, vb, va, vb], l2_bbbb)
-    contracted_intermediate =  1.00 * einsum('jdac,kibd->abjicdk', g_bbbb[ob, vb, vb, vb], l2_abab)
-    lhe2e2cc_babbbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->abijcdk', contracted_intermediate) 
-    lhe2e2cc_babbbbba +=  1.00 * einsum('kdbc,ijda->abjicdk', g_abab[oa, vb, va, vb], l2_bbbb)
-    lhe2e2cc_babbbbba += -1.00 * einsum('klba,dl,ijcd->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
-    contracted_intermediate =  1.00 * einsum('ljac,dl,kibd->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_babbbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('kjbd,dl,liac->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_babbbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
-    lhe2e2cc_babbbbba += -1.00 * einsum('klbd,dl,ijac->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_babbbbba +=  1.00 * einsum('klbc,dl,ijad->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_babbbbba += -1.00 * einsum('ijcd,dl,klba->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    contracted_intermediate =  1.00 * einsum('ljcd,dl,kiba->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_babbbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
-    lhe2e2cc_babbbbba += -1.00 * einsum('kb,ijac->abjick', f_aa[oa, va], l2_bbbb)
-    contracted_intermediate = -1.00 * einsum('jc,kiba->abjick', f_bb[ob, vb], l2_abab)
-    lhe2e2cc_babbbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
+    lhe2e2cc_babbbbba = -1.00 * einsum('kjba,licd->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_babbbbba +=  1.00 * einsum('kiba,ljcd->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_babbbbba += -1.00 * einsum('klba,ijcd->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    contracted_intermediate = -1.00 * einsum('ijac,klbd->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_babbbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjldcik', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('liac,kjbd->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_babbbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('kjbc,liad->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_babbbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abijdclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('klbc,ijad->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_babbbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('ijcd,klba->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_babbbbba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_babbbbba += -1.00 * einsum('licd,kjba->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
     return lhe2e2cc_babbbbba
+
+
+def get_lhe2e2cc_bbaaaabb(
+    uhf_scf_data: Intermediates,
+    uhf_ccsd_data: UHF_CCSD_Data,
+) -> NDArray:
+    """ tensor_subscripts: ('a', 'b', 'j', 'i', 'c', 'd', 'l', 'k') """
+    f_aa = uhf_scf_data.f_aa
+    f_bb = uhf_scf_data.f_bb
+    g_aaaa = uhf_scf_data.g_aaaa
+    g_abab = uhf_scf_data.g_abab
+    g_bbbb = uhf_scf_data.g_bbbb
+    kd_aa =  uhf_scf_data.identity_aa
+    kd_bb =  uhf_scf_data.identity_bb
+    va = uhf_scf_data.va
+    vb = uhf_scf_data.vb
+    oa = uhf_scf_data.oa
+    ob = uhf_scf_data.ob
+    t1_aa = uhf_ccsd_data.t1_aa
+    t1_bb = uhf_ccsd_data.t1_bb
+    t2_aaaa = uhf_ccsd_data.t2_aaaa
+    t2_abab = uhf_ccsd_data.t2_abab
+    t2_bbbb = uhf_ccsd_data.t2_bbbb
+    if uhf_ccsd_data.lmbda is None:
+        raise RuntimeError("Lambda amplitues missing in UHF_CCSD_Data")
+    l1_aa = uhf_ccsd_data.lmbda.l1_aa
+    l1_bb = uhf_ccsd_data.lmbda.l1_bb
+    l2_aaaa = uhf_ccsd_data.lmbda.l2_aaaa
+    l2_abab = uhf_ccsd_data.lmbda.l2_abab
+    l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
+    
+    lhe2e2cc_bbaaaabb =  1.00 * einsum('klab,ijcd->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_aaaa)
+    contracted_intermediate =  1.00 * einsum('jlca,ikdb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bbaaaabb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('jkca,ildb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bbaaaabb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abijdclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('ilca,jkdb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bbaaaabb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('jlcb,ikda->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bbaaaabb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('jkcb,ilda->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bbaaaabb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abijdclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('ilcb,jkda->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bbaaaabb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    lhe2e2cc_bbaaaabb +=  1.00 * einsum('ijcd,klab->abjicdlk', g_aaaa[oa, oa, va, va], l2_bbbb)
+    return lhe2e2cc_bbaaaabb
 
 
 def get_lhe2e2cc_bbabaaab(
@@ -3165,31 +2703,24 @@ def get_lhe2e2cc_bbabaaab(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    lhe2e2cc_bbabaaab =  1.00 * einsum('kiab,jc->abjick', g_bbbb[ob, ob, vb, vb], l1_aa)
-    contracted_intermediate = -1.00 * einsum('jica,kb->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_bbabaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abjkci', contracted_intermediate)  + -1.00000 * einsum('abjick->bajick', contracted_intermediate)  +  1.00000 * einsum('abjick->bajkci', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('jkla,licb->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    lhe2e2cc_bbabaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->bajiclk', contracted_intermediate) 
-    lhe2e2cc_bbabaaab +=  1.00 * einsum('dkca,jidb->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    contracted_intermediate = -1.00 * einsum('dica,jkdb->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    lhe2e2cc_bbabaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->bajicdk', contracted_intermediate) 
-    lhe2e2cc_bbabaaab += -1.00 * einsum('dkcb,jida->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    lhe2e2cc_bbabaaab += -1.00 * einsum('lkca,dl,jidb->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    contracted_intermediate =  1.00 * einsum('lica,dl,jkdb->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bbabaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->bajicdlk', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('jkda,dl,licb->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bbabaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->bajicdlk', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('lkda,dl,jicb->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bbabaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->bajicdlk', contracted_intermediate) 
-    lhe2e2cc_bbabaaab +=  1.00 * einsum('lkcb,dl,jida->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bbabaaab += -1.00 * einsum('ljcd,dl,kiab->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
-    contracted_intermediate =  1.00 * einsum('ka,jicb->abjick', f_bb[ob, vb], l2_abab)
-    lhe2e2cc_bbabaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    lhe2e2cc_bbabaaab +=  1.00 * einsum('jc,kiab->abjick', f_aa[oa, va], l2_bbbb)
+    lhe2e2cc_bbabaaab = -1.00 * einsum('kiab,ljcd->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_aaaa)
+    contracted_intermediate = -1.00 * einsum('jica,lkdb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bbabaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('jkca,lidb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bbabaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('lica,jkdb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bbabaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjkdcli', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('jicb,lkda->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bbabaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('jkcb,lida->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bbabaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('licb,jkda->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bbabaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjkdcli', contracted_intermediate) 
+    lhe2e2cc_bbabaaab += -1.00 * einsum('ljcd,kiab->abjicdlk', g_aaaa[oa, oa, va, va], l2_bbbb)
     return lhe2e2cc_bbabaaab
 
 
-def get_lhe2e2cc_bbabaabb(
+def get_lhe2e2cc_bbabaaba(
     uhf_scf_data: Intermediates,
     uhf_ccsd_data: UHF_CCSD_Data,
 ) -> NDArray:
@@ -3218,64 +2749,21 @@ def get_lhe2e2cc_bbabaabb(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    lhe2e2cc_bbabaabb =  1.00 * einsum('kiab,jc->abjick', g_bbbb[ob, ob, vb, vb], l1_aa)
-    contracted_intermediate = -1.00 * einsum('jica,kb->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_bbabaabb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abjkci', contracted_intermediate)  + -1.00000 * einsum('abjick->bajick', contracted_intermediate)  +  1.00000 * einsum('abjick->bajkci', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('kial,jlcb->abjiclk', g_bbbb[ob, ob, vb, ob], l2_abab)
-    lhe2e2cc_bbabaabb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->bajiclk', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('jicl,klab->abjiclk', g_abab[oa, ob, va, ob], l2_bbbb)
-    lhe2e2cc_bbabaabb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abjkcli', contracted_intermediate) 
-    lhe2e2cc_bbabaabb +=  1.00 * einsum('dkca,jidb->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    contracted_intermediate = -1.00 * einsum('dica,jkdb->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    lhe2e2cc_bbabaabb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->bajicdk', contracted_intermediate) 
-    lhe2e2cc_bbabaabb += -1.00 * einsum('dkcb,jida->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    contracted_intermediate =  1.00 * einsum('ka,jicb->abjick', f_bb[ob, vb], l2_abab)
-    lhe2e2cc_bbabaabb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    lhe2e2cc_bbabaabb +=  1.00 * einsum('jc,kiab->abjick', f_aa[oa, va], l2_bbbb)
-    return lhe2e2cc_bbabaabb
-
-
-def get_lhe2e2cc_bbababab(
-    uhf_scf_data: Intermediates,
-    uhf_ccsd_data: UHF_CCSD_Data,
-) -> NDArray:
-    """ tensor_subscripts: ('a', 'b', 'j', 'i', 'c', 'd', 'l', 'k') """
-    f_aa = uhf_scf_data.f_aa
-    f_bb = uhf_scf_data.f_bb
-    g_aaaa = uhf_scf_data.g_aaaa
-    g_abab = uhf_scf_data.g_abab
-    g_bbbb = uhf_scf_data.g_bbbb
-    kd_aa =  uhf_scf_data.identity_aa
-    kd_bb =  uhf_scf_data.identity_bb
-    va = uhf_scf_data.va
-    vb = uhf_scf_data.vb
-    oa = uhf_scf_data.oa
-    ob = uhf_scf_data.ob
-    t1_aa = uhf_ccsd_data.t1_aa
-    t1_bb = uhf_ccsd_data.t1_bb
-    t2_aaaa = uhf_ccsd_data.t2_aaaa
-    t2_abab = uhf_ccsd_data.t2_abab
-    t2_bbbb = uhf_ccsd_data.t2_bbbb
-    if uhf_ccsd_data.lmbda is None:
-        raise RuntimeError("Lambda amplitues missing in UHF_CCSD_Data")
-    l1_aa = uhf_ccsd_data.lmbda.l1_aa
-    l1_bb = uhf_ccsd_data.lmbda.l1_bb
-    l2_aaaa = uhf_ccsd_data.lmbda.l2_aaaa
-    l2_abab = uhf_ccsd_data.lmbda.l2_abab
-    l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
-    
-    lhe2e2cc_bbababab =  1.00 * einsum('kiab,jc->abjick', g_bbbb[ob, ob, vb, vb], l1_aa)
-    contracted_intermediate = -1.00 * einsum('jica,kb->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_bbababab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abjkci', contracted_intermediate)  + -1.00000 * einsum('abjick->bajick', contracted_intermediate)  +  1.00000 * einsum('abjick->bajkci', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('jkla,licb->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    lhe2e2cc_bbababab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->bajiclk', contracted_intermediate) 
-    lhe2e2cc_bbababab +=  1.00 * einsum('kdab,jicd->abjicdk', g_bbbb[ob, vb, vb, vb], l2_abab)
-    contracted_intermediate =  1.00 * einsum('jdca,kidb->abjicdk', g_abab[oa, vb, va, vb], l2_bbbb)
-    lhe2e2cc_bbababab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->bajicdk', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('ka,jicb->abjick', f_bb[ob, vb], l2_abab)
-    lhe2e2cc_bbababab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    lhe2e2cc_bbababab +=  1.00 * einsum('jc,kiab->abjick', f_aa[oa, va], l2_bbbb)
-    return lhe2e2cc_bbababab
+    lhe2e2cc_bbabaaba =  1.00 * einsum('liab,kjcd->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_aaaa)
+    contracted_intermediate =  1.00 * einsum('jica,kldb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bbabaaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjldcik', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('kica,jldb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bbabaaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('klca,jidb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bbabaaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('jicb,klda->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bbabaaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjldcik', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('kicb,jlda->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bbabaaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('klcb,jida->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bbabaaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    lhe2e2cc_bbabaaba +=  1.00 * einsum('kjcd,liab->abjicdlk', g_aaaa[oa, oa, va, va], l2_bbbb)
+    return lhe2e2cc_bbabaaba
 
 
 def get_lhe2e2cc_bbababbb(
@@ -3307,30 +2795,75 @@ def get_lhe2e2cc_bbababbb(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    lhe2e2cc_bbababbb =  1.00 * einsum('kiab,jc->abjick', g_bbbb[ob, ob, vb, vb], l1_aa)
-    contracted_intermediate = -1.00 * einsum('jica,kb->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_bbababbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abjkci', contracted_intermediate)  + -1.00000 * einsum('abjick->bajick', contracted_intermediate)  +  1.00000 * einsum('abjick->bajkci', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('kial,jlcb->abjiclk', g_bbbb[ob, ob, vb, ob], l2_abab)
-    lhe2e2cc_bbababbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->bajiclk', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('jicl,klab->abjiclk', g_abab[oa, ob, va, ob], l2_bbbb)
-    lhe2e2cc_bbababbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abjkcli', contracted_intermediate) 
-    lhe2e2cc_bbababbb +=  1.00 * einsum('kdab,jicd->abjicdk', g_bbbb[ob, vb, vb, vb], l2_abab)
-    contracted_intermediate =  1.00 * einsum('jdca,kidb->abjicdk', g_abab[oa, vb, va, vb], l2_bbbb)
-    lhe2e2cc_bbababbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->bajicdk', contracted_intermediate) 
-    lhe2e2cc_bbababbb +=  1.00 * einsum('lkab,dl,jicd->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    contracted_intermediate =  1.00 * einsum('jlca,dl,kibd->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bbababbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->bajicdlk', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('kiad,dl,jlcb->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bbababbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->bajicdlk', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('lkad,dl,jicb->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bbababbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->bajicdlk', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('jicd,dl,lkab->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
+    contracted_intermediate = -1.00 * einsum('liab,jkcd->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbababbb =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjicdkl', contracted_intermediate) 
+    lhe2e2cc_bbababbb += -1.00 * einsum('klab,jicd->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    contracted_intermediate = -1.00 * einsum('jica,klbd->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbababbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_bbababbb += -1.00 * einsum('jkca,libd->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbababbb += -1.00 * einsum('kiad,jlcb->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    contracted_intermediate =  1.00 * einsum('liad,jkcb->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
     lhe2e2cc_bbababbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate) 
-    lhe2e2cc_bbababbb +=  1.00 * einsum('jlcd,dl,kiab->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
-    contracted_intermediate =  1.00 * einsum('ka,jicb->abjick', f_bb[ob, vb], l2_abab)
-    lhe2e2cc_bbababbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    lhe2e2cc_bbababbb +=  1.00 * einsum('jc,kiab->abjick', f_aa[oa, va], l2_bbbb)
+    contracted_intermediate =  1.00 * einsum('jicb,klad->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbababbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_bbababbb +=  1.00 * einsum('jkcb,liad->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbababbb +=  1.00 * einsum('kibd,jlca->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    contracted_intermediate = -1.00 * einsum('libd,jkca->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbababbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('jicd,klab->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbababbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_bbababbb += -1.00 * einsum('jkcd,liab->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
     return lhe2e2cc_bbababbb
+
+
+def get_lhe2e2cc_bbabbabb(
+    uhf_scf_data: Intermediates,
+    uhf_ccsd_data: UHF_CCSD_Data,
+) -> NDArray:
+    """ tensor_subscripts: ('a', 'b', 'j', 'i', 'c', 'd', 'l', 'k') """
+    f_aa = uhf_scf_data.f_aa
+    f_bb = uhf_scf_data.f_bb
+    g_aaaa = uhf_scf_data.g_aaaa
+    g_abab = uhf_scf_data.g_abab
+    g_bbbb = uhf_scf_data.g_bbbb
+    kd_aa =  uhf_scf_data.identity_aa
+    kd_bb =  uhf_scf_data.identity_bb
+    va = uhf_scf_data.va
+    vb = uhf_scf_data.vb
+    oa = uhf_scf_data.oa
+    ob = uhf_scf_data.ob
+    t1_aa = uhf_ccsd_data.t1_aa
+    t1_bb = uhf_ccsd_data.t1_bb
+    t2_aaaa = uhf_ccsd_data.t2_aaaa
+    t2_abab = uhf_ccsd_data.t2_abab
+    t2_bbbb = uhf_ccsd_data.t2_bbbb
+    if uhf_ccsd_data.lmbda is None:
+        raise RuntimeError("Lambda amplitues missing in UHF_CCSD_Data")
+    l1_aa = uhf_ccsd_data.lmbda.l1_aa
+    l1_bb = uhf_ccsd_data.lmbda.l1_bb
+    l2_aaaa = uhf_ccsd_data.lmbda.l2_aaaa
+    l2_abab = uhf_ccsd_data.lmbda.l2_abab
+    l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
+    
+    contracted_intermediate =  1.00 * einsum('liab,jkdc->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbabbabb =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjicdkl', contracted_intermediate) 
+    lhe2e2cc_bbabbabb +=  1.00 * einsum('klab,jidc->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    contracted_intermediate =  1.00 * einsum('jida,klbc->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbabbabb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_bbabbabb +=  1.00 * einsum('jkda,libc->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbabbabb +=  1.00 * einsum('kiac,jldb->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    contracted_intermediate = -1.00 * einsum('liac,jkdb->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbabbabb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('jidb,klac->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbabbabb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_bbabbabb += -1.00 * einsum('jkdb,liac->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbabbabb += -1.00 * einsum('kibc,jlda->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    contracted_intermediate =  1.00 * einsum('libc,jkda->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbabbabb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('jidc,klab->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbabbabb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    lhe2e2cc_bbabbabb +=  1.00 * einsum('jkdc,liab->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    return lhe2e2cc_bbabbabb
 
 
 def get_lhe2e2cc_bbbaaaab(
@@ -3362,33 +2895,24 @@ def get_lhe2e2cc_bbbaaaab(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    lhe2e2cc_bbbaaaab = -1.00 * einsum('kjab,ic->abjick', g_bbbb[ob, ob, vb, vb], l1_aa)
-    contracted_intermediate =  1.00 * einsum('ijca,kb->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_bbbaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('ikca,jb->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_bbbaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('ikla,ljcb->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    lhe2e2cc_bbbaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->bajiclk', contracted_intermediate) 
-    lhe2e2cc_bbbaaaab += -1.00 * einsum('dkca,ijdb->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    contracted_intermediate =  1.00 * einsum('djca,ikdb->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    lhe2e2cc_bbbaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->bajicdk', contracted_intermediate) 
-    lhe2e2cc_bbbaaaab +=  1.00 * einsum('dkcb,ijda->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    lhe2e2cc_bbbaaaab +=  1.00 * einsum('lkca,dl,ijdb->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    contracted_intermediate = -1.00 * einsum('ljca,dl,ikdb->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bbbaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->bajicdlk', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('ikda,dl,ljcb->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bbbaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->bajicdlk', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('lkda,dl,ijcb->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bbbaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->bajicdlk', contracted_intermediate) 
-    lhe2e2cc_bbbaaaab += -1.00 * einsum('lkcb,dl,ijda->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bbbaaaab +=  1.00 * einsum('licd,dl,kjab->abjicdlk', g_aaaa[oa, oa, va, va], t1_aa, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
-    contracted_intermediate = -1.00 * einsum('ka,ijcb->abjick', f_bb[ob, vb], l2_abab)
-    lhe2e2cc_bbbaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    lhe2e2cc_bbbaaaab += -1.00 * einsum('ic,kjab->abjick', f_aa[oa, va], l2_bbbb)
+    lhe2e2cc_bbbaaaab =  1.00 * einsum('kjab,licd->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_aaaa)
+    contracted_intermediate =  1.00 * einsum('ijca,lkdb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bbbaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjldcik', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('ikca,ljdb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bbbaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('lkca,ijdb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bbbaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('ijcb,lkda->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bbbaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjldcik', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('ikcb,ljda->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bbbaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('lkcb,ijda->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bbbaaaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    lhe2e2cc_bbbaaaab +=  1.00 * einsum('licd,kjab->abjicdlk', g_aaaa[oa, oa, va, va], l2_bbbb)
     return lhe2e2cc_bbbaaaab
 
 
-def get_lhe2e2cc_bbbaaabb(
+def get_lhe2e2cc_bbbaaaba(
     uhf_scf_data: Intermediates,
     uhf_ccsd_data: UHF_CCSD_Data,
 ) -> NDArray:
@@ -3417,68 +2941,21 @@ def get_lhe2e2cc_bbbaaabb(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    lhe2e2cc_bbbaaabb = -1.00 * einsum('kjab,ic->abjick', g_bbbb[ob, ob, vb, vb], l1_aa)
-    contracted_intermediate =  1.00 * einsum('ijca,kb->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_bbbaaabb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('ikca,jb->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_bbbaaabb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('kjal,ilcb->abjiclk', g_bbbb[ob, ob, vb, ob], l2_abab)
-    lhe2e2cc_bbbaaabb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->bajiclk', contracted_intermediate) 
-    lhe2e2cc_bbbaaabb +=  1.00 * einsum('ijcl,klab->abjiclk', g_abab[oa, ob, va, ob], l2_bbbb)
-    lhe2e2cc_bbbaaabb += -1.00 * einsum('ikcl,jlab->abjiclk', g_abab[oa, ob, va, ob], l2_bbbb)
-    lhe2e2cc_bbbaaabb += -1.00 * einsum('dkca,ijdb->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    contracted_intermediate =  1.00 * einsum('djca,ikdb->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    lhe2e2cc_bbbaaabb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->bajicdk', contracted_intermediate) 
-    lhe2e2cc_bbbaaabb +=  1.00 * einsum('dkcb,ijda->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    contracted_intermediate = -1.00 * einsum('ka,ijcb->abjick', f_bb[ob, vb], l2_abab)
-    lhe2e2cc_bbbaaabb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    lhe2e2cc_bbbaaabb += -1.00 * einsum('ic,kjab->abjick', f_aa[oa, va], l2_bbbb)
-    return lhe2e2cc_bbbaaabb
-
-
-def get_lhe2e2cc_bbbaabab(
-    uhf_scf_data: Intermediates,
-    uhf_ccsd_data: UHF_CCSD_Data,
-) -> NDArray:
-    """ tensor_subscripts: ('a', 'b', 'j', 'i', 'c', 'd', 'l', 'k') """
-    f_aa = uhf_scf_data.f_aa
-    f_bb = uhf_scf_data.f_bb
-    g_aaaa = uhf_scf_data.g_aaaa
-    g_abab = uhf_scf_data.g_abab
-    g_bbbb = uhf_scf_data.g_bbbb
-    kd_aa =  uhf_scf_data.identity_aa
-    kd_bb =  uhf_scf_data.identity_bb
-    va = uhf_scf_data.va
-    vb = uhf_scf_data.vb
-    oa = uhf_scf_data.oa
-    ob = uhf_scf_data.ob
-    t1_aa = uhf_ccsd_data.t1_aa
-    t1_bb = uhf_ccsd_data.t1_bb
-    t2_aaaa = uhf_ccsd_data.t2_aaaa
-    t2_abab = uhf_ccsd_data.t2_abab
-    t2_bbbb = uhf_ccsd_data.t2_bbbb
-    if uhf_ccsd_data.lmbda is None:
-        raise RuntimeError("Lambda amplitues missing in UHF_CCSD_Data")
-    l1_aa = uhf_ccsd_data.lmbda.l1_aa
-    l1_bb = uhf_ccsd_data.lmbda.l1_bb
-    l2_aaaa = uhf_ccsd_data.lmbda.l2_aaaa
-    l2_abab = uhf_ccsd_data.lmbda.l2_abab
-    l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
-    
-    lhe2e2cc_bbbaabab = -1.00 * einsum('kjab,ic->abjick', g_bbbb[ob, ob, vb, vb], l1_aa)
-    contracted_intermediate =  1.00 * einsum('ijca,kb->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_bbbaabab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('ikca,jb->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_bbbaabab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('ikla,ljcb->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    lhe2e2cc_bbbaabab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->bajiclk', contracted_intermediate) 
-    lhe2e2cc_bbbaabab += -1.00 * einsum('kdab,ijcd->abjicdk', g_bbbb[ob, vb, vb, vb], l2_abab)
-    contracted_intermediate = -1.00 * einsum('idca,kjdb->abjicdk', g_abab[oa, vb, va, vb], l2_bbbb)
-    lhe2e2cc_bbbaabab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->bajicdk', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('ka,ijcb->abjick', f_bb[ob, vb], l2_abab)
-    lhe2e2cc_bbbaabab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    lhe2e2cc_bbbaabab += -1.00 * einsum('ic,kjab->abjick', f_aa[oa, va], l2_bbbb)
-    return lhe2e2cc_bbbaabab
+    lhe2e2cc_bbbaaaba = -1.00 * einsum('ljab,kicd->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_aaaa)
+    contracted_intermediate = -1.00 * einsum('ijca,kldb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bbbaaaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('kjca,ildb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bbbaaaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('ilca,kjdb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bbbaaaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjkdcli', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('ijcb,klda->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bbbaaaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('kjcb,ilda->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bbbaaaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('ilcb,kjda->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bbbaaaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjkdcli', contracted_intermediate) 
+    lhe2e2cc_bbbaaaba += -1.00 * einsum('kicd,ljab->abjicdlk', g_aaaa[oa, oa, va, va], l2_bbbb)
+    return lhe2e2cc_bbbaaaba
 
 
 def get_lhe2e2cc_bbbaabbb(
@@ -3510,32 +2987,75 @@ def get_lhe2e2cc_bbbaabbb(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    lhe2e2cc_bbbaabbb = -1.00 * einsum('kjab,ic->abjick', g_bbbb[ob, ob, vb, vb], l1_aa)
-    contracted_intermediate =  1.00 * einsum('ijca,kb->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_bbbaabbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('ikca,jb->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_bbbaabbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('kjal,ilcb->abjiclk', g_bbbb[ob, ob, vb, ob], l2_abab)
-    lhe2e2cc_bbbaabbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->bajiclk', contracted_intermediate) 
-    lhe2e2cc_bbbaabbb +=  1.00 * einsum('ijcl,klab->abjiclk', g_abab[oa, ob, va, ob], l2_bbbb)
-    lhe2e2cc_bbbaabbb += -1.00 * einsum('ikcl,jlab->abjiclk', g_abab[oa, ob, va, ob], l2_bbbb)
-    lhe2e2cc_bbbaabbb += -1.00 * einsum('kdab,ijcd->abjicdk', g_bbbb[ob, vb, vb, vb], l2_abab)
-    contracted_intermediate = -1.00 * einsum('idca,kjdb->abjicdk', g_abab[oa, vb, va, vb], l2_bbbb)
-    lhe2e2cc_bbbaabbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->bajicdk', contracted_intermediate) 
-    lhe2e2cc_bbbaabbb += -1.00 * einsum('lkab,dl,ijcd->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    contracted_intermediate = -1.00 * einsum('ilca,dl,kjbd->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bbbaabbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->bajicdlk', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('kjad,dl,ilcb->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bbbaabbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->bajicdlk', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('lkad,dl,ijcb->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bbbaabbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->bajicdlk', contracted_intermediate) 
-    lhe2e2cc_bbbaabbb += -1.00 * einsum('ijcd,dl,lkab->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bbbaabbb += -1.00 * einsum('ilcd,dl,kjab->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bbbaabbb +=  1.00 * einsum('ikcd,dl,ljab->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
-    contracted_intermediate = -1.00 * einsum('ka,ijcb->abjick', f_bb[ob, vb], l2_abab)
-    lhe2e2cc_bbbaabbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    lhe2e2cc_bbbaabbb += -1.00 * einsum('ic,kjab->abjick', f_aa[oa, va], l2_bbbb)
+    contracted_intermediate =  1.00 * einsum('ljab,ikcd->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbbaabbb =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjicdkl', contracted_intermediate) 
+    lhe2e2cc_bbbaabbb +=  1.00 * einsum('klab,ijcd->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbbaabbb +=  1.00 * einsum('ijca,klbd->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbbaabbb += -1.00 * einsum('ljad,ikcb->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbbaabbb +=  1.00 * einsum('kjad,ilcb->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbbaabbb +=  1.00 * einsum('ikca,ljbd->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbbaabbb += -1.00 * einsum('ilca,kjbd->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbbaabbb +=  1.00 * einsum('lkad,ijcb->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbbaabbb += -1.00 * einsum('ijcb,klad->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbbaabbb +=  1.00 * einsum('ljbd,ikca->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbbaabbb += -1.00 * einsum('kjbd,ilca->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbbaabbb += -1.00 * einsum('ikcb,ljad->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbbaabbb +=  1.00 * einsum('ilcb,kjad->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbbaabbb += -1.00 * einsum('lkbd,ijca->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbbaabbb +=  1.00 * einsum('ijcd,klab->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbbaabbb +=  1.00 * einsum('ikcd,ljab->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbbaabbb += -1.00 * einsum('ilcd,kjab->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
     return lhe2e2cc_bbbaabbb
+
+
+def get_lhe2e2cc_bbbababb(
+    uhf_scf_data: Intermediates,
+    uhf_ccsd_data: UHF_CCSD_Data,
+) -> NDArray:
+    """ tensor_subscripts: ('a', 'b', 'j', 'i', 'c', 'd', 'l', 'k') """
+    f_aa = uhf_scf_data.f_aa
+    f_bb = uhf_scf_data.f_bb
+    g_aaaa = uhf_scf_data.g_aaaa
+    g_abab = uhf_scf_data.g_abab
+    g_bbbb = uhf_scf_data.g_bbbb
+    kd_aa =  uhf_scf_data.identity_aa
+    kd_bb =  uhf_scf_data.identity_bb
+    va = uhf_scf_data.va
+    vb = uhf_scf_data.vb
+    oa = uhf_scf_data.oa
+    ob = uhf_scf_data.ob
+    t1_aa = uhf_ccsd_data.t1_aa
+    t1_bb = uhf_ccsd_data.t1_bb
+    t2_aaaa = uhf_ccsd_data.t2_aaaa
+    t2_abab = uhf_ccsd_data.t2_abab
+    t2_bbbb = uhf_ccsd_data.t2_bbbb
+    if uhf_ccsd_data.lmbda is None:
+        raise RuntimeError("Lambda amplitues missing in UHF_CCSD_Data")
+    l1_aa = uhf_ccsd_data.lmbda.l1_aa
+    l1_bb = uhf_ccsd_data.lmbda.l1_bb
+    l2_aaaa = uhf_ccsd_data.lmbda.l2_aaaa
+    l2_abab = uhf_ccsd_data.lmbda.l2_abab
+    l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
+    
+    contracted_intermediate = -1.00 * einsum('ljab,ikdc->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbbababb =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjicdkl', contracted_intermediate) 
+    lhe2e2cc_bbbababb += -1.00 * einsum('klab,ijdc->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbbababb += -1.00 * einsum('ijda,klbc->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbbababb +=  1.00 * einsum('ljac,ikdb->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbbababb += -1.00 * einsum('kjac,ildb->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbbababb += -1.00 * einsum('ikda,ljbc->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbbababb +=  1.00 * einsum('ilda,kjbc->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbbababb += -1.00 * einsum('lkac,ijdb->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbbababb +=  1.00 * einsum('ijdb,klac->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbbababb += -1.00 * einsum('ljbc,ikda->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbbababb +=  1.00 * einsum('kjbc,ilda->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbbababb +=  1.00 * einsum('ikdb,ljac->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbbababb += -1.00 * einsum('ildb,kjac->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbbababb +=  1.00 * einsum('lkbc,ijda->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbbababb += -1.00 * einsum('ijdc,klab->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbbababb += -1.00 * einsum('ikdc,ljab->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbbababb +=  1.00 * einsum('ildc,kjab->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    return lhe2e2cc_bbbababb
 
 
 def get_lhe2e2cc_bbbbaaaa(
@@ -3567,22 +3087,22 @@ def get_lhe2e2cc_bbbbaaaa(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    contracted_intermediate = -1.00 * einsum('kjca,ib->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_bbbbaaaa =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('kica,jb->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_bbbbaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('kjla,licb->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    lhe2e2cc_bbbbaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abijclk', contracted_intermediate)  + -1.00000 * einsum('abjiclk->bajiclk', contracted_intermediate)  +  1.00000 * einsum('abjiclk->baijclk', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('djca,kidb->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    lhe2e2cc_bbbbaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->abijcdk', contracted_intermediate)  + -1.00000 * einsum('abjicdk->bajicdk', contracted_intermediate)  +  1.00000 * einsum('abjicdk->baijcdk', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('ljca,dl,kidb->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bbbbaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->bajicdlk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->baijcdlk', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('kjda,dl,licb->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_abab, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bbbbaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->bajicdlk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->baijcdlk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('ljca,kidb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bbbbaaaa =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('kjca,lidb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bbbbaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abijdclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('lica,kjdb->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bbbbaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('ljcb,kida->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bbbbaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('kjcb,lida->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bbbbaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abijdclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('licb,kjda->abjicdlk', g_abab[oa, ob, va, vb], l2_abab)
+    lhe2e2cc_bbbbaaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate) 
     return lhe2e2cc_bbbbaaaa
 
 
-def get_lhe2e2cc_bbbbaaba(
+def get_lhe2e2cc_bbbbabab(
     uhf_scf_data: Intermediates,
     uhf_ccsd_data: UHF_CCSD_Data,
 ) -> NDArray:
@@ -3611,55 +3131,23 @@ def get_lhe2e2cc_bbbbaaba(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    contracted_intermediate = -1.00 * einsum('kjca,ib->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_bbbbaaba =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('kica,jb->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_bbbbaaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    lhe2e2cc_bbbbaaba += -1.00 * einsum('kjcl,ilab->abjiclk', g_abab[oa, ob, va, ob], l2_bbbb)
-    lhe2e2cc_bbbbaaba +=  1.00 * einsum('kicl,jlab->abjiclk', g_abab[oa, ob, va, ob], l2_bbbb)
-    contracted_intermediate = -1.00 * einsum('djca,kidb->abjicdk', g_abab[va, ob, va, vb], l2_abab)
-    lhe2e2cc_bbbbaaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->abijcdk', contracted_intermediate)  + -1.00000 * einsum('abjicdk->bajicdk', contracted_intermediate)  +  1.00000 * einsum('abjicdk->baijcdk', contracted_intermediate) 
-    return lhe2e2cc_bbbbaaba
-
-
-def get_lhe2e2cc_bbbbabaa(
-    uhf_scf_data: Intermediates,
-    uhf_ccsd_data: UHF_CCSD_Data,
-) -> NDArray:
-    """ tensor_subscripts: ('a', 'b', 'j', 'i', 'c', 'd', 'l', 'k') """
-    f_aa = uhf_scf_data.f_aa
-    f_bb = uhf_scf_data.f_bb
-    g_aaaa = uhf_scf_data.g_aaaa
-    g_abab = uhf_scf_data.g_abab
-    g_bbbb = uhf_scf_data.g_bbbb
-    kd_aa =  uhf_scf_data.identity_aa
-    kd_bb =  uhf_scf_data.identity_bb
-    va = uhf_scf_data.va
-    vb = uhf_scf_data.vb
-    oa = uhf_scf_data.oa
-    ob = uhf_scf_data.ob
-    t1_aa = uhf_ccsd_data.t1_aa
-    t1_bb = uhf_ccsd_data.t1_bb
-    t2_aaaa = uhf_ccsd_data.t2_aaaa
-    t2_abab = uhf_ccsd_data.t2_abab
-    t2_bbbb = uhf_ccsd_data.t2_bbbb
-    if uhf_ccsd_data.lmbda is None:
-        raise RuntimeError("Lambda amplitues missing in UHF_CCSD_Data")
-    l1_aa = uhf_ccsd_data.lmbda.l1_aa
-    l1_bb = uhf_ccsd_data.lmbda.l1_bb
-    l2_aaaa = uhf_ccsd_data.lmbda.l2_aaaa
-    l2_abab = uhf_ccsd_data.lmbda.l2_abab
-    l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
-    
-    contracted_intermediate = -1.00 * einsum('kjca,ib->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_bbbbabaa =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('kica,jb->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_bbbbabaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('kjla,licb->abjiclk', g_abab[oa, ob, oa, vb], l2_abab)
-    lhe2e2cc_bbbbabaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abijclk', contracted_intermediate)  + -1.00000 * einsum('abjiclk->bajiclk', contracted_intermediate)  +  1.00000 * einsum('abjiclk->baijclk', contracted_intermediate) 
-    lhe2e2cc_bbbbabaa +=  1.00 * einsum('kdca,ijdb->abjicdk', g_abab[oa, vb, va, vb], l2_bbbb)
-    lhe2e2cc_bbbbabaa += -1.00 * einsum('kdcb,ijda->abjicdk', g_abab[oa, vb, va, vb], l2_bbbb)
-    return lhe2e2cc_bbbbabaa
+    lhe2e2cc_bbbbabab =  1.00 * einsum('kjab,licd->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbbbabab += -1.00 * einsum('kiab,ljcd->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbbbabab +=  1.00 * einsum('ijad,lkcb->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbbbabab += -1.00 * einsum('ljca,kibd->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    contracted_intermediate = -1.00 * einsum('kjad,licb->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbbbabab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('lica,kjbd->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbbbabab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate) 
+    lhe2e2cc_bbbbabab += -1.00 * einsum('ijbd,lkca->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbbbabab +=  1.00 * einsum('ljcb,kiad->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    contracted_intermediate =  1.00 * einsum('kjbd,lica->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbbbabab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('licb,kjad->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbbbabab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate) 
+    lhe2e2cc_bbbbabab += -1.00 * einsum('ljcd,kiab->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbbbabab +=  1.00 * einsum('licd,kjab->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    return lhe2e2cc_bbbbabab
 
 
 def get_lhe2e2cc_bbbbabba(
@@ -3691,18 +3179,22 @@ def get_lhe2e2cc_bbbbabba(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    contracted_intermediate = -1.00 * einsum('kjca,ib->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_bbbbabba =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('kica,jb->abjick', g_abab[oa, ob, va, vb], l1_bb)
-    lhe2e2cc_bbbbabba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    lhe2e2cc_bbbbabba += -1.00 * einsum('kjcl,ilab->abjiclk', g_abab[oa, ob, va, ob], l2_bbbb)
-    lhe2e2cc_bbbbabba +=  1.00 * einsum('kicl,jlab->abjiclk', g_abab[oa, ob, va, ob], l2_bbbb)
-    lhe2e2cc_bbbbabba +=  1.00 * einsum('kdca,ijdb->abjicdk', g_abab[oa, vb, va, vb], l2_bbbb)
-    lhe2e2cc_bbbbabba += -1.00 * einsum('kdcb,ijda->abjicdk', g_abab[oa, vb, va, vb], l2_bbbb)
-    lhe2e2cc_bbbbabba +=  1.00 * einsum('klca,dl,ijbd->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bbbbabba += -1.00 * einsum('klcb,dl,ijad->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bbbbabba +=  1.00 * einsum('kjcd,dl,liab->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bbbbabba += -1.00 * einsum('kicd,dl,ljab->abjicdlk', g_abab[oa, ob, va, vb], t1_bb, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
+    lhe2e2cc_bbbbabba = -1.00 * einsum('ljab,kicd->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbbbabba +=  1.00 * einsum('liab,kjcd->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    contracted_intermediate = -1.00 * einsum('ijad,klcb->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbbbabba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('kjca,libd->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbbbabba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
+    lhe2e2cc_bbbbabba += -1.00 * einsum('liad,kjcb->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbbbabba +=  1.00 * einsum('klca,ijbd->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    contracted_intermediate =  1.00 * einsum('ijbd,klca->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbbbabba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('kjcb,liad->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbbbabba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
+    lhe2e2cc_bbbbabba +=  1.00 * einsum('libd,kjca->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbbbabba += -1.00 * einsum('klcb,ijad->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    contracted_intermediate =  1.00 * einsum('kjcd,liab->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbbbabba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
     return lhe2e2cc_bbbbabba
 
 
@@ -3735,24 +3227,26 @@ def get_lhe2e2cc_bbbbbaab(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    contracted_intermediate = -1.00 * einsum('kjab,ic->abjick', g_bbbb[ob, ob, vb, vb], l1_bb)
-    lhe2e2cc_bbbbbaab =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('ijac,kb->abjick', g_bbbb[ob, ob, vb, vb], l1_bb)
-    lhe2e2cc_bbbbbaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abjkci', contracted_intermediate)  + -1.00000 * einsum('abjick->bajick', contracted_intermediate)  +  1.00000 * einsum('abjick->bajkci', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('kiac,jb->abjick', g_bbbb[ob, ob, vb, vb], l1_bb)
-    lhe2e2cc_bbbbbaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('lkda,dl,ijbc->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bbbbbaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->bajicdlk', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('ljdc,dl,kiab->abjicdlk', g_abab[oa, ob, va, vb], t1_aa, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
+    lhe2e2cc_bbbbbaab = -1.00 * einsum('kjab,lidc->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbbbbaab +=  1.00 * einsum('kiab,ljdc->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbbbbaab += -1.00 * einsum('ijac,lkdb->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbbbbaab +=  1.00 * einsum('ljda,kibc->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    contracted_intermediate =  1.00 * einsum('kjac,lidb->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
     lhe2e2cc_bbbbbaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('ka,ijbc->abjick', f_bb[ob, vb], l2_bbbb)
-    lhe2e2cc_bbbbbaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('jc,kiab->abjick', f_bb[ob, vb], l2_bbbb)
-    lhe2e2cc_bbbbbaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('lida,kjbc->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbbbbaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate) 
+    lhe2e2cc_bbbbbaab +=  1.00 * einsum('ijbc,lkda->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbbbbaab += -1.00 * einsum('ljdb,kiac->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    contracted_intermediate = -1.00 * einsum('kjbc,lida->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbbbbaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('lidb,kjac->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbbbbaab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate) 
+    lhe2e2cc_bbbbbaab +=  1.00 * einsum('ljdc,kiab->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbbbbaab += -1.00 * einsum('lidc,kjab->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
     return lhe2e2cc_bbbbbaab
 
 
-def get_lhe2e2cc_bbbbbabb(
+def get_lhe2e2cc_bbbbbaba(
     uhf_scf_data: Intermediates,
     uhf_ccsd_data: UHF_CCSD_Data,
 ) -> NDArray:
@@ -3781,69 +3275,23 @@ def get_lhe2e2cc_bbbbbabb(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    contracted_intermediate = -1.00 * einsum('kjab,ic->abjick', g_bbbb[ob, ob, vb, vb], l1_bb)
-    lhe2e2cc_bbbbbabb =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('ijac,kb->abjick', g_bbbb[ob, ob, vb, vb], l1_bb)
-    lhe2e2cc_bbbbbabb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abjkci', contracted_intermediate)  + -1.00000 * einsum('abjick->bajick', contracted_intermediate)  +  1.00000 * einsum('abjick->bajkci', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('kiac,jb->abjick', g_bbbb[ob, ob, vb, vb], l1_bb)
-    lhe2e2cc_bbbbbabb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('kjal,ilbc->abjiclk', g_bbbb[ob, ob, vb, ob], l2_bbbb)
-    lhe2e2cc_bbbbbabb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abijclk', contracted_intermediate)  + -1.00000 * einsum('abjiclk->bajiclk', contracted_intermediate)  +  1.00000 * einsum('abjiclk->baijclk', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('ijcl,klab->abjiclk', g_bbbb[ob, ob, vb, ob], l2_bbbb)
-    lhe2e2cc_bbbbbabb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abjkcli', contracted_intermediate) 
-    lhe2e2cc_bbbbbabb +=  1.00 * einsum('kicl,jlab->abjiclk', g_bbbb[ob, ob, vb, ob], l2_bbbb)
-    contracted_intermediate =  1.00 * einsum('ka,ijbc->abjick', f_bb[ob, vb], l2_bbbb)
-    lhe2e2cc_bbbbbabb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('jc,kiab->abjick', f_bb[ob, vb], l2_bbbb)
-    lhe2e2cc_bbbbbabb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
-    return lhe2e2cc_bbbbbabb
-
-
-def get_lhe2e2cc_bbbbbbab(
-    uhf_scf_data: Intermediates,
-    uhf_ccsd_data: UHF_CCSD_Data,
-) -> NDArray:
-    """ tensor_subscripts: ('a', 'b', 'j', 'i', 'c', 'd', 'l', 'k') """
-    f_aa = uhf_scf_data.f_aa
-    f_bb = uhf_scf_data.f_bb
-    g_aaaa = uhf_scf_data.g_aaaa
-    g_abab = uhf_scf_data.g_abab
-    g_bbbb = uhf_scf_data.g_bbbb
-    kd_aa =  uhf_scf_data.identity_aa
-    kd_bb =  uhf_scf_data.identity_bb
-    va = uhf_scf_data.va
-    vb = uhf_scf_data.vb
-    oa = uhf_scf_data.oa
-    ob = uhf_scf_data.ob
-    t1_aa = uhf_ccsd_data.t1_aa
-    t1_bb = uhf_ccsd_data.t1_bb
-    t2_aaaa = uhf_ccsd_data.t2_aaaa
-    t2_abab = uhf_ccsd_data.t2_abab
-    t2_bbbb = uhf_ccsd_data.t2_bbbb
-    if uhf_ccsd_data.lmbda is None:
-        raise RuntimeError("Lambda amplitues missing in UHF_CCSD_Data")
-    l1_aa = uhf_ccsd_data.lmbda.l1_aa
-    l1_bb = uhf_ccsd_data.lmbda.l1_bb
-    l2_aaaa = uhf_ccsd_data.lmbda.l2_aaaa
-    l2_abab = uhf_ccsd_data.lmbda.l2_abab
-    l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
-    
-    contracted_intermediate = -1.00 * einsum('kjab,ic->abjick', g_bbbb[ob, ob, vb, vb], l1_bb)
-    lhe2e2cc_bbbbbbab =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('ijac,kb->abjick', g_bbbb[ob, ob, vb, vb], l1_bb)
-    lhe2e2cc_bbbbbbab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abjkci', contracted_intermediate)  + -1.00000 * einsum('abjick->bajick', contracted_intermediate)  +  1.00000 * einsum('abjick->bajkci', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('kiac,jb->abjick', g_bbbb[ob, ob, vb, vb], l1_bb)
-    lhe2e2cc_bbbbbbab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('kdab,ijdc->abjicdk', g_bbbb[ob, vb, vb, vb], l2_bbbb)
-    lhe2e2cc_bbbbbbab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->acjibdk', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('jdac,kidb->abjicdk', g_bbbb[ob, vb, vb, vb], l2_bbbb)
-    lhe2e2cc_bbbbbbab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->abijcdk', contracted_intermediate)  + -1.00000 * einsum('abjicdk->bajicdk', contracted_intermediate)  +  1.00000 * einsum('abjicdk->baijcdk', contracted_intermediate) 
-    lhe2e2cc_bbbbbbab +=  1.00 * einsum('kdbc,ijda->abjicdk', g_bbbb[ob, vb, vb, vb], l2_bbbb)
-    contracted_intermediate =  1.00 * einsum('ka,ijbc->abjick', f_bb[ob, vb], l2_bbbb)
-    lhe2e2cc_bbbbbbab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('jc,kiab->abjick', f_bb[ob, vb], l2_bbbb)
-    lhe2e2cc_bbbbbbab +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
-    return lhe2e2cc_bbbbbbab
+    lhe2e2cc_bbbbbaba =  1.00 * einsum('ljab,kidc->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbbbbaba += -1.00 * einsum('liab,kjdc->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    contracted_intermediate =  1.00 * einsum('ijac,kldb->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbbbbaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('kjda,libc->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbbbbaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
+    lhe2e2cc_bbbbbaba +=  1.00 * einsum('liac,kjdb->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbbbbaba += -1.00 * einsum('klda,ijbc->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    contracted_intermediate = -1.00 * einsum('ijbc,klda->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbbbbaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('kjdb,liac->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbbbbaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
+    lhe2e2cc_bbbbbaba += -1.00 * einsum('libc,kjda->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_abab)
+    lhe2e2cc_bbbbbaba +=  1.00 * einsum('kldb,ijac->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    contracted_intermediate = -1.00 * einsum('kjdc,liab->abjicdlk', g_abab[oa, ob, va, vb], l2_bbbb)
+    lhe2e2cc_bbbbbaba +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
+    return lhe2e2cc_bbbbbaba
 
 
 def get_lhe2e2cc_bbbbbbbb(
@@ -3875,38 +3323,26 @@ def get_lhe2e2cc_bbbbbbbb(
     l2_abab = uhf_ccsd_data.lmbda.l2_abab
     l2_bbbb = uhf_ccsd_data.lmbda.l2_bbbb
     
-    contracted_intermediate = -1.00 * einsum('kjab,ic->abjick', g_bbbb[ob, ob, vb, vb], l1_bb)
-    lhe2e2cc_bbbbbbbb =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('ijac,kb->abjick', g_bbbb[ob, ob, vb, vb], l1_bb)
-    lhe2e2cc_bbbbbbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abjkci', contracted_intermediate)  + -1.00000 * einsum('abjick->bajick', contracted_intermediate)  +  1.00000 * einsum('abjick->bajkci', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('kiac,jb->abjick', g_bbbb[ob, ob, vb, vb], l1_bb)
-    lhe2e2cc_bbbbbbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('kjal,ilbc->abjiclk', g_bbbb[ob, ob, vb, ob], l2_bbbb)
-    lhe2e2cc_bbbbbbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abijclk', contracted_intermediate)  + -1.00000 * einsum('abjiclk->bajiclk', contracted_intermediate)  +  1.00000 * einsum('abjiclk->baijclk', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('ijcl,klab->abjiclk', g_bbbb[ob, ob, vb, ob], l2_bbbb)
-    lhe2e2cc_bbbbbbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjiclk->abjkcli', contracted_intermediate) 
-    lhe2e2cc_bbbbbbbb +=  1.00 * einsum('kicl,jlab->abjiclk', g_bbbb[ob, ob, vb, ob], l2_bbbb)
-    contracted_intermediate =  1.00 * einsum('kdab,ijdc->abjicdk', g_bbbb[ob, vb, vb, vb], l2_bbbb)
-    lhe2e2cc_bbbbbbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->acjibdk', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('jdac,kidb->abjicdk', g_bbbb[ob, vb, vb, vb], l2_bbbb)
-    lhe2e2cc_bbbbbbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdk->abijcdk', contracted_intermediate)  + -1.00000 * einsum('abjicdk->bajicdk', contracted_intermediate)  +  1.00000 * einsum('abjicdk->baijcdk', contracted_intermediate) 
-    lhe2e2cc_bbbbbbbb +=  1.00 * einsum('kdbc,ijda->abjicdk', g_bbbb[ob, vb, vb, vb], l2_bbbb)
-    contracted_intermediate = -1.00 * einsum('lkab,dl,ijcd->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bbbbbbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->acjibdlk', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('ljac,dl,kibd->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bbbbbbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->bajicdlk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->baijcdlk', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('kjad,dl,libc->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bbbbbbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->bajicdlk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->baijcdlk', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('lkad,dl,ijbc->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bbbbbbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->bajicdlk', contracted_intermediate) 
-    lhe2e2cc_bbbbbbbb += -1.00 * einsum('lkbc,dl,ijad->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
-    contracted_intermediate = -1.00 * einsum('ijcd,dl,lkab->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
-    lhe2e2cc_bbbbbbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate) 
-    contracted_intermediate = -1.00 * einsum('ljcd,dl,kiab->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
+    contracted_intermediate = -1.00 * einsum('ljab,kicd->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_bbbb)
+    lhe2e2cc_bbbbbbbb =  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjicdkl', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('liab,kjcd->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_bbbb)
+    lhe2e2cc_bbbbbbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjicdkl', contracted_intermediate) 
+    lhe2e2cc_bbbbbbbb +=  1.00 * einsum('klab,ijcd->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_bbbb)
+    contracted_intermediate = -1.00 * einsum('ijac,klbd->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_bbbb)
+    lhe2e2cc_bbbbbbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjldcik', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('kjac,libd->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_bbbb)
+    lhe2e2cc_bbbbbbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abijdclk', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('liac,kjbd->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_bbbb)
+    lhe2e2cc_bbbbbbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjkdcli', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('ijbc,klad->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_bbbb)
+    lhe2e2cc_bbbbbbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjldcik', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('kjbc,liad->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_bbbb)
+    lhe2e2cc_bbbbbbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abijdclk', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('libc,kjad->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_bbbb)
+    lhe2e2cc_bbbbbbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjkcdli', contracted_intermediate)  + -1.00000 * einsum('abjicdlk->abjidclk', contracted_intermediate)  +  1.00000 * einsum('abjicdlk->abjkdcli', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('ijcd,klab->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_bbbb)
+    lhe2e2cc_bbbbbbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abjlcdik', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('kjcd,liab->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_bbbb)
     lhe2e2cc_bbbbbbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjicdlk->abijcdlk', contracted_intermediate) 
-    lhe2e2cc_bbbbbbbb += -1.00 * einsum('kicd,dl,ljab->abjicdlk', g_bbbb[ob, ob, vb, vb], t1_bb, l2_bbbb, optimize=['einsum_path', (0, 1, 2)])
-    contracted_intermediate =  1.00 * einsum('ka,ijbc->abjick', f_bb[ob, vb], l2_bbbb)
-    lhe2e2cc_bbbbbbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->bajick', contracted_intermediate) 
-    contracted_intermediate =  1.00 * einsum('jc,kiab->abjick', f_bb[ob, vb], l2_bbbb)
-    lhe2e2cc_bbbbbbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abjick->abijck', contracted_intermediate) 
+    lhe2e2cc_bbbbbbbb +=  1.00 * einsum('licd,kjab->abjicdlk', g_bbbb[ob, ob, vb, vb], l2_bbbb)
     return lhe2e2cc_bbbbbbbb

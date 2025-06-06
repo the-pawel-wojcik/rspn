@@ -143,15 +143,15 @@ def build_lHe2e2cc():
     #         - e2(c,d,l,k) H e2(a,b,j,i) 
     #         + e2(c,d,l,k) e2(a,b,j,i) H
 
-    pq.add_st_operator(1.0, ['v', 'e2(a,b,j,i)', 'e1(c,k)'], ['t1', 't2'])
-    pq.add_st_operator(-1., ['e2(a,b,j,i)', 'v', 'e1(c,k)'], ['t1', 't2'])
-    pq.add_st_operator(-1., ['e1(c,k)', 'v', 'e2(a,b,j,i)'], ['t1', 't2'])
-    pq.add_st_operator(1.0, ['e1(c,k)', 'e2(a,b,j,i)', 'v'], ['t1', 't2'])
+    pq.add_st_operator(1.0, ['v', 'e2(a,b,j,i)', 'e2(c,d,l,k)'], ['t1', 't2'])
+    pq.add_st_operator(-1., ['e2(a,b,j,i)', 'v', 'e2(c,d,l,k)'], ['t1', 't2'])
+    pq.add_st_operator(-1., ['e2(c,d,l,k)', 'v', 'e2(a,b,j,i)'], ['t1', 't2'])
+    pq.add_st_operator(1.0, ['e2(c,d,l,k)', 'e2(a,b,j,i)', 'v'], ['t1', 't2'])
 
-    pq.add_st_operator(1.0, ['f', 'e2(a,b,j,i)', 'e1(c,k)'], ['t1', 't2'])
-    pq.add_st_operator(-1., ['e2(a,b,j,i)', 'f', 'e1(c,k)'], ['t1', 't2'])
-    pq.add_st_operator(-1., ['e1(c,k)', 'f', 'e2(a,b,j,i)'], ['t1', 't2'])
-    pq.add_st_operator(1.0, ['e1(c,k)', 'e2(a,b,j,i)', 'f'], ['t1', 't2'])
+    pq.add_st_operator(1.0, ['f', 'e2(a,b,j,i)', 'e2(c,d,l,k)'], ['t1', 't2'])
+    pq.add_st_operator(-1., ['e2(a,b,j,i)', 'f', 'e2(c,d,l,k)'], ['t1', 't2'])
+    pq.add_st_operator(-1., ['e2(c,d,l,k)', 'f', 'e2(a,b,j,i)'], ['t1', 't2'])
+    pq.add_st_operator(1.0, ['e2(c,d,l,k)', 'e2(a,b,j,i)', 'f'], ['t1', 't2'])
 
     pq.simplify()
 

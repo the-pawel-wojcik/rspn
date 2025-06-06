@@ -39,40 +39,40 @@ from rspn.uhf_ccsd.equations.lHeecc.e2e1 import (
 )
 from rspn.uhf_ccsd.equations.lHeecc.e2e2 import (
     get_lhe2e2cc_aaaaaaaa,
-    # get_lhe2e2cc_aaaaabab,
+    get_lhe2e2cc_aaaaabab,
     get_lhe2e2cc_aaaaabba,
     get_lhe2e2cc_aaaabaab,
-    # get_lhe2e2cc_aaaababa,
+    get_lhe2e2cc_aaaababa,
     get_lhe2e2cc_aaaabbbb,
     get_lhe2e2cc_ababaaaa,
-    # get_lhe2e2cc_abababab,
+    get_lhe2e2cc_abababab,
     get_lhe2e2cc_abababba,
     get_lhe2e2cc_ababbaab,
-    # get_lhe2e2cc_ababbaba,
+    get_lhe2e2cc_ababbaba,
     get_lhe2e2cc_ababbbbb,
     get_lhe2e2cc_abbaaaaa,
-    # get_lhe2e2cc_abbaabab,
+    get_lhe2e2cc_abbaabab,
     get_lhe2e2cc_abbaabba,
     get_lhe2e2cc_abbabaab,
-    # get_lhe2e2cc_abbababa,
+    get_lhe2e2cc_abbababa,
     get_lhe2e2cc_abbabbbb,
     get_lhe2e2cc_baabaaaa,
-    # get_lhe2e2cc_baababab,
+    get_lhe2e2cc_baababab,
     get_lhe2e2cc_baababba,
     get_lhe2e2cc_baabbaab,
-    # get_lhe2e2cc_baabbaba,
+    get_lhe2e2cc_baabbaba,
     get_lhe2e2cc_baabbbbb,
     get_lhe2e2cc_babaaaaa,
-    # get_lhe2e2cc_babaabab,
+    get_lhe2e2cc_babaabab,
     get_lhe2e2cc_babaabba,
     get_lhe2e2cc_bababaab,
-    # get_lhe2e2cc_babababa,
+    get_lhe2e2cc_babababa,
     get_lhe2e2cc_bababbbb,
     get_lhe2e2cc_bbbbaaaa,
-    # get_lhe2e2cc_bbbbabab,
+    get_lhe2e2cc_bbbbabab,
     get_lhe2e2cc_bbbbabba,
     get_lhe2e2cc_bbbbbaab,
-    # get_lhe2e2cc_bbbbbaba,
+    get_lhe2e2cc_bbbbbaba,
     get_lhe2e2cc_bbbbbbbb,
 )
 
@@ -113,40 +113,40 @@ def build_pol_xA_F_xB(
     f_bbbb_bb = get_lhe2e1cc_bbbbbb(**kwargs)
 
     f_aaaa_aaaa = get_lhe2e2cc_aaaaaaaa(**kwargs)
-    # f_aaaa_abab = get_lhe2e2cc_aaaaabab(**kwargs)
+    f_aaaa_abab = get_lhe2e2cc_aaaaabab(**kwargs)
     f_aaaa_abba = get_lhe2e2cc_aaaaabba(**kwargs)
     f_aaaa_baab = get_lhe2e2cc_aaaabaab(**kwargs)
-    # f_aaaa_baba = get_lhe2e2cc_aaaababa(**kwargs)
+    f_aaaa_baba = get_lhe2e2cc_aaaababa(**kwargs)
     f_aaaa_bbbb = get_lhe2e2cc_aaaabbbb(**kwargs)
     f_abab_aaaa = get_lhe2e2cc_ababaaaa(**kwargs)
-    # f_abab_abab = get_lhe2e2cc_abababab(**kwargs)
+    f_abab_abab = get_lhe2e2cc_abababab(**kwargs)
     f_abab_abba = get_lhe2e2cc_abababba(**kwargs)
     f_abab_baab = get_lhe2e2cc_ababbaab(**kwargs)
-    # f_abab_baba = get_lhe2e2cc_ababbaba(**kwargs)
+    f_abab_baba = get_lhe2e2cc_ababbaba(**kwargs)
     f_abab_bbbb = get_lhe2e2cc_ababbbbb(**kwargs)
     f_abba_aaaa = get_lhe2e2cc_abbaaaaa(**kwargs)
-    # f_abba_abab = get_lhe2e2cc_abbaabab(**kwargs)
+    f_abba_abab = get_lhe2e2cc_abbaabab(**kwargs)
     f_abba_abba = get_lhe2e2cc_abbaabba(**kwargs)
     f_abba_baab = get_lhe2e2cc_abbabaab(**kwargs)
-    # f_abba_baba = get_lhe2e2cc_abbababa(**kwargs)
+    f_abba_baba = get_lhe2e2cc_abbababa(**kwargs)
     f_abba_bbbb = get_lhe2e2cc_abbabbbb(**kwargs)
     f_baab_aaaa = get_lhe2e2cc_baabaaaa(**kwargs)
-    # f_baab_abab = get_lhe2e2cc_baababab(**kwargs)
+    f_baab_abab = get_lhe2e2cc_baababab(**kwargs)
     f_baab_abba = get_lhe2e2cc_baababba(**kwargs)
     f_baab_baab = get_lhe2e2cc_baabbaab(**kwargs)
-    # f_baab_baba = get_lhe2e2cc_baabbaba(**kwargs)
+    f_baab_baba = get_lhe2e2cc_baabbaba(**kwargs)
     f_baab_bbbb = get_lhe2e2cc_baabbbbb(**kwargs)
     f_baba_aaaa = get_lhe2e2cc_babaaaaa(**kwargs)
-    # f_baba_abab = get_lhe2e2cc_babaabab(**kwargs)
+    f_baba_abab = get_lhe2e2cc_babaabab(**kwargs)
     f_baba_abba = get_lhe2e2cc_babaabba(**kwargs)
     f_baba_baab = get_lhe2e2cc_bababaab(**kwargs)
-    # f_baba_baba = get_lhe2e2cc_babababa(**kwargs)
+    f_baba_baba = get_lhe2e2cc_babababa(**kwargs)
     f_baba_bbbb = get_lhe2e2cc_bababbbb(**kwargs)
     f_bbbb_aaaa = get_lhe2e2cc_bbbbaaaa(**kwargs)
-    # f_bbbb_abab = get_lhe2e2cc_bbbbabab(**kwargs)
+    f_bbbb_abab = get_lhe2e2cc_bbbbabab(**kwargs)
     f_bbbb_abba = get_lhe2e2cc_bbbbabba(**kwargs)
     f_bbbb_baab = get_lhe2e2cc_bbbbbaab(**kwargs)
-    # f_bbbb_baba = get_lhe2e2cc_bbbbbaba(**kwargs)
+    f_bbbb_baba = get_lhe2e2cc_bbbbbaba(**kwargs)
     f_bbbb_bbbb = get_lhe2e2cc_bbbbbbbb(**kwargs)
 
     return Polarizability.from_builder(
@@ -353,13 +353,13 @@ def build_pol_xA_F_xB(
                 f_aaaa_aaaa,
                 t_res_B[second]['aaaa'],
             )
-            # +
-            # np.einsum(
-            #     'abji,abjicdlk,cdlk->',
-            #     t_res_A[first]['aaaa'],
-            #     f_aaaa_abab,
-            #     t_res_B[second]['abab'],
-            # )
+            +
+            np.einsum(
+                'abji,abjicdlk,cdlk->',
+                t_res_A[first]['aaaa'],
+                f_aaaa_abab,
+                t_res_B[second]['abab'],
+            )
             +
             np.einsum(
                 'abji,abjicdlk,cdlk->',
@@ -374,13 +374,13 @@ def build_pol_xA_F_xB(
                 f_aaaa_baab,
                 t_res_B[second]['baab'],
             )
-            # +
-            # np.einsum(
-            #     'abji,abjicdlk,cdlk->',
-            #     t_res_A[first]['aaaa'],
-            #     f_aaaa_baba,
-            #     t_res_B[second]['baba'],
-            # )
+            +
+            np.einsum(
+                'abji,abjicdlk,cdlk->',
+                t_res_A[first]['aaaa'],
+                f_aaaa_baba,
+                t_res_B[second]['baba'],
+            )
             +
             np.einsum(
                 'abji,abjicdlk,cdlk->',
@@ -395,13 +395,13 @@ def build_pol_xA_F_xB(
                 f_abab_aaaa,
                 t_res_B[second]['aaaa'],
             )
-            # +
-            # np.einsum(
-            #     'abji,abjicdlk,cdlk->',
-            #     t_res_A[first]['abab'],
-            #     f_abab_abab,
-            #     t_res_B[second]['abab'],
-            # )
+            +
+            np.einsum(
+                'abji,abjicdlk,cdlk->',
+                t_res_A[first]['abab'],
+                f_abab_abab,
+                t_res_B[second]['abab'],
+            )
             +
             np.einsum(
                 'abji,abjicdlk,cdlk->',
@@ -416,13 +416,13 @@ def build_pol_xA_F_xB(
                 f_abab_baab,
                 t_res_B[second]['baab'],
             )
-            # +
-            # np.einsum(
-            #     'abji,abjicdlk,cdlk->',
-            #     t_res_A[first]['abab'],
-            #     f_abab_baba,
-            #     t_res_B[second]['baba'],
-            # )
+            +
+            np.einsum(
+                'abji,abjicdlk,cdlk->',
+                t_res_A[first]['abab'],
+                f_abab_baba,
+                t_res_B[second]['baba'],
+            )
             +
             np.einsum(
                 'abji,abjicdlk,cdlk->',
@@ -437,13 +437,13 @@ def build_pol_xA_F_xB(
                 f_abba_aaaa,
                 t_res_B[second]['aaaa'],
             )
-            # +
-            # np.einsum(
-            #     'abji,abjicdlk,cdlk->',
-            #     t_res_A[first]['abba'],
-            #     f_abba_abab,
-            #     t_res_B[second]['abab'],
-            # )
+            +
+            np.einsum(
+                'abji,abjicdlk,cdlk->',
+                t_res_A[first]['abba'],
+                f_abba_abab,
+                t_res_B[second]['abab'],
+            )
             +
             np.einsum(
                 'abji,abjicdlk,cdlk->',
@@ -458,13 +458,13 @@ def build_pol_xA_F_xB(
                 f_abba_baab,
                 t_res_B[second]['baab'],
             )
-            # +
-            # np.einsum(
-            #     'abji,abjicdlk,cdlk->',
-            #     t_res_A[first]['abba'],
-            #     f_abba_baba,
-            #     t_res_B[second]['baba'],
-            # )
+            +
+            np.einsum(
+                'abji,abjicdlk,cdlk->',
+                t_res_A[first]['abba'],
+                f_abba_baba,
+                t_res_B[second]['baba'],
+            )
             +
             np.einsum(
                 'abji,abjicdlk,cdlk->',
@@ -479,13 +479,13 @@ def build_pol_xA_F_xB(
                 f_baab_aaaa,
                 t_res_B[second]['aaaa'],
             )
-            # +
-            # np.einsum(
-            #     'abji,abjicdlk,cdlk->',
-            #     t_res_A[first]['baab'],
-            #     f_baab_abab,
-            #     t_res_B[second]['abab'],
-            # )
+            +
+            np.einsum(
+                'abji,abjicdlk,cdlk->',
+                t_res_A[first]['baab'],
+                f_baab_abab,
+                t_res_B[second]['abab'],
+            )
             +
             np.einsum(
                 'abji,abjicdlk,cdlk->',
@@ -500,13 +500,13 @@ def build_pol_xA_F_xB(
                 f_baab_baab,
                 t_res_B[second]['baab'],
             )
-            # +
-            # np.einsum(
-            #     'abji,abjicdlk,cdlk->',
-            #     t_res_A[first]['baab'],
-            #     f_baab_baba,
-            #     t_res_B[second]['baba'],
-            # )
+            +
+            np.einsum(
+                'abji,abjicdlk,cdlk->',
+                t_res_A[first]['baab'],
+                f_baab_baba,
+                t_res_B[second]['baba'],
+            )
             +
             np.einsum(
                 'abji,abjicdlk,cdlk->',
@@ -521,13 +521,13 @@ def build_pol_xA_F_xB(
                 f_baba_aaaa,
                 t_res_B[second]['aaaa'],
             )
-            # +
-            # np.einsum(
-            #     'abji,abjicdlk,cdlk->',
-            #     t_res_A[first]['baba'],
-            #     f_baba_abab,
-            #     t_res_B[second]['abab'],
-            # )
+            +
+            np.einsum(
+                'abji,abjicdlk,cdlk->',
+                t_res_A[first]['baba'],
+                f_baba_abab,
+                t_res_B[second]['abab'],
+            )
             +
             np.einsum(
                 'abji,abjicdlk,cdlk->',
@@ -542,13 +542,13 @@ def build_pol_xA_F_xB(
                 f_baba_baab,
                 t_res_B[second]['baab'],
             )
-            # +
-            # np.einsum(
-            #     'abji,abjicdlk,cdlk->',
-            #     t_res_A[first]['baba'],
-            #     f_baba_baba,
-            #     t_res_B[second]['baba'],
-            # )
+            +
+            np.einsum(
+                'abji,abjicdlk,cdlk->',
+                t_res_A[first]['baba'],
+                f_baba_baba,
+                t_res_B[second]['baba'],
+            )
             +
             np.einsum(
                 'abji,abjicdlk,cdlk->',
@@ -563,13 +563,13 @@ def build_pol_xA_F_xB(
                 f_bbbb_aaaa,
                 t_res_B[second]['aaaa'],
             )
-            # +
-            # np.einsum(
-            #     'abji,abjicdlk,cdlk->',
-            #     t_res_A[first]['bbbb'],
-            #     f_bbbb_abab,
-            #     t_res_B[second]['abab'],
-            # )
+            +
+            np.einsum(
+                'abji,abjicdlk,cdlk->',
+                t_res_A[first]['bbbb'],
+                f_bbbb_abab,
+                t_res_B[second]['abab'],
+            )
             +
             np.einsum(
                 'abji,abjicdlk,cdlk->',
@@ -584,13 +584,13 @@ def build_pol_xA_F_xB(
                 f_bbbb_baab,
                 t_res_B[second]['baab'],
             )
-            # +
-            # np.einsum(
-            #     'abji,abjicdlk,cdlk->',
-            #     t_res_A[first]['bbbb'],
-            #     f_bbbb_baba,
-            #     t_res_B[second]['baba'],
-            # )
+            +
+            np.einsum(
+                'abji,abjicdlk,cdlk->',
+                t_res_A[first]['bbbb'],
+                f_bbbb_baba,
+                t_res_B[second]['baba'],
+            )
             +
             np.einsum(
                 'abji,abjicdlk,cdlk->',
