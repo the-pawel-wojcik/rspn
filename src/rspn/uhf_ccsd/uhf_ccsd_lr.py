@@ -54,7 +54,7 @@ class UHF_CCSD_LR:
             kwargs=builders_input,
             dims=self.assign_dims(),
         )
-        cc_electric_dipole = self.build_cc_electric_dipole_singles()
+        cc_electric_dipole = self.build_cc_electric_diple()
         t_response = self.find_t_response(cc_jacobian, cc_electric_dipole)
         eta_mu = self._find_eta_mu()
 
@@ -236,7 +236,7 @@ class UHF_CCSD_LR:
         self.dims['bbbb'] = nvb * nvb * nob * nob
         return self.dims
 
-    def build_cc_electric_dipole_singles(
+    def build_cc_electric_diple(
         self
     ) -> dict[Descartes, dict[str, NDArray]]:
         r"""
