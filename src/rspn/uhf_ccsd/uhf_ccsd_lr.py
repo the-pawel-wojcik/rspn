@@ -44,6 +44,10 @@ from rspn.uhf_ccsd._jacobian import build_cc_jacobian
 class UHF_CCSD_LR:
     uhf_ccsd_data: UHF_CCSD_Data
     uhf_scf_data: Intermediates
+    SPIN_BLOCKS: list[str]  = [
+        'aa', 'bb',
+        'aaaa', 'abab', 'abba', 'baab', 'baba', 'bbbb',
+    ]
 
     def find_polarizabilities(self) -> Polarizability:
         builders_input = GeneratorsInput(
@@ -79,9 +83,7 @@ class UHF_CCSD_LR:
                 float(
                     np.sum(eta[first][spin] * t_response[second][spin])
                 )
-                for spin in [
-                    'aa', 'bb', 'aaaa', 'abab', 'abba', 'baab', 'baba', 'bbbb',
-                ]
+                for spin in self.SPIN_BLOCKS
             ),
         )
         return pol
@@ -157,16 +159,7 @@ class UHF_CCSD_LR:
         for coord in CARTESIAN:
             mu = cc_mu[coord]
             rhs = np.vstack(
-                (
-                    mu['aa'].reshape(-1, 1),
-                    mu['bb'].reshape(-1, 1),
-                    mu['aaaa'].reshape(-1, 1),
-                    mu['abab'].reshape(-1, 1),
-                    mu['abba'].reshape(-1, 1),
-                    mu['baab'].reshape(-1, 1),
-                    mu['baba'].reshape(-1, 1),
-                    mu['bbbb'].reshape(-1, 1),
-                )
+                tuple(mu[block].reshape(-1, 1) for block in self.SPIN_BLOCKS)
             )
             gmres_output = gmres(
                 cc_jacobian,
@@ -186,13 +179,9 @@ class UHF_CCSD_LR:
             nva = nmo - noa
             nvb = nmo - nob
 
-            blocks = [
-                'aa', 'bb', 'aaaa', 'abab', 'abba', 'baab', 'baba', 'bbbb',
-            ]
-
             slices = dict()
             current_size = 0
-            for block in blocks:
+            for block in self.SPIN_BLOCKS:
                 block_dim = dims[block]
                 slices[block] = slice(current_size, current_size + block_dim)
                 current_size += block_dim
@@ -211,7 +200,7 @@ class UHF_CCSD_LR:
             response: NDArray = gmres_output[0]
             t_response_mu[coord] = {
                 block: response[slices[block]].reshape(shapes[block])
-                for block in blocks
+                for block in self.SPIN_BLOCKS
             }
         return t_response_mu
 
