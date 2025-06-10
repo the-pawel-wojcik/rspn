@@ -1,18 +1,24 @@
 import pickle
 
+from chem.ccsd.equations.util import GeneratorsInput
 from chem.ccsd.uhf_ccsd import UHF_CCSD
 from chem.meta.coordinates import CARTESIAN
 from rspn.uhf_ccsd.uhf_ccsd_lr import UHF_CCSD_LR
+from rspn.uhf_ccsd._nuOpCC import build_nu_bar_V_cc
 
 
 def test_cc_mu():
     with open('pickles/uhf_ccsd.pkl','rb') as bak_file:
         ccsd: UHF_CCSD = pickle.load(bak_file)
     lr = UHF_CCSD_LR(ccsd.data, ccsd.scf_data)
-    eta_mu = lr.build_cc_electric_diple()
-    # TODO: Test the mu values
-    assert set(eta_mu) == {coord for coord in CARTESIAN}
-    for _, val in eta_mu.items():
+    input=GeneratorsInput(
+        uhf_scf_data=lr.uhf_scf_data,
+        uhf_ccsd_data=lr.uhf_ccsd_data,
+    )
+    cced_interation_op = build_nu_bar_V_cc(input=input)
+    # TODO: Test the values
+    assert set(cced_interation_op) == {coord for coord in CARTESIAN}
+    for _, val in cced_interation_op.items():
         assert set(val) == {
             'aa', 'bb', 'aaaa', 'abab', 'abba', 'baab', 'baba', 'bbbb',
         }

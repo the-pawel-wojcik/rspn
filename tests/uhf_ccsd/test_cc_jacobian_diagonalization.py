@@ -8,7 +8,7 @@ from rspn.uhf_ccsd.uhf_ccsd_lr import UHF_CCSD_LR
 import numpy as np
 
 
-# takes a lot of resources and is not used in the code
+# takes a lot of resources and is not used in the rspn code
 @pytest.mark.skip
 def test_cc_diagonalization():
     with open('pickles/uhf_ccsd.pkl', 'rb') as bak_file:

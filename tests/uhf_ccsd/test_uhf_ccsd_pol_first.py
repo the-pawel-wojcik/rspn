@@ -5,6 +5,7 @@ from chem.ccsd.uhf_ccsd import UHF_CCSD
 from rspn.uhf_ccsd.uhf_ccsd_lr import UHF_CCSD_LR
 from rspn.uhf_ccsd._jacobian import build_cc_jacobian
 from rspn.uhf_ccsd._lheecc import build_pol_xA_F_xB
+from rspn.uhf_ccsd._nuOpCC import build_nu_bar_V_cc
 
 
 def test_polarizabilities():
@@ -19,8 +20,8 @@ def test_polarizabilities():
         kwargs=builder_input,
         dims=lr.assign_dims(),
     )
-    cc_mu = lr.build_cc_electric_diple()
-    t_response = lr.find_t_response(cc_jacobian, cc_mu)
+    cced_interaction_op = build_nu_bar_V_cc(input=builder_input)
+    t_response = lr.find_t_response(cc_jacobian, cced_interaction_op)
     eta_mu = lr._find_eta_mu()
     pol_etaA_xB = lr._build_pol_eta_X(eta_mu, t_response)
     fmt='=^50'

@@ -5,6 +5,7 @@ from chem.ccsd.uhf_ccsd import UHF_CCSD
 from chem.meta.coordinates import Descartes
 from rspn.uhf_ccsd.uhf_ccsd_lr import UHF_CCSD_LR
 from rspn.uhf_ccsd._jacobian import build_cc_jacobian
+from rspn.uhf_ccsd._nuOpCC import build_nu_bar_V_cc
 
 
 def test_t_response():
@@ -19,10 +20,10 @@ def test_t_response():
         kwargs=builder_input,
         dims=lr.assign_dims(),
     )
-    cc_mu = lr.build_cc_electric_diple()
+    cced_interaction_op = build_nu_bar_V_cc(input=builder_input)
     t_mu_resp = lr.find_t_response(
         cc_jacobian=cc_jacobian,
-        cc_mu=cc_mu,
+        cc_mu=cced_interaction_op,
     )
     assert set(t_mu_resp.keys()) == {Descartes.x, Descartes.y, Descartes.z}
     t_mu_res_x = t_mu_resp[Descartes.x]
