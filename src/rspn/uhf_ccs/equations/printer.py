@@ -100,8 +100,8 @@ def print_function_header(
 
     if DefineSections.LAMBDA_AMPS not in defines_exclude:
         body += '''
-    l1_aa = uhf_ccs_lambda_data.lmbda.l1_aa
-    l1_bb = uhf_ccs_lambda_data.lmbda.l1_bb'''
+    l1_aa = uhf_ccs_lambda_data.l1_aa
+    l1_bb = uhf_ccs_lambda_data.l1_bb'''
 
     body += f'\n{TAB}'
 
