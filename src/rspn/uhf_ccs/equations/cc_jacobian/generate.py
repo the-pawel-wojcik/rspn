@@ -26,7 +26,7 @@ def build_singles_singles_block():
     pq = pdaggerq.pq_helper('fermi')
 
     # <mu| = <HF| a*_i a_a
-    pq.set_left_operators([['e1(i,a)']])  # (Replace i with a )*
+    pq.set_left_operators([['e1(i,a)']])  # Replace the MO#i with an MO#a
 
     # commutator
     pq.add_st_operator(1.0, ['f', 'e1(b,j)'], ['t1'])
