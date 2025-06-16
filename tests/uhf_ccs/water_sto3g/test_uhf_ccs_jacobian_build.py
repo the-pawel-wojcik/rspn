@@ -1,7 +1,6 @@
 import pickle
 
 from chem.ccs.uhf_ccs import UHF_CCS, UHF_CCS_InputPair
-from chem.ccs.equations.util import UHF_CCS_InputPair
 from rspn.uhf_ccs._jacobian import (
     cc_jacobian_singles_singles,
     build_cc_jacobian,
@@ -53,7 +52,6 @@ def test_cc_jacobian_build():
             singles_singles - singles_singles.T,
             atol=1e-6,
         )=}')
-    
 
     cc_jacobian = build_cc_jacobian(kwargs=builders_input, dims=dims)
     assert np.allclose(cc_jacobian, singles_singles, atol=1e-6)

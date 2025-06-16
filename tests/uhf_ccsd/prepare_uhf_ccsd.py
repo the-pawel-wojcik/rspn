@@ -11,7 +11,7 @@ def basic_test():
     ccsd = UHF_CCSD(intermediates)
     ccsd.verbose = 1
     ccsd.solve_cc_equations()
-    with open('pickles/uhf_ccsd.pkl','wb') as bak_file:
+    with open('pickles/uhf_ccsd.pkl', 'wb') as bak_file:
         pickle.dump(ccsd, bak_file)
 
 

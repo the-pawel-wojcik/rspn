@@ -12,7 +12,7 @@ def prepare_pickle():
     ccs.verbose = 1
     ccs.solve_cc_equations()
     ccs.solve_lambda_equations()
-    with open('pickles/water_uhf_ccs_lambda_ccpVDZ.pkl','wb') as bak_file:
+    with open('pickles/water_uhf_ccs_lambda_ccpVDZ.pkl', 'wb') as bak_file:
         pickle.dump(ccs, bak_file)
 
 

@@ -1,7 +1,6 @@
 import pickle
 
 from chem.ccs.uhf_ccs import UHF_CCS, UHF_CCS_InputPair
-from chem.ccs.equations.util import UHF_CCS_InputPair
 from rspn.uhf_ccs._jacobian import (
     cc_jacobian_singles_singles,
     build_cc_jacobian,

@@ -24,7 +24,7 @@ def test_polarizabilities():
     t_response = lr.find_t_response(cc_jacobian, cced_interaction_op)
     eta_mu = lr._find_eta_mu()
     pol_etaA_xB = lr._build_pol_eta_X(eta_mu, t_response)
-    fmt='=^50'
+    fmt = '=^50'
     print(f'{'η^A X^B':{fmt}}')
     print(pol_etaA_xB)
     pol_xA_F_xB = build_pol_xA_F_xB(
