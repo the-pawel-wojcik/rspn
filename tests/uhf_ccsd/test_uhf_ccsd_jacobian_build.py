@@ -1,5 +1,7 @@
 import pickle
 from chem.ccsd.uhf_ccsd import UHF_CCSD
+from numpy.typing import NDArray
+import numpy as np
 from rspn.uhf_ccsd.uhf_ccsd_lr import UHF_CCSD_LR
 from chem.ccsd.equations.util import GeneratorsInput
 from rspn.uhf_ccsd._jacobian import (
@@ -18,6 +20,71 @@ def humanify(size_bytes: float) -> str:
     return f'{size_bytes:.2f} PiB'
 
 
+def test_singles_singles_build(
+    lr: UHF_CCSD_LR,
+    builders_input: GeneratorsInput,
+) -> NDArray:
+    print('Singles-Singles:')
+    singles_singles = cc_jacobian_singles_singles(
+        kwargs=builders_input,
+        dims=lr.assign_dims(),
+    )
+    print('Ready.')
+    print(f'Size = {humanify(singles_singles.nbytes)}.')  # 282 KiB
+    print(f'Shape = {singles_singles.shape}')  # (190, 190)
+    print()
+    return singles_singles
+
+
+def test_singles_doubles_build(
+    lr: UHF_CCSD_LR,
+    builders_input: GeneratorsInput,
+) -> NDArray:
+    print('Singles-Doubles:')
+    singles_doubles = cc_jacobian_singles_doubles(
+        kwargs=builders_input,
+        dims=lr.assign_dims(),
+    )
+    print('Ready.')
+    print(f'Size = {humanify(singles_doubles.nbytes)}.')  # 78.5 MiB
+    print(f'Shape = {singles_doubles.shape}')  # (190, 54150)
+    print()
+    return singles_doubles
+
+
+def test_doubles_singles_build(
+    lr: UHF_CCSD_LR,
+    builders_input: GeneratorsInput,
+) -> NDArray:
+    print()
+    print('Doubles-Singles:')
+    doubles_singles = cc_jacobian_doubles_singles(
+        kwargs=builders_input,
+        dims=lr.assign_dims(),
+    )
+    print('Ready.')
+    print(f'Size = {humanify(doubles_singles.nbytes)}.')  # 78.5 MiB
+    print(f'Shape = {doubles_singles.shape}')  # (54150, 190)
+    print()
+    return doubles_singles
+
+
+def test_doubles_doubles_build(
+    lr: UHF_CCSD_LR,
+    builders_input: GeneratorsInput,
+) -> NDArray:
+    print('Doubles-Doubles:')
+    doubles_doubles = cc_jacobian_doubles_doubles(
+        kwargs=builders_input,
+        dims=lr.assign_dims(),
+    )
+    print('Ready.')
+    print(f'Size = {humanify(doubles_doubles.nbytes)}.')  # ??? 23 GiB
+    print(f'Shape = {doubles_doubles.shape}')  # (54150, 54150)
+    print()
+    return doubles_doubles
+
+
 def test_cc_jacobian_build():
     with open('pickles/water_sto3g.pkl', 'rb') as bak_file:
         ccsd: UHF_CCSD = pickle.load(bak_file)
@@ -29,44 +96,23 @@ def test_cc_jacobian_build():
     )
     print('Building the UHF CCSD Jacobian matrix.')
 
-    print('Singles-Singles:')
-    singles_singles = cc_jacobian_singles_singles(
-        kwargs=builders_input,
-        dims=lr.assign_dims(),
-    )
-    print('Ready.')
-    print(f'Size = {humanify(singles_singles.nbytes)}.')  # 282 KiB
-    print(f'Shape = {singles_singles.shape}')  # (190, 190)
+    singles_singles = test_singles_singles_build(lr, builders_input)
+    singles_doubles = test_singles_doubles_build(lr, builders_input)
+    doubles_singles = test_doubles_singles_build(lr, builders_input)
+    doubles_doubles = test_doubles_doubles_build(lr, builders_input)
 
-    print()
-    print('Singles-Doubles:')
-    singles_doubles = cc_jacobian_singles_doubles(
-        kwargs=builders_input,
-        dims=lr.assign_dims(),
-    )
-    print('Ready.')
-    print(f'Size = {humanify(singles_doubles.nbytes)}.')  # 78.5 MiB
-    print(f'Shape = {singles_doubles.shape}')  # (190, 54150)
-
-    print()
-    print('Doubles-Singles:')
-    doubles_singles = cc_jacobian_doubles_singles(
-        kwargs=builders_input,
-        dims=lr.assign_dims(),
-    )
-    print('Ready.')
-    print(f'Size = {humanify(doubles_singles.nbytes)}.')  # 78.5 MiB
-    print(f'Shape = {doubles_singles.shape}')  # (54150, 190)
-
-    print()
-    print('Doubles-Doubles:')
-    doubles_doubles = cc_jacobian_doubles_doubles(
-        kwargs=builders_input,
-        dims=lr.assign_dims(),
-    )
-    print('Ready.')
-    print(f'Size = {humanify(doubles_doubles.nbytes)}.')  # ??? 23 GiB
-    print(f'Shape = {doubles_doubles.shape}')  # (54150, 54150)
+    print(f'{
+        np.allclose(
+            np.zeros_like(singles_singles),
+            singles_singles - singles_singles.T,
+            atol=1e-6,
+        )
+    =}')
+    with np.printoptions(precision=3, suppress=True):
+        print('singles-singles')
+        print(singles_singles)
+        print('SS - SS.T')
+        print(singles_singles - singles_singles.T)
 
 
 if __name__ == "__main__":
