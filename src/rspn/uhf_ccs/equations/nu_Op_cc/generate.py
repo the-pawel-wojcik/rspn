@@ -31,7 +31,7 @@ def singles():
     print_imports(defines_exclude=defines_exclude)
     for component in CARTESIAN:
         pq = pdaggerq.pq_helper('fermi')
-        pq.add_st_operator(1.0, ['a*(i)', 'a(a)', 'h'], ['t1'])
+        pq.add_st_operator(1.0, ['e1(i,a)', 'h'], ['t1'])
         pq.simplify()
         extra_definitions = (
             f'h_aa = uhf_data.mua_{component}',
