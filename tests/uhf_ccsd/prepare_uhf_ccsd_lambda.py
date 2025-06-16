@@ -12,7 +12,7 @@ def basic_test():
     ccsd.verbose = 1
     ccsd.solve_cc_equations()
     ccsd.solve_lambda_equations()
-    with open('pickles/uhf_ccsd_lambda.pkl','wb') as bak_file:
+    with open('pickles/uhf_ccsd_lambda.pkl', 'wb') as bak_file:
         pickle.dump(ccsd, bak_file)
 
 

@@ -10,7 +10,7 @@ from rspn.uhf_ccs._nuOpCC import build_nu_bar_V_cc
 def test_cc_mu():
     with open('../pickles/water_uhf_ccs_lambda_sto3g.pkl', 'rb') as bak_file:
         ccs: UHF_CCS = pickle.load(bak_file)
-    input=UHF_CCS_InputPair(
+    input = UHF_CCS_InputPair(
         uhf_data=ccs.scf_data,
         uhf_ccs_data=ccs.data,
     )

@@ -41,15 +41,15 @@ class UHF_CCSD_LR:
         pol_xA_F_xB = build_pol_xA_F_xB(
             builders_input, t_res_A=t_response, t_res_B=t_response,
         )
-        # when there is only one operator this term is the same as the first one
-        # pol_etaB_xA = self._build_pol_eta_X(eta_mu, t_response)
+        # when there is only one operator this term is the same as the first
+        # one pol_etaB_xA = self._build_pol_eta_X(eta_mu, t_response)
         pol_etaB_xA = pol_etaA_xB
 
         return pol_etaA_xB + pol_xA_F_xB + pol_etaB_xA
 
     def _build_pol_eta_X(self, eta, t_response) -> Polarizability:
         r"""
-        Calculates 
+        Calculates
         sum _mu \eta _\mu X _\mu
         """
         pol = Polarizability.from_builder(
@@ -139,8 +139,7 @@ class UHF_CCSD_LR:
             gmres_output = gmres(
                 cc_jacobian,
                 rhs,
-                rtol=1e-7,
-                atol=1e-7,
+                atol=1e-12,
             )
             exit_code: int = gmres_output[1]
             if exit_code != 0:

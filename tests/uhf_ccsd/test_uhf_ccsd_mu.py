@@ -8,10 +8,10 @@ from rspn.uhf_ccsd._nuOpCC import build_nu_bar_V_cc
 
 
 def test_cc_mu():
-    with open('pickles/uhf_ccsd.pkl','rb') as bak_file:
+    with open('pickles/uhf_ccsd.pkl', 'rb') as bak_file:
         ccsd: UHF_CCSD = pickle.load(bak_file)
     lr = UHF_CCSD_LR(ccsd.data, ccsd.scf_data)
-    input=GeneratorsInput(
+    input = GeneratorsInput(
         uhf_scf_data=lr.uhf_scf_data,
         uhf_ccsd_data=lr.uhf_ccsd_data,
     )

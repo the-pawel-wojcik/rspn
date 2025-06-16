@@ -9,14 +9,14 @@ from rspn.uhf_ccs.uhf_ccs_lr import UHF_CCS_LR
 
 
 def test_eta_works():
-    with open('pickles/water_uhf_ccs_lambda_ccpVDZ.pkl','rb') as bak_file:
+    with open('pickles/water_uhf_ccs_lambda_ccpVDZ.pkl', 'rb') as bak_file:
         ccs: UHF_CCS = pickle.load(bak_file)
     lr = UHF_CCS_LR(
         uhf_data=ccs.scf_data,
         uhf_ccs_data=ccs.data,
         uhf_ccs_lambda_data=ccs.cc_lambda_data,
     )
-            
+
     eta_mu = lr._find_eta_mu()
     assert set(eta_mu) == {coord for coord in CARTESIAN}
     for key, val in eta_mu.items():

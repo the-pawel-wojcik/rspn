@@ -10,7 +10,7 @@ import pytest
 
 
 def test_eta_works():
-    with open('pickles/uhf_ccsd_lambda.pkl','rb') as bak_file:
+    with open('pickles/uhf_ccsd_lambda.pkl', 'rb') as bak_file:
         ccsd: UHF_CCSD = pickle.load(bak_file)
     lr = UHF_CCSD_LR(ccsd.data, ccsd.scf_data)
     eta_mu = lr._find_eta_mu()
@@ -25,10 +25,10 @@ def test_eta_works():
 
 
 def test_eta_missing_lambda():
-    """ Solving lambdas is necessary for builidng the response vectors. Produces
-    an error if the lambdas are missing. TODO: solve the lambda equations first
-    instead. """
-    with open('pickles/uhf_ccsd.pkl','rb') as bak_file:
+    """ Solving lambdas is necessary for builidng the response vectors.
+    Produces an error if the lambdas are missing. TODO: solve the lambda
+    equations first instead. """
+    with open('pickles/uhf_ccsd.pkl', 'rb') as bak_file:
         ccsd: UHF_CCSD = pickle.load(bak_file)
     lr = UHF_CCSD_LR(ccsd.data, ccsd.scf_data)
     with pytest.raises(RuntimeError):
