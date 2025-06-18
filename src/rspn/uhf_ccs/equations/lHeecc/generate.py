@@ -7,8 +7,8 @@ The operator tau _ν is an excitation operator that can be a single, double, and
 higher order excitation operator. The operator H is the molecular Hamiltonian.
 
 Refs:
-[1] H. Koch and P. Jørgensen, Coupled cluster response functions, The Journal of
-Chemical Physics 93, 3333 (1990).
+[1] H. Koch and P. Jørgensen, Coupled cluster response functions, The Journal
+of Chemical Physics 93, 3333 (1990).
 """
 import pdaggerq
 from rspn.uhf_ccs.equations.printer import print_imports, print_to_numpy
@@ -32,7 +32,7 @@ def build_lHe1e1cc():
     #
     #     =     H e1(a,i) e1(b,j)
     #         - e1(a,i) H e1(b,j)
-    #         - e1(b,j) H e1(a,i) 
+    #         - e1(b,j) H e1(a,i)
     #         + e1(b,j) e1(a,i) H
 
     pq.add_st_operator(1.0, ['v', 'e1(a,i)', 'e1(b,j)'], ['t1'])
