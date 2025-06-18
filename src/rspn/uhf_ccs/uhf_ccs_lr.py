@@ -114,7 +114,7 @@ class UHF_CCS_LR:
                 tuple(mu[block].reshape(-1, 1) for block in self.SPIN_BLOCKS)
             )
             gmres_output = gmres(
-                cc_jacobian,
+                -cc_jacobian,
                 rhs,
                 rtol=1e-10,
                 atol=1e-10,
