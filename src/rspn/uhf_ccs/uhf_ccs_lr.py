@@ -43,15 +43,15 @@ class UHF_CCS_LR:
         pol_xA_F_xB = build_pol_xA_F_xB(
             input_triple, t_res_A=t_response, t_res_B=t_response,
         )
-        # when there is only one operator this term is the same as the first one
-        # pol_etaB_xA = self._build_pol_eta_X(eta_mu, t_response)
+        # when there is only one operator this term is the same as the first
+        # one pol_etaB_xA = self._build_pol_eta_X(eta_mu, t_response)
         pol_etaB_xA = pol_etaA_xB
 
         return pol_etaA_xB + pol_xA_F_xB + pol_etaB_xA
 
     def _build_pol_eta_X(self, eta, t_response) -> Polarizability:
         r"""
-        Calculates 
+        Calculates
         sum _mu \eta _\mu X _\mu
         """
         pol = Polarizability.from_builder(
@@ -66,9 +66,9 @@ class UHF_CCS_LR:
 
     def _find_eta_mu(self) -> dict[Descartes, dict[str, NDArray]]:
         """mu stands for the electric dipole moment. It is a special case of a
-        general perturbation operator. See the comment in 
-        rspn.uhf_ccs.equations.eta.generate.py for details. For CCS with T=0 and
-        L = 0, the eta reduces a lot."""
+        general perturbation operator. See the comment in
+        rspn.uhf_ccs.equations.eta.generate.py for details. For CCS with T=0
+        and L = 0, the eta reduces a lot."""
         operators = {
             Descartes.x: dict(
                 operator_aa=self.uhf_data.mua_x,
@@ -84,9 +84,9 @@ class UHF_CCS_LR:
             ),
         }
         input_triple = UHF_CCS_InputTriple(
-                uhf_data=self.uhf_data,
-                uhf_ccs_data=self.uhf_ccs_data,
-                uhf_ccs_lambda_data=self.uhf_ccs_lambda_data,
+            uhf_data=self.uhf_data,
+            uhf_ccs_data=self.uhf_ccs_data,
+            uhf_ccs_lambda_data=self.uhf_ccs_lambda_data,
         )
         etas = {}
         for coord in CARTESIAN:
