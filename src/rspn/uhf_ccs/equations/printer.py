@@ -3,7 +3,8 @@ from collections.abc import Iterable, Sequence
 from pdaggerq.parser import contracted_strings_to_tensor_terms
 from enum import Enum, auto
 
-TAB='    '
+TAB = '    '
+
 
 class DefineSections(Enum):
     FOCK = auto()
@@ -54,7 +55,6 @@ def print_function_header(
     if DefineSections.LAMBDA_AMPS not in defines_exclude:
         body += f'''\n{TAB}uhf_ccs_lambda_data: UHF_CCS_Lambda_Data,'''
 
-
     if extra_arguments is not None:
         for argument in extra_arguments:
             body += f'\n{TAB}{argument},'
@@ -71,7 +71,7 @@ def print_function_header(
             body += f'\n{TAB}{definition}'
 
     if DefineSections.FOCK not in defines_exclude:
-        body += f'''
+        body += '''
     f_aa = uhf_data.f_aa
     f_bb = uhf_data.f_bb'''
 

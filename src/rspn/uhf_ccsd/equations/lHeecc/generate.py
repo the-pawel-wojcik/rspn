@@ -7,8 +7,8 @@ The operator tau _ν is an excitation operator that can be a single, double, and
 higher order excitation operator. The operator H is the molecular Hamiltonian.
 
 Refs:
-[1] H. Koch and P. Jørgensen, Coupled cluster response functions, The Journal of
-Chemical Physics 93, 3333 (1990).
+[1] H. Koch and P. Jørgensen, Coupled cluster response functions, The Journal
+of Chemical Physics 93, 3333 (1990).
 """
 import pdaggerq
 from rspn.uhf_ccsd.equations.printer import print_imports, print_to_numpy
@@ -32,7 +32,7 @@ def build_lHe1e1cc():
     #
     #     =     H e1(a,i) e1(b,j)
     #         - e1(a,i) H e1(b,j)
-    #         - e1(b,j) H e1(a,i) 
+    #         - e1(b,j) H e1(a,i)
     #         + e1(b,j) e1(a,i) H
 
     pq.add_st_operator(1.0, ['v', 'e1(a,i)', 'e1(b,j)'], ['t1', 't2'])
@@ -68,7 +68,7 @@ def build_lHe1e2cc():
     #
     #     =     H e1(a,i) e2(b,c,k,j)
     #         - e1(a,i) H e2(b,c,k,j)
-    #         - e2(b,c,k,j) H e1(a,i) 
+    #         - e2(b,c,k,j) H e1(a,i)
     #         + e2(b,c,k,j) e1(a,i) H
 
     pq.add_st_operator(1.0, ['v', 'e1(a,i)', 'e2(b,c,k,j)'], ['t1', 't2'])
@@ -104,7 +104,7 @@ def build_lHe2e1cc():
     #
     #     =     H e2(a,b,j,i) e1(c,k)
     #         - e2(a,b,j,i) H e1(c,k)
-    #         - e1(c,k) H e2(a,b,j,i) 
+    #         - e1(c,k) H e2(a,b,j,i)
     #         + e1(c,k) e2(a,b,j,i) H
 
     pq.add_st_operator(1.0, ['v', 'e2(a,b,j,i)', 'e1(c,k)'], ['t1', 't2'])
@@ -140,7 +140,7 @@ def build_lHe2e2cc():
     #
     #     =     H e2(a,b,j,i) e2(c,d,l,k)
     #         - e2(a,b,j,i) H e2(c,d,l,k)
-    #         - e2(c,d,l,k) H e2(a,b,j,i) 
+    #         - e2(c,d,l,k) H e2(a,b,j,i)
     #         + e2(c,d,l,k) e2(a,b,j,i) H
 
     pq.add_st_operator(1.0, ['v', 'e2(a,b,j,i)', 'e2(c,d,l,k)'], ['t1', 't2'])

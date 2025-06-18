@@ -4,13 +4,13 @@ r""" Build a matrix defined in Eq. (76) of Ref. [1].
 
 The operator tau _ν is an excitation operator that can be a single, double, and
 higher order excitation operator. The operator V^{\omega _1} is a Fourier
-transform of the interaction operator, see Ref. [2] for details and examples. In
-case of a static electric field perturbation $-μE$, the operaotr
+transform of the interaction operator, see Ref. [2] for details and examples.
+In case of a static electric field perturbation $-μE$, the operaotr
 $V ^{\omega _1}$ reduces to the dipole operator $\mu$.
 
 Refs:
-[1] H. Koch and P. Jørgensen, Coupled cluster response functions, The Journal of
-Chemical Physics 93, 3333 (1990).
+[1] H. Koch and P. Jørgensen, Coupled cluster response functions, The Journal
+of Chemical Physics 93, 3333 (1990).
 [2] J. Olsen and P. Jørgensen, Linear and nonlinear response functions for an
 exact state and for an MCSCF state, The Journal of Chemical Physics 82, 3235
 (1985).

@@ -1,8 +1,9 @@
 import itertools
-TAB='    '
-PAD=f'{TAB}'
+TAB = '    '
+PAD = f'{TAB}'
 oeblocks = ['aa', 'bb', ]
 teblocks = ['aaaa', 'abab', 'abba', 'baab', 'baba', 'bbbb']
+
 
 def imports():
     print(
@@ -60,6 +61,7 @@ def einsum_template(sum: str, left: str, right: str, PAD: str) -> str:
 {PAD})
 {PAD}+"""
 
+
 def builder():
     sums = ''
     for left, right in itertools.product(oeblocks, oeblocks):
@@ -74,11 +76,11 @@ def builder():
     for left, right in itertools.product(teblocks, teblocks):
         sums += einsum_template('abji,abjicdlk,cdlk->', left, right, TAB * 3)
 
-
     print(f'''{PAD}return Polarizability.from_builder(
 {PAD}{TAB}builder = lambda first, second: ({sums}
 {PAD}{TAB})
 {PAD})''')
+
 
 if __name__ == "__main__":
     # imports()

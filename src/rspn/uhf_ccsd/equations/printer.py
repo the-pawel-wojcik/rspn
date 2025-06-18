@@ -3,7 +3,8 @@ from collections.abc import Iterable, Sequence
 from pdaggerq.parser import contracted_strings_to_tensor_terms
 from enum import Enum, auto
 
-TAB='    '
+TAB = '    '
+
 
 class DefineSections(Enum):
     FOCK = auto()
@@ -38,7 +39,6 @@ def print_function_header(
     if spin_subscript != '':
         spin_subscript = '_' + spin_subscript
 
-    
     body = f'''\n\ndef get_{quantity}{spin_subscript}(
     uhf_scf_data: Intermediates,
     uhf_ccsd_data: UHF_CCSD_Data,'''
@@ -62,7 +62,7 @@ def print_function_header(
         defines_exclude = set()
 
     if DefineSections.FOCK not in defines_exclude:
-        body += f'''
+        body += '''
     f_aa = uhf_scf_data.f_aa
     f_bb = uhf_scf_data.f_bb'''
 

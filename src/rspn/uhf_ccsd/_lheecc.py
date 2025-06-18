@@ -76,6 +76,7 @@ from rspn.uhf_ccsd.equations.lHeecc.e2e2 import (
     get_lhe2e2cc_bbbbbbbb,
 )
 
+
 def build_pol_xA_F_xB(
     kwargs: GeneratorsInput,
     t_res_B: dict[Descartes, dict[str, NDArray]],
@@ -150,7 +151,7 @@ def build_pol_xA_F_xB(
     f_bbbb_bbbb = get_lhe2e2cc_bbbbbbbb(**kwargs)
 
     return Polarizability.from_builder(
-        builder = lambda first, second: (
+        builder=lambda first, second: (
             np.einsum(
                 'ai,aibj,bj->',
                 t_res_A[first]['aa'],

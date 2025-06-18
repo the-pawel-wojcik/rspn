@@ -5,7 +5,7 @@ Builds the matrices of the perturbation operator as given by Eq. (60) from Ref.
     matrix[x][a, i] = <HF| e^{-T} a*(i) a(a) \hat{mu} _x e^{T} |HF>
 
 the flipped order of `a` and `i` appears because the pair (a, i) is an index of
-a single excitation operator $\tau _mu ^\dagger$. The theory from Ref. [1] 
+a single excitation operator $\tau _mu ^\dagger$. The theory from Ref. [1]
 works on the excitation indices.
 
 [1] H. Koch and P. Jørgensen, Coupled cluster response functions, The Journal

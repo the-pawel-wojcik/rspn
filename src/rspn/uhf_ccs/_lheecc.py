@@ -10,6 +10,7 @@ from rspn.uhf_ccs.equations.lHeecc.e1e1 import (
     get_lhe1e1cc_bbbb,
 )
 
+
 def build_pol_xA_F_xB(
     kwargs: UHF_CCS_InputTriple,
     t_res_B: dict[Descartes, dict[str, NDArray]],
@@ -21,7 +22,7 @@ def build_pol_xA_F_xB(
     f_bb_bb = get_lhe1e1cc_bbbb(**kwargs)
 
     return Polarizability.from_builder(
-        builder = lambda first, second: (
+        builder=lambda first, second: (
             np.einsum(
                 'ai,aibj,bj->',
                 t_res_A[first]['aa'],

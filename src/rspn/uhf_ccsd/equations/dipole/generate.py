@@ -1,6 +1,6 @@
 r""" The perturbation operator needed as given by Eq. (60) from Ref. [1]
 $$
-\xi _{\nu} (\omega) 
+\xi _{\nu} (\omega)
 =
 \bra{0} \tau _{\nu} e ^{-T} V ^{\omega} e ^{T} \ket{0}
 $$
@@ -9,9 +9,9 @@ $$
 The version of this prorgam at the time of writing this comment works only with
 the electric dipole moment operator.
 
-Refs: 
-[1] H. Koch and P. Jørgensen, Coupled cluster response functions, The Journal of
-Chemical Physics 93, 3333 (1990).
+Refs:
+[1] H. Koch and P. Jørgensen, Coupled cluster response functions, The Journal
+of Chemical Physics 93, 3333 (1990).
 """
 import pdaggerq
 from rspn.uhf_ccsd.equations.printer import (

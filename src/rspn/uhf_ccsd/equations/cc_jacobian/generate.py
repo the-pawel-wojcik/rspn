@@ -6,14 +6,15 @@ A _μν = <μ| e^{-T} [H, tau_ν] | CC>
 The operator tau _ν is an excitation operator that can be a single, double, and
 higher order excitation operators.
 
-The above can be translated to 
+The above can be translated to
 
 A _μν = <HF| tau * _μ [\bar{H}, tau_ν] |HF>
 
 which can be implemented with pdaggerq
 
 Refs:
-[1] H. Koch and P. Jørgensen, Coupled cluster response functions, The Journal of Chemical Physics 93, 3333 (1990).
+[1] H. Koch and P. Jørgensen, Coupled cluster response functions, The Journal
+of Chemical Physics 93, 3333 (1990).
 """
 from rspn.uhf_ccsd.equations.printer import (
         DefineSections, print_to_numpy, print_imports,
