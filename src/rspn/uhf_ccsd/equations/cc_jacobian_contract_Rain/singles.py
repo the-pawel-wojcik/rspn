@@ -2,19 +2,21 @@ from numpy import einsum
 from numpy.typing import NDArray
 from chem.hf.intermediates_builders import Intermediates
 from chem.ccsd.uhf_ccsd import UHF_CCSD_Data
+from chem.ccsd.containers import Spin_MBE, E1_spin, E2_spin
 
 
 def get_cc_j_w_singles_aa(
     uhf_scf_data: Intermediates,
     uhf_ccsd_data: UHF_CCSD_Data,
-    r1_aa: NDArray,
-    r1_bb: NDArray,
-    r2_aaaa: NDArray,
-    r2_abab: NDArray,
-    r2_baba: NDArray,
-    r2_bbbb: NDArray,
+    vector: Spin_MBE,
 ) -> NDArray:
     """ tensor_subscripts: ('a', 'i') """
+    r1_aa = vector.singles[E1_spin.aa]
+    r1_bb = vector.singles[E1_spin.bb]
+    r2_aaaa = vector.doubles[E2_spin.aaaa]
+    r2_abab = vector.doubles[E2_spin.abab]
+    r2_baba = vector.doubles[E2_spin.baba]
+    r2_bbbb = vector.doubles[E2_spin.bbbb]
     f_aa = uhf_scf_data.f_aa
     f_bb = uhf_scf_data.f_bb
     g_aaaa = uhf_scf_data.g_aaaa
@@ -54,14 +56,15 @@ def get_cc_j_w_singles_aa(
 def get_cc_j_w_singles_bb(
     uhf_scf_data: Intermediates,
     uhf_ccsd_data: UHF_CCSD_Data,
-    r1_aa: NDArray,
-    r1_bb: NDArray,
-    r2_aaaa: NDArray,
-    r2_abab: NDArray,
-    r2_baba: NDArray,
-    r2_bbbb: NDArray,
+    vector: Spin_MBE,
 ) -> NDArray:
     """ tensor_subscripts: ('a', 'i') """
+    r1_aa = vector.singles[E1_spin.aa]
+    r1_bb = vector.singles[E1_spin.bb]
+    r2_aaaa = vector.doubles[E2_spin.aaaa]
+    r2_abab = vector.doubles[E2_spin.abab]
+    r2_baba = vector.doubles[E2_spin.baba]
+    r2_bbbb = vector.doubles[E2_spin.bbbb]
     f_aa = uhf_scf_data.f_aa
     f_bb = uhf_scf_data.f_bb
     g_aaaa = uhf_scf_data.g_aaaa

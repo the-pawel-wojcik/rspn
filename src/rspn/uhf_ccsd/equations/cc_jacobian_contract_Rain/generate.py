@@ -90,12 +90,15 @@ def main():
             defines_exclude={DefineSections.LAMBDA_AMPS},
             tensor_subscripts=('a', 'i'),
             extra_arguments=[
-                'r1_aa: NDArray',
-                'r1_bb: NDArray',
-                'r2_aaaa: NDArray',
-                'r2_abab: NDArray',
-                'r2_baba: NDArray',
-                'r2_bbbb: NDArray',
+                'vector: Spin_MBE',
+            ],
+            extra_definitions=[
+                'r1_aa = vector.singles[E1_spin.aa]',
+                'r1_bb = vector.singles[E1_spin.bb]',
+                'r2_aaaa = vector.doubles[E2_spin.aaaa]',
+                'r2_abab = vector.doubles[E2_spin.abab]',
+                'r2_baba = vector.doubles[E2_spin.baba]',
+                'r2_bbbb = vector.doubles[E2_spin.bbbb]',
             ],
         )
 
@@ -108,12 +111,15 @@ def main():
             defines_exclude={DefineSections.LAMBDA_AMPS},
             tensor_subscripts=('a', 'b', 'j', 'i'),
             extra_arguments=[
-                'r1_aa: NDArray',
-                'r1_bb: NDArray',
-                'r2_aaaa: NDArray',
-                'r2_abab: NDArray',
-                'r2_baba: NDArray',
-                'r2_bbbb: NDArray',
+                'vector: Spin_MBE',
+            ],
+            extra_definitions=[
+                'r1_aa = vector.singles[E1_spin.aa]',
+                'r1_bb = vector.singles[E1_spin.bb]',
+                'r2_aaaa = vector.doubles[E2_spin.aaaa]',
+                'r2_abab = vector.doubles[E2_spin.abab]',
+                'r2_baba = vector.doubles[E2_spin.baba]',
+                'r2_bbbb = vector.doubles[E2_spin.bbbb]',
             ],
         )
 
