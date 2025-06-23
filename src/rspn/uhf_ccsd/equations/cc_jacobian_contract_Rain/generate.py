@@ -78,8 +78,8 @@ def build_doubles_block():
 
 def main():
 
-    do_singles = True
-    do_doubles = False
+    do_singles = False
+    do_doubles = True
 
     if do_singles:
         pq = build_singles_block()
@@ -104,9 +104,17 @@ def main():
         print_imports()
         print_to_numpy(
             pq,
-            tensor_name='cc_j_singles_doubles',
+            tensor_name='cc_j_w_singles_doubles',
             defines_exclude={DefineSections.LAMBDA_AMPS},
-            tensor_subscripts=('a', 'i', 'b', 'c', 'k', 'j'),
+            tensor_subscripts=('a', 'b', 'j', 'i'),
+            extra_arguments=[
+                'r1_aa: NDArray',
+                'r1_bb: NDArray',
+                'r2_aaaa: NDArray',
+                'r2_abab: NDArray',
+                'r2_baba: NDArray',
+                'r2_bbbb: NDArray',
+            ],
         )
 
 
