@@ -4,6 +4,7 @@ from chem.ccsd.equations.util import GeneratorsInput
 from chem.ccsd.containers import E1_spin, E2_spin, Spin_MBE
 from numpy.typing import NDArray
 from rspn.uhf_ccsd._jacobian import build_cc_jacobian
+from rspn.uhf_ccsd._jacobian_action import Minus_UHF_CCSD_Jacobian_action
 from chem.ccsd.uhf_ccsd import UHF_CCSD
 from rspn.uhf_ccsd.uhf_ccsd_lr import UHF_CCSD_LR
 from rspn.uhf_ccsd.equations.cc_jacobian_contract_Rain.singles import (
@@ -21,7 +22,11 @@ from rspn.uhf_ccsd.equations.cc_jacobian_contract_Rain.doubles import (
 import numpy as np
 
 
-def build_elegant_sigma(test_vector: NDArray, ccsd: UHF_CCSD, **kwargs):
+def build_elegant_sigma(
+    test_vector: NDArray,
+    ccsd: UHF_CCSD,
+    **kwargs,
+) -> Spin_MBE:
     mock_rhs = Spin_MBE.from_flattened_NDArray(test_vector, ccsd.scf_data)
     sigma_elegant = Spin_MBE()
     sigma_elegant.singles[E1_spin.aa] = get_cc_j_w_singles_aa(
@@ -65,8 +70,7 @@ def build_elegant_sigma(test_vector: NDArray, ccsd: UHF_CCSD, **kwargs):
     return sigma_elegant
 
 
-
-def test_CC_Jacobian_action():
+def test_Jacobian_build_vs_Jacobian_action():
     with open('pickles/water_sto3g@HF.pkl', 'rb') as bak_file:
         ccsd: UHF_CCSD = pickle.load(bak_file)
 
@@ -92,16 +96,40 @@ def test_CC_Jacobian_action():
         sigma_brute_force = Spin_MBE.from_flattened_NDArray(
             vector=out_vector, uhf_scf_data=ccsd.scf_data,
         )
-        sigma_brute_force.pretty_print_mbe()
+        # sigma_brute_force.pretty_print_mbe()
 
         sigma_elegant = build_elegant_sigma(test_vector, ccsd, **kwargs)
-        sigma_elegant.pretty_print_mbe()
+        # sigma_elegant.pretty_print_mbe()
 
-        # for spin_block, elegant in sigma_elegant.singles.items():
-        #     assert np.allclose(elegant, sigma_brute_force.singles[spin_block])
+        # The Rain's approach does not work!
+        assert not sigma_elegant == sigma_brute_force
 
-        break
+
+def test_Jacobian_action():
+    with open('pickles/water_sto3g@HF.pkl', 'rb') as bak_file:
+        ccsd: UHF_CCSD = pickle.load(bak_file)
+
+    kwargs = GeneratorsInput(
+        uhf_scf_data=ccsd.scf_data,
+        uhf_ccsd_data=ccsd.data,
+    )
+    m_cc_jacobian = Minus_UHF_CCSD_Jacobian_action(ccsd.scf_data, ccsd.data)
+    dims, _, _ = Spin_MBE.find_dims_slices_shapes(ccsd.scf_data)
+    dim = Spin_MBE.get_vector_dim(dims)
+    today = 20250623
+    rng = np.random.default_rng(seed=today)
+    test_vectors = (rng.random(size=(dim)) for _ in range(10))
+
+    for test_vector in test_vectors:
+        out_vector = m_cc_jacobian.matvec(test_vector)
+        mbe_out = Spin_MBE.from_flattened_NDArray(out_vector, ccsd.scf_data)
+        # mbe_out.pretty_print_mbe()
+        sigma_elegant = build_elegant_sigma(test_vector, ccsd, **kwargs)
+        # sigma_elegant.pretty_print_mbe()
+
+        assert -sigma_elegant == mbe_out
 
 
 if __name__ == "__main__":
-    test_CC_Jacobian_action()
+    test_Jacobian_build_vs_Jacobian_action()
+    test_Jacobian_action()
