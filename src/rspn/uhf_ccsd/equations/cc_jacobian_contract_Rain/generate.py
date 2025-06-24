@@ -107,7 +107,7 @@ def main():
         print_imports()
         print_to_numpy(
             pq,
-            tensor_name='cc_j_w_singles_doubles',
+            tensor_name='cc_j_w_doubles',
             defines_exclude={DefineSections.LAMBDA_AMPS},
             tensor_subscripts=('a', 'b', 'j', 'i'),
             extra_arguments=[
