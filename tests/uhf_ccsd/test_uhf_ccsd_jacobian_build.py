@@ -20,7 +20,7 @@ def humanify(size_bytes: float) -> str:
 
 
 def test_cc_jacobian_build():
-    with open('pickles/water_sto3g.pkl', 'rb') as bak_file:
+    with open('pickles/water_sto3g@HF.pkl', 'rb') as bak_file:
         ccsd: UHF_CCSD = pickle.load(bak_file)
 
     lr = UHF_CCSD_LR(uhf_scf_data=ccsd.scf_data, uhf_ccsd_data=ccsd.data,)

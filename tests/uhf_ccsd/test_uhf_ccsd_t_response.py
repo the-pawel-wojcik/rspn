@@ -9,7 +9,7 @@ from rspn.uhf_ccsd._nuOpCC import build_nu_bar_V_cc
 
 
 def test_t_response():
-    with open('pickles/water_sto3g.pkl', 'rb') as bak_file:
+    with open('pickles/water_sto3g@HF.pkl', 'rb') as bak_file:
         ccsd: UHF_CCSD = pickle.load(bak_file)
     lr = UHF_CCSD_LR(ccsd.data, ccsd.scf_data)
     builder_input = GeneratorsInput(

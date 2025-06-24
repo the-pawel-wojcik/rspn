@@ -10,7 +10,7 @@ import pytest
 
 
 def test_eta_works():
-    with open('pickles/uhf_ccsd_lambda.pkl', 'rb') as bak_file:
+    with open('pickles/water_ccpVDZ.pkl', 'rb') as bak_file:
         ccsd: UHF_CCSD = pickle.load(bak_file)
     lr = UHF_CCSD_LR(ccsd.data, ccsd.scf_data)
     eta_mu = lr._find_eta_mu()
