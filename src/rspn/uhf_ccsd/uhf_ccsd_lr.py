@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from chem.ccsd.uhf_ccsd import UHF_CCSD_Data
 from chem.hf.intermediates_builders import Intermediates
 from chem.ccsd.equations.util import GeneratorsInput
@@ -6,34 +6,69 @@ from chem.meta.coordinates import Descartes, CARTESIAN
 from chem.meta.polarizability import Polarizability
 import numpy as np
 from numpy.typing import NDArray
-from scipy.sparse.linalg import gmres
+from scipy.sparse.linalg import LinearOperator, gmres
 import rspn.uhf_ccsd.equations.eta.singles as eta_singles
 import rspn.uhf_ccsd.equations.eta.doubles as eta_doubles
 from rspn.uhf_ccsd._lheecc import build_pol_xA_F_xB
 from rspn.uhf_ccsd._jacobian import build_cc_jacobian
 from rspn.uhf_ccsd._nuOpCC import build_nu_bar_V_cc
+from rspn.uhf_ccsd._jacobian_action import Minus_UHF_CCSD_Jacobian_action
+
+
+@dataclass
+class UHF_CCSD_LR_config:
+    """ 
+    BUILD_JACOBIAN: One implementation build the whole CC Jacobian matrix and
+    uses it to solve the equation 
+    Jacobian @ response_vector = "external_field_operator"
+
+    The other implementation does not store the whole matrix but only
+    implements the operator that takes an input_vector and returns the vector
+    Jacobian @ input_vector. The second approach saves a ton of memory.
+
+    Set to False to save memory.
+    """
+    RESPONSE_THRESHOLD: float = 1e-5
+    BUILD_JACOBIAN: bool = False
+    SPIN_BLOCKS: tuple[str, ...] = (
+        'aa', 'bb',
+        'aaaa', 'abab', 'abba', 'baab', 'baba', 'bbbb',
+    )  # TODO: these should be replaced with E1_Spin and E2_Spin
+
 
 
 @dataclass
 class UHF_CCSD_LR:
     uhf_ccsd_data: UHF_CCSD_Data
     uhf_scf_data: Intermediates
-    SPIN_BLOCKS: tuple[str, ...] = (
-        'aa', 'bb',
-        'aaaa', 'abab', 'abba', 'baab', 'baba', 'bbbb',
-    )
+    CONFIG: UHF_CCSD_LR_config = field(default_factory=UHF_CCSD_LR_config)
 
     def find_polarizabilities(self) -> Polarizability:
         builders_input = GeneratorsInput(
             uhf_scf_data=self.uhf_scf_data,
             uhf_ccsd_data=self.uhf_ccsd_data,
         )
-        cc_jacobian = build_cc_jacobian(
-            kwargs=builders_input,
-            dims=self.assign_dims(),
-        )
+
         cc_electric_dipole = build_nu_bar_V_cc(input=builders_input)
-        t_response = self.find_t_response(cc_jacobian, cc_electric_dipole)
+        if self.CONFIG.BUILD_JACOBIAN:
+            cc_jacobian = build_cc_jacobian(
+                kwargs=builders_input,
+                dims=self.assign_dims(),
+            )
+            t_response = self.find_t_response(
+                cc_jacobian,
+                cc_electric_dipole
+            )
+        else:
+            jacobian_op = Minus_UHF_CCSD_Jacobian_action(
+                uhf_hf_data=self.uhf_scf_data,
+                uhf_ccsd_data=self.uhf_ccsd_data,
+            )
+            t_response = self.find_t_response(
+                cc_jacobian=jacobian_op,
+                cc_mu=cc_electric_dipole
+            )
+
         eta_mu = self._find_eta_mu()
 
         # TODO: all operators work only for the electric dipole operator
@@ -57,7 +92,7 @@ class UHF_CCSD_LR:
                 float(
                     np.sum(eta[first][spin] * t_response[second][spin])
                 )
-                for spin in self.SPIN_BLOCKS
+                for spin in self.CONFIG.SPIN_BLOCKS
             ),
         )
         return pol
@@ -126,7 +161,7 @@ class UHF_CCSD_LR:
 
     def find_t_response(
         self,
-        cc_jacobian: NDArray,
+        cc_jacobian: NDArray | LinearOperator,
         cc_mu: dict[Descartes, dict[str, NDArray]],
     ) -> dict[Descartes, dict[str, NDArray]]:
         dims = self.assign_dims()
@@ -134,12 +169,15 @@ class UHF_CCSD_LR:
         for coord in CARTESIAN:
             mu = cc_mu[coord]
             rhs = np.vstack(
-                tuple(mu[block].reshape(-1, 1) for block in self.SPIN_BLOCKS)
+                tuple(
+                    mu[block].reshape(-1, 1)
+                    for block in self.CONFIG.SPIN_BLOCKS
+                )
             )
             gmres_output = gmres(
                 -cc_jacobian,
                 rhs,
-                atol=1e-12,
+                atol=self.CONFIG.RESPONSE_THRESHOLD,
             )
             exit_code: int = gmres_output[1]
             if exit_code != 0:
@@ -155,7 +193,7 @@ class UHF_CCSD_LR:
 
             slices = dict()
             current_size = 0
-            for block in self.SPIN_BLOCKS:
+            for block in self.CONFIG.SPIN_BLOCKS:
                 block_dim = dims[block]
                 slices[block] = slice(current_size, current_size + block_dim)
                 current_size += block_dim
@@ -174,7 +212,7 @@ class UHF_CCSD_LR:
             response: NDArray = gmres_output[0]
             t_response_mu[coord] = {
                 block: response[slices[block]].reshape(shapes[block])
-                for block in self.SPIN_BLOCKS
+                for block in self.CONFIG.SPIN_BLOCKS
             }
         return t_response_mu
 
