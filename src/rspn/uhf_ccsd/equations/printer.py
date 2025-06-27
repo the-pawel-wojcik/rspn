@@ -20,6 +20,7 @@ def print_imports() -> None:
     print('from numpy.typing import NDArray')
     print('from chem.hf.intermediates_builders import Intermediates')
     print('from chem.ccsd.uhf_ccsd import UHF_CCSD_Data')
+    print('from chem.ccsd.containers import Spin_MBE, E1_spin, E2_spin')
 
 
 def print_function_header(
@@ -30,7 +31,6 @@ def print_function_header(
     extra_definitions: None | Iterable[str] = None,
     extra_arguments: None | Iterable[str] = None,
 ) -> None:
-
     if not quantity.isidentifier():
         raise ValueError('Argument must be a valid python isidentifier.')
     if spin_subscript != '' and not spin_subscript.isidentifier():
