@@ -3,7 +3,7 @@ import pickle
 from chem.ccsd.equations.util import GeneratorsInput
 from chem.ccsd.uhf_ccsd import UHF_CCSD
 from chem.meta.coordinates import Descartes
-from rspn.uhf_ccsd.uhf_ccsd_lr import UHF_CCSD_LR
+from rspn.uhf_ccsd.uhf_ccsd_lr import UHF_CCSD_LR, UHF_CCSD_LR_config
 from rspn.uhf_ccsd._jacobian import build_cc_jacobian
 from rspn.uhf_ccsd._nuOpCC import build_nu_bar_V_cc
 
@@ -11,7 +11,9 @@ from rspn.uhf_ccsd._nuOpCC import build_nu_bar_V_cc
 def test_t_response():
     with open('pickles/water_sto3g@HF.pkl', 'rb') as bak_file:
         ccsd: UHF_CCSD = pickle.load(bak_file)
-    lr = UHF_CCSD_LR(ccsd.data, ccsd.scf_data)
+
+    lr_config = UHF_CCSD_LR_config(BUILD_JACOBIAN=True)
+    lr = UHF_CCSD_LR(ccsd.data, ccsd.scf_data, lr_config)
     builder_input = GeneratorsInput(
         uhf_scf_data=ccsd.scf_data,
         uhf_ccsd_data=ccsd.data,

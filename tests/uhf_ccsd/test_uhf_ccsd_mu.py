@@ -3,14 +3,16 @@ import pickle
 from chem.ccsd.equations.util import GeneratorsInput
 from chem.ccsd.uhf_ccsd import UHF_CCSD
 from chem.meta.coordinates import CARTESIAN
-from rspn.uhf_ccsd.uhf_ccsd_lr import UHF_CCSD_LR
+from rspn.uhf_ccsd.uhf_ccsd_lr import UHF_CCSD_LR, UHF_CCSD_LR_config
 from rspn.uhf_ccsd._nuOpCC import build_nu_bar_V_cc
 
 
 def test_cc_mu():
     with open('pickles/water_ccpVDZ.pkl', 'rb') as bak_file:
         ccsd: UHF_CCSD = pickle.load(bak_file)
-    lr = UHF_CCSD_LR(ccsd.data, ccsd.scf_data)
+
+    lr_config = UHF_CCSD_LR_config(BUILD_JACOBIAN=True)
+    lr = UHF_CCSD_LR(ccsd.data, ccsd.scf_data, lr_config)
     input = GeneratorsInput(
         uhf_scf_data=lr.uhf_scf_data,
         uhf_ccsd_data=lr.uhf_ccsd_data,

@@ -6,7 +6,7 @@ from numpy.typing import NDArray
 from rspn.uhf_ccsd._jacobian import build_cc_jacobian
 from rspn.uhf_ccsd._jacobian_action import Minus_UHF_CCSD_Jacobian_action
 from chem.ccsd.uhf_ccsd import UHF_CCSD
-from rspn.uhf_ccsd.uhf_ccsd_lr import UHF_CCSD_LR
+from rspn.uhf_ccsd.uhf_ccsd_lr import UHF_CCSD_LR, UHF_CCSD_LR_config
 from rspn.uhf_ccsd.equations.cc_jacobian_contract_Rain.singles import (
     get_cc_j_w_singles_aa,
     get_cc_j_w_singles_bb,
@@ -27,6 +27,10 @@ def build_elegant_sigma(
     ccsd: UHF_CCSD,
     **kwargs,
 ) -> Spin_MBE:
+    """
+    Elegant means on-the-fly calculation that does not involve the storage of
+    the operator matrix.
+    """
     mock_rhs = Spin_MBE.from_flattened_NDArray(test_vector, ccsd.scf_data)
     sigma_elegant = Spin_MBE()
     sigma_elegant.singles[E1_spin.aa] = get_cc_j_w_singles_aa(
@@ -74,7 +78,8 @@ def test_Jacobian_build_vs_Jacobian_action():
     with open('pickles/water_sto3g@HF.pkl', 'rb') as bak_file:
         ccsd: UHF_CCSD = pickle.load(bak_file)
 
-    lr = UHF_CCSD_LR(ccsd.data, ccsd.scf_data)
+    lr_config = UHF_CCSD_LR_config(BUILD_JACOBIAN=True)
+    lr = UHF_CCSD_LR(ccsd.data, ccsd.scf_data, lr_config)
     kwargs = GeneratorsInput(
         uhf_scf_data=ccsd.scf_data,
         uhf_ccsd_data=ccsd.data,

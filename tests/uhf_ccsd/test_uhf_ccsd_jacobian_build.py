@@ -1,7 +1,7 @@
 import pickle
 from chem.ccsd.uhf_ccsd import UHF_CCSD
 import numpy as np
-from rspn.uhf_ccsd.uhf_ccsd_lr import UHF_CCSD_LR
+from rspn.uhf_ccsd.uhf_ccsd_lr import UHF_CCSD_LR, UHF_CCSD_LR_config
 from chem.ccsd.equations.util import GeneratorsInput
 from rspn.uhf_ccsd._jacobian import (
     cc_jacobian_singles_singles,
@@ -23,7 +23,8 @@ def test_cc_jacobian_build():
     with open('pickles/water_sto3g@HF.pkl', 'rb') as bak_file:
         ccsd: UHF_CCSD = pickle.load(bak_file)
 
-    lr = UHF_CCSD_LR(uhf_scf_data=ccsd.scf_data, uhf_ccsd_data=ccsd.data,)
+    lr_config = UHF_CCSD_LR_config(BUILD_JACOBIAN=True)
+    lr = UHF_CCSD_LR(ccsd.data, ccsd.scf_data, lr_config)
     builders_input = GeneratorsInput(
         uhf_scf_data=ccsd.scf_data,
         uhf_ccsd_data=ccsd.data,
