@@ -1,0 +1,271 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, physics}
+\usepackage[backend=biber, style=phys]{biblatex}
+\addbibresource{/home/pawel/Documents/Zotero/pawels_library.bib}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=cyan,
+    citecolor=magenta,
+    filecolor=magenta,
+    urlcolor=cyan,
+    runcolor=cyan
+}
+\usepackage{doi}
+
+\title{Coupled Clusters Response Properties}
+\author{Pawe\l{} W{\'o}jcik}
+
+\begin{document}
+\maketitle
+
+\section{CC equations}
+The CC energy is given by 
+\begin{equation}
+    E _{CC} = 
+    \bra{\text{HF}}
+    e ^{-T}
+    H 
+    e ^T
+    \ket{\text{HF}}.
+    \label{eq:cc_energy}
+\end{equation}
+The CC equations (in the linked
+formulation\autocite{helgakerMolecularElectronicstructureTheory2000}) are given
+by
+\begin{equation}
+    \bra{\mu} e^{-T} H e^T \ket{0} = 0
+    \label{eq:cc_equations}
+\end{equation}
+The CC vector is given by
+\begin{equation}
+    \ket{\text{CC}} = e ^T \ket{\text{HF}}.
+    \label{eq:cc_vector}
+\end{equation}
+The cluster operator for an $N$-electron system is given by
+\begin{equation}
+    T = T _1 + T _2 + \ldots + T _N,
+    \label{eq:T}
+\end{equation}
+\begin{equation}
+    T _1 
+    = 
+    \sum _{ai} \sum _ {\sigma_1 \sigma _2}
+    t _{a\sigma _1 i \sigma _2}
+    a ^\dagger _{a \sigma _1} a _{i \sigma _2},
+    \label{eq:T1}
+\end{equation}
+\begin{equation}
+    T _2 
+    = 
+    % \frac{1}{(2!)^2}
+    \sum _{abji} \sum _ {\sigma_1 \sigma _2 \sigma_3 \sigma _4}
+    t _{a\sigma _1 b \sigma _2 j \sigma_3 i \sigma _4}
+    a ^\dagger _{a \sigma _1} 
+    a ^\dagger _{b \sigma _2} 
+    a _{j \sigma _3}
+    a _{i \sigma _4}.
+    \label{eq:T2}
+\end{equation}
+The chemistry convention specifies that the indices $i$, $j$, $k$, $l$ index
+the occupied orbitals, while the indices $a$, $b$, $c$, $d$ index the virtual
+orbitals. Occupied orbitals are the ones that form the reference state
+$\ket{\text{HF}}$ while virutal orbitals are the reminder. In a shorthand
+notation, the products of creation and annihilations operators are replaced
+with a corresponding excitation operator $\tau$
+\begin{equation}
+    T = t \tau = \sum _\nu t _\nu \tau _\nu.
+    \label{eq:T_tau}
+\end{equation}
+The index of the excitation operator goes over single excitations, double
+excitations, and so on.
+
+Koch and J{\o}rgensen\autocite{kochCoupledClusterResponse1990} also define the
+excited bras
+\begin{equation}
+    \bra{\nu} = \bra{\text{HF}} \tau ^\dagger _\nu,
+    \label{eq:bra_nu}
+\end{equation}
+and the excited bras with an extra exponential
+\begin{equation}
+    \bra{\bar{\nu}} 
+    = \bra{\nu} e ^{-T}
+    = \bra{\text{HF}} \tau ^\dagger _\nu e ^{-T}.
+    \label{eq:bra_nu_bar}
+\end{equation}
+
+\section{Lambda equations}
+The dual of the CC vector, $\bra{\text{CC}}$, is no good for calculation of
+properties, because it breaks the Hellman-Feynman
+theorem.\autocite{helgakerMolecularElectronicstructureTheory2000} To fix this
+issue, the CC theory founders have created an alternative dual vector to
+$\ket{\text{CC}}$, which assures the Hellman-Feynman theorem is satisfied and
+the properties make sense. The dual vector is typically called lambda,
+$\bra{\Lambda}$.
+
+The lambda is defined as
+\begin{equation}
+        \bra{\Lambda}
+        =
+        \bra{\text{HF}} 
+        +
+        \sum _{\nu}
+        \zeta _\nu \bra{\nu} e^{-T}
+    =
+    \left(
+        \bra{\text{HF}}
+        +
+        \sum _{\nu}
+        \zeta _\nu \bra{\nu} 
+    \right)e^{-T}
+    \label{eq:lambda}
+\end{equation}
+The $\zeta _\nu$ coefficients are determined by making sure that the
+$\bra{\Lambda}$ satisfies the Schr\"odinger equation
+\begin{equation}
+    \bra{\Lambda} H = \bra{\Lambda} E _{CC}.
+    \label{eq:lambda_se}
+\end{equation}
+To find the equations for $\zeta _\nu$, first the equation
+Eq.~\eqref{eq:lambda_se} is hit with the cluster operator from the right
+\begin{equation}
+    \bra{\Lambda} H e^T = \bra{\Lambda} e^T E _{CC},
+    \label{eq:lambda_se_eT}
+\end{equation}
+then it is projected onto the reference determinant, $\ket{\text{HF}}$, and
+enough many excited determinants, $\ket{\mu}$. Projection onto
+$\ket{\text{HF}}$ resuts in an equation that vanishies, for the $E _{CC}$ and
+$T$ satisfying the CC equations. Projections onto the excited determinants
+lead to
+\begin{equation}
+    \bra{\Lambda}H e^T \ket{\mu}
+    =
+    E _{CC}
+    \bra{\Lambda}
+    e ^T
+    \ket{\mu}.
+    \label{eq:zeta_eq}
+\end{equation}
+The rhs simplifies to $E _{CC} \zeta _\mu$, leading to the lambda residual
+equations
+\begin{equation}
+    \bra{\Lambda}H e^T \ket{\mu}
+    -
+    E _{CC} \zeta _{\mu}
+    = 
+    0.
+    \label{eq:lambda_residual}
+\end{equation}
+
+
+\section{Linear Response Properties}
+The linear response properties describe the response of a molecule to an
+external field. This statement is formalized by writing down the system
+Hamiltonian as
+\begin{equation}
+    H_{sys} = H + V
+    \label{eq:H_plus_pert}
+\end{equation}
+I follow the method of Koch and
+J{\o}rgensen.\autocite{kochCoupledClusterResponse1990} Much of the notation from
+this work is explained in detail in an earlier work of Olsen and
+J{\o}rgensen\autocite{olsenLinearNonlinearResponse1985}, as well as in the book
+by Zubarev.\autocite{zubarevNonequilibriumStatisticalThermodynamics1974}
+
+The coupled cluster linear response function is given by Eq.~(94) from
+Ref.~\cite{kochCoupledClusterResponse1990}
+\begin{equation}
+    \expval{\expval{A; B}} _{\omega _1}
+    =
+    \sum _\mu
+        \bra{\Lambda}
+            \commutator{A}{\tau _\mu}
+        \ket{CC}
+        X ^B _\mu (\omega _1)
+    +
+    \sum _\mu
+    \left(
+        \bra{\Lambda}
+            \commutator{B}{\tau _\mu}
+        \ket{CC}
+        +
+        \sum _\gamma
+            F _{\mu \gamma}
+            X ^B _\gamma (\omega _1)
+    \right)
+    X ^A _\mu (-\omega _1)
+    \label{eq:lin_res}
+\end{equation}
+The matrices $X ^x _\mu (\omega)$ are the $t$ amplitudes responses defined in
+Eq.~(95) and (58) or Ref.~\cite{kochCoupledClusterResponse1990}.
+\begin{equation}
+    X ^x _\mu (\omega)
+    = 
+    \sum _\nu
+    (- \mathbf{A} + \omega \mathbf{I}) ^{-1} _{\mu \nu}
+    x _\nu,
+    \label{eq:t_response}
+\end{equation}
+where the $x _\nu$ matrix is related to the external perturbation operator,
+$x$ (e.g., for the electric dipole perturbation this operator is the electric
+dipole operator $x = \hat{\mu}$, see
+Ref.~\cite{olsenLinearNonlinearResponse1985})
+\begin{equation}
+    x _\nu = \bra{\nu}e ^{-T} x e^T \ket{\text{HF}},
+    \label{eq:cc_mu}
+\end{equation}
+and the matrix $\textbf{A}$ is the CC Jacobian
+\begin{equation}
+    A _{\mu \nu} 
+    =
+    \bra{\mu}
+    e^{-T}
+    \commutator{H}{\tau _\nu}
+    e ^T
+    \ket{\text{HF}}
+    \label{eq:cc_jacobian}
+\end{equation}
+Finally, the $F _{\mu\nu}$ matrix originates from the $\zeta$ amplitudes
+response and is given by Eq.~(77) from
+Ref.~\cite{kochCoupledClusterResponse1990}
+\begin{equation}
+    F _{\mu \gamma}
+    =
+    \bra{\Lambda}
+    \commutator{\commutator{H}{\tau _\mu}}{\tau _\gamma}
+    \ket{\text{CC}}.
+    \label{eq:fmatrix}
+\end{equation}
+
+One more term from the Eq.~\eqref{eq:lin_res} has a shortcut notation
+(following Eq.~(76) from Ref.~\cite{kochCoupledClusterResponse1990})
+\begin{equation}
+    \eta ^x _\nu (\omega) = 
+    \bra{\Lambda}
+    \commutator{x ^\omega}{\tau _\nu}
+    \ket{\text{CC}},
+    \label{eq:eta}
+\end{equation}
+where $x ^\omega$ is a Fourier transform component of the external field
+operator. Using this shortcut the Eq.~\eqref{eq:lin_res} becomes
+\begin{equation}
+    \expval{\expval{A; B}} _{\omega _1}
+    =
+    \sum _\mu
+        \eta ^A _\mu
+        X ^B _\mu (\omega _1)
+    +
+    \sum _\mu
+    \left(
+        \eta ^B _\mu
+        +
+        \sum _\gamma
+            F _{\mu \gamma}
+            X ^B _\gamma (\omega _1)
+    \right)
+    X ^A _\mu (-\omega _1).
+    \label{eq:lin_res2}
+\end{equation}
+
+\printbibliography{}
+\end{document}

@@ -1,0 +1,183 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{none/global//global/global/global}
+    \entry{helgakerMolecularElectronicstructureTheory2000}{book}{}{}
+      \name{author}{3}{}{%
+        {{hash=a65eee852e05c2429d195ae5885b369c}{%
+           family={Helgaker},
+           familyi={H\bibinitperiod},
+           given={Trygve},
+           giveni={T\bibinitperiod}}}%
+        {{hash=ecf8eeba955a1abcd1c706863bf3f99a}{%
+           family={Jørgensen},
+           familyi={J\bibinitperiod},
+           given={Poul},
+           giveni={P\bibinitperiod}}}%
+        {{hash=e0162f991fd7816fdf3c9b0a60d56798}{%
+           family={Olsen},
+           familyi={O\bibinitperiod},
+           given={Jeppe},
+           giveni={J\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Chichester ; New York}%
+      }
+      \list{publisher}{1}{%
+        {Wiley}%
+      }
+      \strng{namehash}{8a939c710876ccd486c5c3bcc948de99}
+      \strng{fullhash}{6674370108e6c5d702d12f5c64476696}
+      \strng{fullhashraw}{6674370108e6c5d702d12f5c64476696}
+      \strng{bibnamehash}{6674370108e6c5d702d12f5c64476696}
+      \strng{authorbibnamehash}{6674370108e6c5d702d12f5c64476696}
+      \strng{authornamehash}{8a939c710876ccd486c5c3bcc948de99}
+      \strng{authorfullhash}{6674370108e6c5d702d12f5c64476696}
+      \strng{authorfullhashraw}{6674370108e6c5d702d12f5c64476696}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{isbn}{978-0-471-96755-2 978-1-118-53147-1}
+      \field{pagetotal}{908}
+      \field{title}{Molecular Electronic-Structure Theory}
+      \field{year}{2000}
+      \field{dateera}{ce}
+    \endentry
+    \entry{kochCoupledClusterResponse1990}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=e80e7445330320adaffcecdbcc6bbaba}{%
+           family={Koch},
+           familyi={K\bibinitperiod},
+           given={Henrik},
+           giveni={H\bibinitperiod}}}%
+        {{hash=ecf8eeba955a1abcd1c706863bf3f99a}{%
+           family={Jørgensen},
+           familyi={J\bibinitperiod},
+           given={Poul},
+           giveni={P\bibinitperiod}}}%
+      }
+      \strng{namehash}{118b0800986b8505a31e357b601eccfc}
+      \strng{fullhash}{118b0800986b8505a31e357b601eccfc}
+      \strng{fullhashraw}{118b0800986b8505a31e357b601eccfc}
+      \strng{bibnamehash}{118b0800986b8505a31e357b601eccfc}
+      \strng{authorbibnamehash}{118b0800986b8505a31e357b601eccfc}
+      \strng{authornamehash}{118b0800986b8505a31e357b601eccfc}
+      \strng{authorfullhash}{118b0800986b8505a31e357b601eccfc}
+      \strng{authorfullhashraw}{118b0800986b8505a31e357b601eccfc}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{day}{1}
+      \field{issn}{0021-9606}
+      \field{journaltitle}{The Journal of Chemical Physics}
+      \field{month}{9}
+      \field{number}{5}
+      \field{shortjournal}{The Journal of Chemical Physics}
+      \field{title}{Coupled Cluster Response Functions}
+      \field{volume}{93}
+      \field{year}{1990}
+      \field{dateera}{ce}
+      \field{pages}{3333\bibrangedash 3344}
+      \range{pages}{12}
+      \verb{doi}
+      \verb 10.1063/1.458814
+      \endverb
+    \endentry
+    \entry{olsenLinearNonlinearResponse1985}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=e0162f991fd7816fdf3c9b0a60d56798}{%
+           family={Olsen},
+           familyi={O\bibinitperiod},
+           given={Jeppe},
+           giveni={J\bibinitperiod}}}%
+        {{hash=ecf8eeba955a1abcd1c706863bf3f99a}{%
+           family={Jørgensen},
+           familyi={J\bibinitperiod},
+           given={Poul},
+           giveni={P\bibinitperiod}}}%
+      }
+      \strng{namehash}{caf57a65fedf38d77e77401246caeb32}
+      \strng{fullhash}{caf57a65fedf38d77e77401246caeb32}
+      \strng{fullhashraw}{caf57a65fedf38d77e77401246caeb32}
+      \strng{bibnamehash}{caf57a65fedf38d77e77401246caeb32}
+      \strng{authorbibnamehash}{caf57a65fedf38d77e77401246caeb32}
+      \strng{authornamehash}{caf57a65fedf38d77e77401246caeb32}
+      \strng{authorfullhash}{caf57a65fedf38d77e77401246caeb32}
+      \strng{authorfullhashraw}{caf57a65fedf38d77e77401246caeb32}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{day}{1}
+      \field{issn}{0021-9606}
+      \field{journaltitle}{The Journal of Chemical Physics}
+      \field{month}{4}
+      \field{number}{7}
+      \field{shortjournal}{The Journal of Chemical Physics}
+      \field{title}{Linear and Nonlinear Response Functions for an Exact State and for an {{MCSCF}} State}
+      \field{volume}{82}
+      \field{year}{1985}
+      \field{dateera}{ce}
+      \field{pages}{3235\bibrangedash 3264}
+      \range{pages}{30}
+      \verb{doi}
+      \verb 10.1063/1.448223
+      \endverb
+    \endentry
+    \entry{zubarevNonequilibriumStatisticalThermodynamics1974}{book}{}{}
+      \name{author}{1}{}{%
+        {{hash=4e3309d8bf12643b8159d40238230f1c}{%
+           family={Zubarev},
+           familyi={Z\bibinitperiod},
+           given={D.\bibnamedelimi N.},
+           giveni={D\bibinitperiod\bibinitdelim N\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {New York}%
+      }
+      \list{publisher}{1}{%
+        {Consultants Bureau}%
+      }
+      \strng{namehash}{4e3309d8bf12643b8159d40238230f1c}
+      \strng{fullhash}{4e3309d8bf12643b8159d40238230f1c}
+      \strng{fullhashraw}{4e3309d8bf12643b8159d40238230f1c}
+      \strng{bibnamehash}{4e3309d8bf12643b8159d40238230f1c}
+      \strng{authorbibnamehash}{4e3309d8bf12643b8159d40238230f1c}
+      \strng{authornamehash}{4e3309d8bf12643b8159d40238230f1c}
+      \strng{authorfullhash}{4e3309d8bf12643b8159d40238230f1c}
+      \strng{authorfullhashraw}{4e3309d8bf12643b8159d40238230f1c}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{isbn}{978-0-306-10895-2}
+      \field{langid}{engrus}
+      \field{pagetotal}{489}
+      \field{series}{Studies in Soviet science}
+      \field{title}{Nonequilibrium statistical thermodynamics}
+      \field{year}{1974}
+      \field{dateera}{ce}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+
