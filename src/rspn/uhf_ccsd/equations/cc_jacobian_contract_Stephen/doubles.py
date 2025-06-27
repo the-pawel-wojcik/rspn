@@ -1,0 +1,1043 @@
+from numpy import einsum
+from numpy.typing import NDArray
+from chem.hf.intermediates_builders import Intermediates
+from chem.ccsd.uhf_ccsd import UHF_CCSD_Data
+from chem.ccsd.containers import Spin_MBE, E1_spin, E2_spin
+
+
+def get_cc_j_w_doubles_aaaa(
+    uhf_scf_data: Intermediates,
+    uhf_ccsd_data: UHF_CCSD_Data,
+    vector: Spin_MBE,
+    E_CC: float,
+) -> NDArray:
+    """ tensor_subscripts: ('a', 'b', 'j', 'i') """
+    r1_aa = vector.singles[E1_spin.aa]
+    r1_bb = vector.singles[E1_spin.bb]
+    r2_aaaa = vector.doubles[E2_spin.aaaa]
+    r2_abab = vector.doubles[E2_spin.abab]
+    r2_baba = vector.doubles[E2_spin.baba]
+    r2_bbbb = vector.doubles[E2_spin.bbbb]
+    f_aa = uhf_scf_data.f_aa
+    f_bb = uhf_scf_data.f_bb
+    g_aaaa = uhf_scf_data.g_aaaa
+    g_abab = uhf_scf_data.g_abab
+    g_bbbb = uhf_scf_data.g_bbbb
+    kd_aa =  uhf_scf_data.identity_aa
+    kd_bb =  uhf_scf_data.identity_bb
+    va = uhf_scf_data.va
+    vb = uhf_scf_data.vb
+    oa = uhf_scf_data.oa
+    ob = uhf_scf_data.ob
+    t1_aa = uhf_ccsd_data.t1_aa
+    t1_bb = uhf_ccsd_data.t1_bb
+    t2_aaaa = uhf_ccsd_data.t2_aaaa
+    t2_abab = uhf_ccsd_data.t2_abab
+    t2_bbbb = uhf_ccsd_data.t2_bbbb
+    
+    cc_j_w_doubles_aaaa =  1.00 * einsum('kc,abij,ck->abji', f_aa[oa, va], r2_aaaa, r1_aa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00 * einsum('kc,abij,ck->abji', f_bb[ob, vb], r2_aaaa, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    contracted_intermediate = -1.00 * einsum('kc,abik,cj->abji', f_aa[oa, va], r2_aaaa, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('kc,ak,cbij->abji', f_aa[oa, va], r1_aa, r2_aaaa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->baji', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('kc,aj,cbik->abji', f_aa[oa, va], r1_aa, r2_aaaa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('kc,aj,bcik->abji', f_bb[ob, vb], r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('lkcj,abil,ck->abji', g_aaaa[oa, oa, va, oa], r2_aaaa, r1_aa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('lkjc,abil,ck->abji', g_abab[oa, ob, oa, vb], r2_aaaa, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate) 
+    contracted_intermediate =  0.50 * einsum('lkcj,ablk,ci->abji', g_aaaa[oa, oa, va, oa], r2_aaaa, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('lkcj,ak,cbil->abji', g_aaaa[oa, oa, va, oa], r1_aa, r2_aaaa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('kljc,ak,bcil->abji', g_abab[oa, ob, oa, vb], r1_aa, r2_abab, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -0.50 * einsum('lkcj,ai,cblk->abji', g_aaaa[oa, oa, va, oa], r1_aa, r2_aaaa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -0.50 * einsum('lkjc,ai,bclk->abji', g_abab[oa, ob, oa, vb], r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -0.50 * einsum('kljc,ai,bckl->abji', g_abab[oa, ob, oa, vb], r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('kacd,dbij,ck->abji', g_aaaa[oa, va, va, va], r2_aaaa, r1_aa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->baji', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('akdc,dbij,ck->abji', g_abab[va, ob, va, vb], r2_aaaa, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->baji', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('kacd,dbik,cj->abji', g_aaaa[oa, va, va, va], r2_aaaa, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('akcd,bdik,cj->abji', g_abab[va, ob, va, vb], r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  0.50 * einsum('kacd,bk,cdij->abji', g_aaaa[oa, va, va, va], r1_aa, r2_aaaa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->baji', contracted_intermediate) 
+    contracted_intermediate = -0.50 * einsum('kacd,bj,cdik->abji', g_aaaa[oa, va, va, va], r1_aa, r2_aaaa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  0.50 * einsum('akcd,bj,cdik->abji', g_abab[va, ob, va, vb], r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  0.50 * einsum('akdc,bj,dcik->abji', g_abab[va, ob, va, vb], r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('lkcd,bi,dajl,ck->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_aaaa, r1_aa, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('lkdc,bi,dajl,ck->abji', g_abab[oa, ob, va, vb], t1_aa, r2_aaaa, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('klcd,bi,adjl,ck->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_aa, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('lkcd,bi,adjl,ck->abji', g_bbbb[ob, ob, vb, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('lkcd,bl,daij,ck->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_aaaa, r1_aa, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->baji', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('lkdc,bl,daij,ck->abji', g_abab[oa, ob, va, vb], t1_aa, r2_aaaa, r1_bb, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->baji', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('lkcd,di,abjl,ck->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_aaaa, r1_aa, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('lkdc,di,abjl,ck->abji', g_abab[oa, ob, va, vb], t1_aa, r2_aaaa, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate) 
+    cc_j_w_doubles_aaaa += -1.00 * einsum('lkcd,dl,abij,ck->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_aaaa, r1_aa, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00 * einsum('lkdc,dl,abij,ck->abji', g_abab[oa, ob, va, vb], t1_aa, r2_aaaa, r1_bb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00 * einsum('klcd,dl,abij,ck->abji', g_abab[oa, ob, va, vb], t1_bb, r2_aaaa, r1_aa, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_aaaa += -1.00 * einsum('lkcd,dl,abij,ck->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_aaaa, r1_bb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    contracted_intermediate = -0.50 * einsum('lkcd,bi,dalk,cj->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_aaaa, r1_aa, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  0.50 * einsum('lkcd,bi,adlk,cj->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  0.50 * einsum('klcd,bi,adkl,cj->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('lkcd,bl,daik,cj->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_aaaa, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('lkcd,bl,adik,cj->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -0.50 * einsum('lkcd,di,ablk,cj->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_aaaa, r1_aa, optimize=['einsum_path', (0, 2), (0, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('lkcd,dl,abik,cj->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_aaaa, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('klcd,dl,abik,cj->abji', g_abab[oa, ob, va, vb], t1_bb, r2_aaaa, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate) 
+    contracted_intermediate = -0.50 * einsum('lkcd,bi,ak,cdjl->abji', g_aaaa[oa, oa, va, va], t1_aa, r1_aa, r2_aaaa, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  0.50 * einsum('klcd,bi,ak,cdjl->abji', g_abab[oa, ob, va, vb], t1_aa, r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  0.50 * einsum('kldc,bi,ak,dcjl->abji', g_abab[oa, ob, va, vb], t1_aa, r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -0.50 * einsum('lkcd,bl,ak,cdij->abji', g_aaaa[oa, oa, va, va], t1_aa, r1_aa, r2_aaaa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->baji', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('lkcd,di,ak,cbjl->abji', g_aaaa[oa, oa, va, va], t1_aa, r1_aa, r2_aaaa, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('kldc,di,ak,bcjl->abji', g_abab[oa, ob, va, vb], t1_aa, r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('lkcd,dl,ak,cbij->abji', g_aaaa[oa, oa, va, va], t1_aa, r1_aa, r2_aaaa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->baji', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('klcd,dl,ak,cbij->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_aaaa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->baji', contracted_intermediate) 
+    contracted_intermediate = -0.250 * einsum('lkcd,bi,aj,cdlk->abji', g_aaaa[oa, oa, va, va], t1_aa, r1_aa, r2_aaaa, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -0.250 * einsum('lkcd,bi,aj,cdlk->abji', g_abab[oa, ob, va, vb], t1_aa, r1_aa, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -0.250 * einsum('klcd,bi,aj,cdkl->abji', g_abab[oa, ob, va, vb], t1_aa, r1_aa, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -0.250 * einsum('lkdc,bi,aj,dclk->abji', g_abab[oa, ob, va, vb], t1_aa, r1_aa, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -0.250 * einsum('kldc,bi,aj,dckl->abji', g_abab[oa, ob, va, vb], t1_aa, r1_aa, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -0.250 * einsum('lkcd,bi,aj,cdlk->abji', g_bbbb[ob, ob, vb, vb], t1_aa, r1_aa, r2_bbbb, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  0.50 * einsum('lkcd,bl,aj,cdik->abji', g_aaaa[oa, oa, va, va], t1_aa, r1_aa, r2_aaaa, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  0.50 * einsum('lkcd,bl,aj,cdik->abji', g_abab[oa, ob, va, vb], t1_aa, r1_aa, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  0.50 * einsum('lkdc,bl,aj,dcik->abji', g_abab[oa, ob, va, vb], t1_aa, r1_aa, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  0.50 * einsum('lkcd,di,aj,cblk->abji', g_aaaa[oa, oa, va, va], t1_aa, r1_aa, r2_aaaa, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  0.50 * einsum('lkdc,di,aj,bclk->abji', g_abab[oa, ob, va, vb], t1_aa, r1_aa, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  0.50 * einsum('kldc,di,aj,bckl->abji', g_abab[oa, ob, va, vb], t1_aa, r1_aa, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('lkcd,dl,aj,cbik->abji', g_aaaa[oa, oa, va, va], t1_aa, r1_aa, r2_aaaa, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('lkdc,dl,aj,bcik->abji', g_abab[oa, ob, va, vb], t1_aa, r1_aa, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('klcd,dl,aj,cbik->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_aaaa, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('lkcd,dl,aj,bcik->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_aaaa +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+
+    # manually added diagonal part
+    cc_j_w_doubles_aaaa -= E_CC * r2_aaaa
+
+    return cc_j_w_doubles_aaaa
+
+
+def get_cc_j_w_doubles_abab(
+    uhf_scf_data: Intermediates,
+    uhf_ccsd_data: UHF_CCSD_Data,
+    vector: Spin_MBE,
+    E_CC: float,
+) -> NDArray:
+    """ tensor_subscripts: ('a', 'b', 'j', 'i') """
+    r1_aa = vector.singles[E1_spin.aa]
+    r1_bb = vector.singles[E1_spin.bb]
+    r2_aaaa = vector.doubles[E2_spin.aaaa]
+    r2_abab = vector.doubles[E2_spin.abab]
+    r2_baba = vector.doubles[E2_spin.baba]
+    r2_bbbb = vector.doubles[E2_spin.bbbb]
+    f_aa = uhf_scf_data.f_aa
+    f_bb = uhf_scf_data.f_bb
+    g_aaaa = uhf_scf_data.g_aaaa
+    g_abab = uhf_scf_data.g_abab
+    g_bbbb = uhf_scf_data.g_bbbb
+    kd_aa =  uhf_scf_data.identity_aa
+    kd_bb =  uhf_scf_data.identity_bb
+    va = uhf_scf_data.va
+    vb = uhf_scf_data.vb
+    oa = uhf_scf_data.oa
+    ob = uhf_scf_data.ob
+    t1_aa = uhf_ccsd_data.t1_aa
+    t1_bb = uhf_ccsd_data.t1_bb
+    t2_aaaa = uhf_ccsd_data.t2_aaaa
+    t2_abab = uhf_ccsd_data.t2_abab
+    t2_bbbb = uhf_ccsd_data.t2_bbbb
+    
+    cc_j_w_doubles_abab = -1.00 * einsum('kc,abji,ck->abji', f_aa[oa, va], r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('kc,abji,ck->abji', f_bb[ob, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('kc,abki,cj->abji', f_aa[oa, va], r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('kc,abjk,ci->abji', f_bb[ob, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('kc,ak,cbji->abji', f_aa[oa, va], r1_aa, r2_abab, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('kc,acji,bk->abji', f_bb[ob, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('kc,aj,cbki->abji', f_aa[oa, va], r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('kc,aj,cbik->abji', f_bb[ob, vb], r1_aa, r2_bbbb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('kc,cajk,bi->abji', f_aa[oa, va], r2_aaaa, r1_bb, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('kc,acjk,bi->abji', f_bb[ob, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('lkcj,abli,ck->abji', g_aaaa[oa, oa, va, oa], r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('lkjc,abli,ck->abji', g_abab[oa, ob, oa, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('klci,abjl,ck->abji', g_abab[oa, ob, va, ob], r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('lkci,abjl,ck->abji', g_bbbb[ob, ob, vb, ob], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abab += -0.50 * einsum('lkjc,ablk,ci->abji', g_abab[oa, ob, oa, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abab += -0.50 * einsum('kljc,abkl,ci->abji', g_abab[oa, ob, oa, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abab += -0.50 * einsum('lkci,ablk,cj->abji', g_abab[oa, ob, va, ob], r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abab += -0.50 * einsum('klci,abkl,cj->abji', g_abab[oa, ob, va, ob], r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('lkcj,ak,cbli->abji', g_aaaa[oa, oa, va, oa], r1_aa, r2_abab, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('kljc,ak,cbil->abji', g_abab[oa, ob, oa, vb], r1_aa, r2_bbbb, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('lkjc,acli,bk->abji', g_abab[oa, ob, oa, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('klci,ak,cbjl->abji', g_abab[oa, ob, va, ob], r1_aa, r2_abab, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('lkci,cajl,bk->abji', g_abab[oa, ob, va, ob], r2_aaaa, r1_bb, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('lkci,acjl,bk->abji', g_bbbb[ob, ob, vb, ob], r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abab +=  0.50 * einsum('lkcj,calk,bi->abji', g_aaaa[oa, oa, va, oa], r2_aaaa, r1_bb, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abab +=  0.50 * einsum('lkjc,aclk,bi->abji', g_abab[oa, ob, oa, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abab +=  0.50 * einsum('kljc,ackl,bi->abji', g_abab[oa, ob, oa, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abab +=  0.50 * einsum('lkci,aj,cblk->abji', g_abab[oa, ob, va, ob], r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  0.50 * einsum('klci,aj,cbkl->abji', g_abab[oa, ob, va, ob], r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  0.50 * einsum('lkci,aj,cblk->abji', g_bbbb[ob, ob, vb, ob], r1_aa, r2_bbbb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('kacd,dbji,ck->abji', g_aaaa[oa, va, va, va], r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('akdc,dbji,ck->abji', g_abab[va, ob, va, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('kbcd,adji,ck->abji', g_abab[oa, vb, va, vb], r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('kbcd,adji,ck->abji', g_bbbb[ob, vb, vb, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('kacd,dbki,cj->abji', g_aaaa[oa, va, va, va], r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('akcd,dbik,cj->abji', g_abab[va, ob, va, vb], r2_bbbb, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('kbcd,adki,cj->abji', g_abab[oa, vb, va, vb], r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('akdc,dbjk,ci->abji', g_abab[va, ob, va, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('kbdc,dajk,ci->abji', g_abab[oa, vb, va, vb], r2_aaaa, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('kbcd,adjk,ci->abji', g_bbbb[ob, vb, vb, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  0.50 * einsum('akcd,bk,cdji->abji', g_abab[va, ob, va, vb], r1_bb, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  0.50 * einsum('akdc,bk,dcji->abji', g_abab[va, ob, va, vb], r1_bb, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  0.50 * einsum('kbcd,ak,cdji->abji', g_abab[oa, vb, va, vb], r1_aa, r2_abab, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abab +=  0.50 * einsum('kbdc,ak,dcji->abji', g_abab[oa, vb, va, vb], r1_aa, r2_abab, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abab += -0.50 * einsum('kbcd,aj,cdki->abji', g_abab[oa, vb, va, vb], r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abab += -0.50 * einsum('kbdc,aj,dcki->abji', g_abab[oa, vb, va, vb], r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  0.50 * einsum('kbcd,aj,cdik->abji', g_bbbb[ob, vb, vb, vb], r1_aa, r2_bbbb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  0.50 * einsum('kacd,bi,cdjk->abji', g_aaaa[oa, va, va, va], r1_bb, r2_aaaa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abab += -0.50 * einsum('akcd,bi,cdjk->abji', g_abab[va, ob, va, vb], r1_bb, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abab += -0.50 * einsum('akdc,bi,dcjk->abji', g_abab[va, ob, va, vb], r1_bb, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('lkcd,bi,dajl,ck->abji', g_aaaa[oa, oa, va, va], t1_bb, r2_aaaa, r1_aa, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('lkdc,bi,dajl,ck->abji', g_abab[oa, ob, va, vb], t1_bb, r2_aaaa, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('klcd,bi,adjl,ck->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('lkcd,bi,adjl,ck->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('lkcd,aj,dbli,ck->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_abab, r1_aa, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('lkdc,aj,dbli,ck->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('klcd,aj,dbil,ck->abji', g_abab[oa, ob, va, vb], t1_aa, r2_bbbb, r1_aa, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('lkcd,aj,dbil,ck->abji', g_bbbb[ob, ob, vb, vb], t1_aa, r2_bbbb, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('klcd,bl,adji,ck->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('lkcd,bl,adji,ck->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('lkcd,al,dbji,ck->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_abab, r1_aa, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('lkdc,al,dbji,ck->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('klcd,di,abjl,ck->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('lkcd,di,abjl,ck->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('lkcd,dj,abli,ck->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_abab, r1_aa, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('lkdc,dj,abli,ck->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('lkcd,dl,abji,ck->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('lkdc,dl,abji,ck->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('klcd,dl,abji,ck->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('lkcd,dl,abji,ck->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab += -0.50 * einsum('lkcd,bi,dalk,cj->abji', g_aaaa[oa, oa, va, va], t1_bb, r2_aaaa, r1_aa, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  0.50 * einsum('lkcd,bi,adlk,cj->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  0.50 * einsum('klcd,bi,adkl,cj->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  0.50 * einsum('lkdc,aj,dblk,ci->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  0.50 * einsum('kldc,aj,dbkl,ci->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab += -0.50 * einsum('lkcd,aj,dblk,ci->abji', g_bbbb[ob, ob, vb, vb], t1_aa, r2_bbbb, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('klcd,bl,adki,cj->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('lkcd,al,dbki,cj->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('lkcd,al,dbik,cj->abji', g_abab[oa, ob, va, vb], t1_aa, r2_bbbb, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('kldc,bl,dajk,ci->abji', g_abab[oa, ob, va, vb], t1_bb, r2_aaaa, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('lkcd,bl,adjk,ci->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('lkdc,al,dbjk,ci->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab += -0.50 * einsum('lkcd,di,ablk,cj->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab += -0.50 * einsum('klcd,di,abkl,cj->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab += -0.50 * einsum('lkdc,dj,ablk,ci->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab += -0.50 * einsum('kldc,dj,abkl,ci->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('lkcd,dl,abki,cj->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('klcd,dl,abki,cj->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('lkdc,dl,abjk,ci->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('lkcd,dl,abjk,ci->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab += -0.50 * einsum('lkcd,bi,ak,cdjl->abji', g_aaaa[oa, oa, va, va], t1_bb, r1_aa, r2_aaaa, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  0.50 * einsum('klcd,bi,ak,cdjl->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  0.50 * einsum('kldc,bi,ak,dcjl->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  0.50 * einsum('lkcd,aj,bk,cdli->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  0.50 * einsum('lkdc,aj,bk,dcli->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab += -0.50 * einsum('lkcd,aj,bk,cdil->abji', g_bbbb[ob, ob, vb, vb], t1_aa, r1_bb, r2_bbbb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab += -0.50 * einsum('klcd,bl,ak,cdji->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab += -0.50 * einsum('kldc,bl,ak,dcji->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab += -0.50 * einsum('lkcd,al,bk,cdji->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab += -0.50 * einsum('lkdc,al,bk,dcji->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('klcd,di,ak,cbjl->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('lkcd,di,cajl,bk->abji', g_abab[oa, ob, va, vb], t1_bb, r2_aaaa, r1_bb, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('lkcd,di,acjl,bk->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('lkcd,dj,ak,cbli->abji', g_aaaa[oa, oa, va, va], t1_aa, r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('kldc,dj,ak,cbil->abji', g_abab[oa, ob, va, vb], t1_aa, r1_aa, r2_bbbb, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('lkdc,dj,acli,bk->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('lkcd,dl,ak,cbji->abji', g_aaaa[oa, oa, va, va], t1_aa, r1_aa, r2_abab, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('klcd,dl,ak,cbji->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('lkdc,dl,acji,bk->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('lkcd,dl,acji,bk->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab += -0.250 * einsum('lkcd,bi,aj,cdlk->abji', g_aaaa[oa, oa, va, va], t1_bb, r1_aa, r2_aaaa, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab += -0.250 * einsum('lkcd,bi,aj,cdlk->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab += -0.250 * einsum('klcd,bi,aj,cdkl->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab += -0.250 * einsum('lkdc,bi,aj,dclk->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab += -0.250 * einsum('kldc,bi,aj,dckl->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab += -0.250 * einsum('lkcd,bi,aj,cdlk->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r1_aa, r2_bbbb, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab += -0.250 * einsum('lkcd,aj,bi,cdlk->abji', g_aaaa[oa, oa, va, va], t1_aa, r1_bb, r2_aaaa, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab += -0.250 * einsum('lkcd,aj,bi,cdlk->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab += -0.250 * einsum('klcd,aj,bi,cdkl->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab += -0.250 * einsum('lkdc,aj,bi,dclk->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab += -0.250 * einsum('kldc,aj,bi,dckl->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab += -0.250 * einsum('lkcd,aj,bi,cdlk->abji', g_bbbb[ob, ob, vb, vb], t1_aa, r1_bb, r2_bbbb, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  0.50 * einsum('klcd,bl,aj,cdki->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  0.50 * einsum('kldc,bl,aj,dcki->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  0.50 * einsum('lkcd,bl,aj,cdik->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r1_aa, r2_bbbb, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  0.50 * einsum('lkcd,al,bi,cdjk->abji', g_aaaa[oa, oa, va, va], t1_aa, r1_bb, r2_aaaa, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  0.50 * einsum('lkcd,al,bi,cdjk->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  0.50 * einsum('lkdc,al,bi,dcjk->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  0.50 * einsum('lkcd,di,aj,cblk->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  0.50 * einsum('klcd,di,aj,cbkl->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  0.50 * einsum('lkcd,di,aj,cblk->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r1_aa, r2_bbbb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  0.50 * einsum('lkcd,dj,calk,bi->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_aaaa, r1_bb, optimize=['einsum_path', (0, 2), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  0.50 * einsum('lkdc,dj,aclk,bi->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  0.50 * einsum('kldc,dj,ackl,bi->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('lkcd,dl,aj,cbki->abji', g_aaaa[oa, oa, va, va], t1_aa, r1_aa, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('lkdc,dl,aj,cbik->abji', g_abab[oa, ob, va, vb], t1_aa, r1_aa, r2_bbbb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('klcd,dl,aj,cbki->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('lkcd,dl,aj,cbik->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r1_aa, r2_bbbb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('lkcd,dl,cajk,bi->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_aaaa, r1_bb, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab += -1.00 * einsum('lkdc,dl,acjk,bi->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('klcd,dl,cajk,bi->abji', g_abab[oa, ob, va, vb], t1_bb, r2_aaaa, r1_bb, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_abab +=  1.00 * einsum('lkcd,dl,acjk,bi->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+
+    # manually added diagonal part
+    cc_j_w_doubles_abab -= E_CC * r2_abab
+    return cc_j_w_doubles_abab
+
+
+def get_cc_j_w_doubles_abba(
+    uhf_scf_data: Intermediates,
+    uhf_ccsd_data: UHF_CCSD_Data,
+    vector: Spin_MBE,
+    E_CC: float,
+) -> NDArray:
+    """ tensor_subscripts: ('a', 'b', 'j', 'i') """
+    r1_aa = vector.singles[E1_spin.aa]
+    r1_bb = vector.singles[E1_spin.bb]
+    r2_aaaa = vector.doubles[E2_spin.aaaa]
+    r2_abab = vector.doubles[E2_spin.abab]
+    r2_baba = vector.doubles[E2_spin.baba]
+    r2_bbbb = vector.doubles[E2_spin.bbbb]
+    f_aa = uhf_scf_data.f_aa
+    f_bb = uhf_scf_data.f_bb
+    g_aaaa = uhf_scf_data.g_aaaa
+    g_abab = uhf_scf_data.g_abab
+    g_bbbb = uhf_scf_data.g_bbbb
+    kd_aa =  uhf_scf_data.identity_aa
+    kd_bb =  uhf_scf_data.identity_bb
+    va = uhf_scf_data.va
+    vb = uhf_scf_data.vb
+    oa = uhf_scf_data.oa
+    ob = uhf_scf_data.ob
+    t1_aa = uhf_ccsd_data.t1_aa
+    t1_bb = uhf_ccsd_data.t1_bb
+    t2_aaaa = uhf_ccsd_data.t2_aaaa
+    t2_abab = uhf_ccsd_data.t2_abab
+    t2_bbbb = uhf_ccsd_data.t2_bbbb
+    
+    cc_j_w_doubles_abba =  1.00 * einsum('kc,abij,ck->abji', f_aa[oa, va], r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('kc,abij,ck->abji', f_bb[ob, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('kc,abik,cj->abji', f_bb[ob, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('kc,abkj,ci->abji', f_aa[oa, va], r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('kc,ak,cbij->abji', f_aa[oa, va], r1_aa, r2_abab, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('kc,acij,bk->abji', f_bb[ob, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('kc,caik,bj->abji', f_aa[oa, va], r2_aaaa, r1_bb, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('kc,acik,bj->abji', f_bb[ob, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('kc,ai,cbkj->abji', f_aa[oa, va], r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('kc,ai,cbjk->abji', f_bb[ob, vb], r1_aa, r2_bbbb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('klcj,abil,ck->abji', g_abab[oa, ob, va, ob], r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('lkcj,abil,ck->abji', g_bbbb[ob, ob, vb, ob], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('lkci,ablj,ck->abji', g_aaaa[oa, oa, va, oa], r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('lkic,ablj,ck->abji', g_abab[oa, ob, oa, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  0.50 * einsum('lkcj,ablk,ci->abji', g_abab[oa, ob, va, ob], r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abba +=  0.50 * einsum('klcj,abkl,ci->abji', g_abab[oa, ob, va, ob], r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abba +=  0.50 * einsum('lkic,ablk,cj->abji', g_abab[oa, ob, oa, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  0.50 * einsum('klic,abkl,cj->abji', g_abab[oa, ob, oa, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('klcj,ak,cbil->abji', g_abab[oa, ob, va, ob], r1_aa, r2_abab, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('lkcj,cail,bk->abji', g_abab[oa, ob, va, ob], r2_aaaa, r1_bb, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('lkcj,acil,bk->abji', g_bbbb[ob, ob, vb, ob], r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('lkci,ak,cblj->abji', g_aaaa[oa, oa, va, oa], r1_aa, r2_abab, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('klic,ak,cbjl->abji', g_abab[oa, ob, oa, vb], r1_aa, r2_bbbb, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('lkic,aclj,bk->abji', g_abab[oa, ob, oa, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abba += -0.50 * einsum('lkcj,ai,cblk->abji', g_abab[oa, ob, va, ob], r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abba += -0.50 * einsum('klcj,ai,cbkl->abji', g_abab[oa, ob, va, ob], r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abba += -0.50 * einsum('lkcj,ai,cblk->abji', g_bbbb[ob, ob, vb, ob], r1_aa, r2_bbbb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abba += -0.50 * einsum('lkci,calk,bj->abji', g_aaaa[oa, oa, va, oa], r2_aaaa, r1_bb, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abba += -0.50 * einsum('lkic,aclk,bj->abji', g_abab[oa, ob, oa, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abba += -0.50 * einsum('klic,ackl,bj->abji', g_abab[oa, ob, oa, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('kacd,dbij,ck->abji', g_aaaa[oa, va, va, va], r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('akdc,dbij,ck->abji', g_abab[va, ob, va, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('kbcd,adij,ck->abji', g_abab[oa, vb, va, vb], r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('kbcd,adij,ck->abji', g_bbbb[ob, vb, vb, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('akdc,dbik,cj->abji', g_abab[va, ob, va, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('kbdc,daik,cj->abji', g_abab[oa, vb, va, vb], r2_aaaa, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('kbcd,adik,cj->abji', g_bbbb[ob, vb, vb, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('kacd,dbkj,ci->abji', g_aaaa[oa, va, va, va], r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('akcd,dbjk,ci->abji', g_abab[va, ob, va, vb], r2_bbbb, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('kbcd,adkj,ci->abji', g_abab[oa, vb, va, vb], r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abba += -0.50 * einsum('akcd,bk,cdij->abji', g_abab[va, ob, va, vb], r1_bb, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abba += -0.50 * einsum('akdc,bk,dcij->abji', g_abab[va, ob, va, vb], r1_bb, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abba += -0.50 * einsum('kbcd,ak,cdij->abji', g_abab[oa, vb, va, vb], r1_aa, r2_abab, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abba += -0.50 * einsum('kbdc,ak,dcij->abji', g_abab[oa, vb, va, vb], r1_aa, r2_abab, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_abba += -0.50 * einsum('kacd,bj,cdik->abji', g_aaaa[oa, va, va, va], r1_bb, r2_aaaa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  0.50 * einsum('akcd,bj,cdik->abji', g_abab[va, ob, va, vb], r1_bb, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  0.50 * einsum('akdc,bj,dcik->abji', g_abab[va, ob, va, vb], r1_bb, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  0.50 * einsum('kbcd,ai,cdkj->abji', g_abab[oa, vb, va, vb], r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  0.50 * einsum('kbdc,ai,dckj->abji', g_abab[oa, vb, va, vb], r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abba += -0.50 * einsum('kbcd,ai,cdjk->abji', g_bbbb[ob, vb, vb, vb], r1_aa, r2_bbbb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('lkcd,ai,dblj,ck->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_abab, r1_aa, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('lkdc,ai,dblj,ck->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('klcd,ai,dbjl,ck->abji', g_abab[oa, ob, va, vb], t1_aa, r2_bbbb, r1_aa, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('lkcd,ai,dbjl,ck->abji', g_bbbb[ob, ob, vb, vb], t1_aa, r2_bbbb, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('lkcd,bj,dail,ck->abji', g_aaaa[oa, oa, va, va], t1_bb, r2_aaaa, r1_aa, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('lkdc,bj,dail,ck->abji', g_abab[oa, ob, va, vb], t1_bb, r2_aaaa, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('klcd,bj,adil,ck->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('lkcd,bj,adil,ck->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('klcd,bl,adij,ck->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('lkcd,bl,adij,ck->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('lkcd,al,dbij,ck->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_abab, r1_aa, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('lkdc,al,dbij,ck->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('lkcd,di,ablj,ck->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_abab, r1_aa, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('lkdc,di,ablj,ck->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('klcd,dj,abil,ck->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('lkcd,dj,abil,ck->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('lkcd,dl,abij,ck->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('lkdc,dl,abij,ck->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('klcd,dl,abij,ck->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('lkcd,dl,abij,ck->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba += -0.50 * einsum('lkdc,ai,dblk,cj->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba += -0.50 * einsum('kldc,ai,dbkl,cj->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  0.50 * einsum('lkcd,ai,dblk,cj->abji', g_bbbb[ob, ob, vb, vb], t1_aa, r2_bbbb, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  0.50 * einsum('lkcd,bj,dalk,ci->abji', g_aaaa[oa, oa, va, va], t1_bb, r2_aaaa, r1_aa, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba += -0.50 * einsum('lkcd,bj,adlk,ci->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba += -0.50 * einsum('klcd,bj,adkl,ci->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('kldc,bl,daik,cj->abji', g_abab[oa, ob, va, vb], t1_bb, r2_aaaa, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('lkcd,bl,adik,cj->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('lkdc,al,dbik,cj->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('klcd,bl,adkj,ci->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('lkcd,al,dbkj,ci->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('lkcd,al,dbjk,ci->abji', g_abab[oa, ob, va, vb], t1_aa, r2_bbbb, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  0.50 * einsum('lkdc,di,ablk,cj->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  0.50 * einsum('kldc,di,abkl,cj->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  0.50 * einsum('lkcd,dj,ablk,ci->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  0.50 * einsum('klcd,dj,abkl,ci->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('lkdc,dl,abik,cj->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('lkcd,dl,abik,cj->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('lkcd,dl,abkj,ci->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('klcd,dl,abkj,ci->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba += -0.50 * einsum('lkcd,ai,bk,cdlj->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba += -0.50 * einsum('lkdc,ai,bk,dclj->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  0.50 * einsum('lkcd,ai,bk,cdjl->abji', g_bbbb[ob, ob, vb, vb], t1_aa, r1_bb, r2_bbbb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  0.50 * einsum('lkcd,bj,ak,cdil->abji', g_aaaa[oa, oa, va, va], t1_bb, r1_aa, r2_aaaa, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba += -0.50 * einsum('klcd,bj,ak,cdil->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba += -0.50 * einsum('kldc,bj,ak,dcil->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  0.50 * einsum('klcd,bl,ak,cdij->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  0.50 * einsum('kldc,bl,ak,dcij->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  0.50 * einsum('lkcd,al,bk,cdij->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  0.50 * einsum('lkdc,al,bk,dcij->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('lkcd,di,ak,cblj->abji', g_aaaa[oa, oa, va, va], t1_aa, r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('kldc,di,ak,cbjl->abji', g_abab[oa, ob, va, vb], t1_aa, r1_aa, r2_bbbb, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('lkdc,di,aclj,bk->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('klcd,dj,ak,cbil->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('lkcd,dj,cail,bk->abji', g_abab[oa, ob, va, vb], t1_bb, r2_aaaa, r1_bb, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('lkcd,dj,acil,bk->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('lkcd,dl,ak,cbij->abji', g_aaaa[oa, oa, va, va], t1_aa, r1_aa, r2_abab, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('klcd,dl,ak,cbij->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('lkdc,dl,acij,bk->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('lkcd,dl,acij,bk->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  0.250 * einsum('lkcd,ai,bj,cdlk->abji', g_aaaa[oa, oa, va, va], t1_aa, r1_bb, r2_aaaa, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  0.250 * einsum('lkcd,ai,bj,cdlk->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  0.250 * einsum('klcd,ai,bj,cdkl->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  0.250 * einsum('lkdc,ai,bj,dclk->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  0.250 * einsum('kldc,ai,bj,dckl->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  0.250 * einsum('lkcd,ai,bj,cdlk->abji', g_bbbb[ob, ob, vb, vb], t1_aa, r1_bb, r2_bbbb, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  0.250 * einsum('lkcd,bj,ai,cdlk->abji', g_aaaa[oa, oa, va, va], t1_bb, r1_aa, r2_aaaa, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  0.250 * einsum('lkcd,bj,ai,cdlk->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  0.250 * einsum('klcd,bj,ai,cdkl->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  0.250 * einsum('lkdc,bj,ai,dclk->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  0.250 * einsum('kldc,bj,ai,dckl->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  0.250 * einsum('lkcd,bj,ai,cdlk->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r1_aa, r2_bbbb, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba += -0.50 * einsum('lkcd,al,bj,cdik->abji', g_aaaa[oa, oa, va, va], t1_aa, r1_bb, r2_aaaa, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba += -0.50 * einsum('lkcd,al,bj,cdik->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba += -0.50 * einsum('lkdc,al,bj,dcik->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba += -0.50 * einsum('klcd,bl,ai,cdkj->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba += -0.50 * einsum('kldc,bl,ai,dckj->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba += -0.50 * einsum('lkcd,bl,ai,cdjk->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r1_aa, r2_bbbb, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba += -0.50 * einsum('lkcd,di,calk,bj->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_aaaa, r1_bb, optimize=['einsum_path', (0, 2), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba += -0.50 * einsum('lkdc,di,aclk,bj->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba += -0.50 * einsum('kldc,di,ackl,bj->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba += -0.50 * einsum('lkcd,dj,ai,cblk->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba += -0.50 * einsum('klcd,dj,ai,cbkl->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba += -0.50 * einsum('lkcd,dj,ai,cblk->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r1_aa, r2_bbbb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('lkcd,dl,caik,bj->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_aaaa, r1_bb, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('lkdc,dl,acik,bj->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('klcd,dl,caik,bj->abji', g_abab[oa, ob, va, vb], t1_bb, r2_aaaa, r1_bb, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('lkcd,dl,acik,bj->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('lkcd,dl,ai,cbkj->abji', g_aaaa[oa, oa, va, va], t1_aa, r1_aa, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba += -1.00 * einsum('lkdc,dl,ai,cbjk->abji', g_abab[oa, ob, va, vb], t1_aa, r1_aa, r2_bbbb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('klcd,dl,ai,cbkj->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_abba +=  1.00 * einsum('lkcd,dl,ai,cbjk->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r1_aa, r2_bbbb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+
+    # manually added diagonal part
+    cc_j_w_doubles_abba -= E_CC * r2_abba
+    return cc_j_w_doubles_abba
+
+
+def get_cc_j_w_doubles_baab(
+    uhf_scf_data: Intermediates,
+    uhf_ccsd_data: UHF_CCSD_Data,
+    vector: Spin_MBE,
+    E_CC: float,
+) -> NDArray:
+    """ tensor_subscripts: ('a', 'b', 'j', 'i') """
+    r1_aa = vector.singles[E1_spin.aa]
+    r1_bb = vector.singles[E1_spin.bb]
+    r2_aaaa = vector.doubles[E2_spin.aaaa]
+    r2_abab = vector.doubles[E2_spin.abab]
+    r2_baba = vector.doubles[E2_spin.baba]
+    r2_bbbb = vector.doubles[E2_spin.bbbb]
+    f_aa = uhf_scf_data.f_aa
+    f_bb = uhf_scf_data.f_bb
+    g_aaaa = uhf_scf_data.g_aaaa
+    g_abab = uhf_scf_data.g_abab
+    g_bbbb = uhf_scf_data.g_bbbb
+    kd_aa =  uhf_scf_data.identity_aa
+    kd_bb =  uhf_scf_data.identity_bb
+    va = uhf_scf_data.va
+    vb = uhf_scf_data.vb
+    oa = uhf_scf_data.oa
+    ob = uhf_scf_data.ob
+    t1_aa = uhf_ccsd_data.t1_aa
+    t1_bb = uhf_ccsd_data.t1_bb
+    t2_aaaa = uhf_ccsd_data.t2_aaaa
+    t2_abab = uhf_ccsd_data.t2_abab
+    t2_bbbb = uhf_ccsd_data.t2_bbbb
+    
+    cc_j_w_doubles_baab =  1.00 * einsum('kc,baji,ck->abji', f_aa[oa, va], r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('kc,baji,ck->abji', f_bb[ob, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('kc,baki,cj->abji', f_aa[oa, va], r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('kc,bajk,ci->abji', f_bb[ob, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('kc,ak,bcji->abji', f_bb[ob, vb], r1_bb, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('kc,caji,bk->abji', f_aa[oa, va], r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('kc,caki,bj->abji', f_aa[oa, va], r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('kc,caik,bj->abji', f_bb[ob, vb], r2_bbbb, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('kc,ai,cbjk->abji', f_aa[oa, va], r1_bb, r2_aaaa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('kc,ai,bcjk->abji', f_bb[ob, vb], r1_bb, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('lkcj,bali,ck->abji', g_aaaa[oa, oa, va, oa], r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('lkjc,bali,ck->abji', g_abab[oa, ob, oa, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('klci,bajl,ck->abji', g_abab[oa, ob, va, ob], r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('lkci,bajl,ck->abji', g_bbbb[ob, ob, vb, ob], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  0.50 * einsum('lkjc,balk,ci->abji', g_abab[oa, ob, oa, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  0.50 * einsum('kljc,bakl,ci->abji', g_abab[oa, ob, oa, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  0.50 * einsum('lkci,balk,cj->abji', g_abab[oa, ob, va, ob], r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_baab +=  0.50 * einsum('klci,bakl,cj->abji', g_abab[oa, ob, va, ob], r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('lkjc,ak,bcli->abji', g_abab[oa, ob, oa, vb], r1_bb, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('lkcj,cali,bk->abji', g_aaaa[oa, oa, va, oa], r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('kljc,cail,bk->abji', g_abab[oa, ob, oa, vb], r2_bbbb, r1_aa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('lkci,ak,cbjl->abji', g_abab[oa, ob, va, ob], r1_bb, r2_aaaa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('lkci,ak,bcjl->abji', g_bbbb[ob, ob, vb, ob], r1_bb, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('klci,cajl,bk->abji', g_abab[oa, ob, va, ob], r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baab += -0.50 * einsum('lkcj,ai,cblk->abji', g_aaaa[oa, oa, va, oa], r1_bb, r2_aaaa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baab += -0.50 * einsum('lkjc,ai,bclk->abji', g_abab[oa, ob, oa, vb], r1_bb, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baab += -0.50 * einsum('kljc,ai,bckl->abji', g_abab[oa, ob, oa, vb], r1_bb, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baab += -0.50 * einsum('lkci,calk,bj->abji', g_abab[oa, ob, va, ob], r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_baab += -0.50 * einsum('klci,cakl,bj->abji', g_abab[oa, ob, va, ob], r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_baab += -0.50 * einsum('lkci,calk,bj->abji', g_bbbb[ob, ob, vb, ob], r2_bbbb, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('kacd,bdji,ck->abji', g_abab[oa, vb, va, vb], r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('kacd,bdji,ck->abji', g_bbbb[ob, vb, vb, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('kbcd,daji,ck->abji', g_aaaa[oa, va, va, va], r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('bkdc,daji,ck->abji', g_abab[va, ob, va, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('kacd,bdki,cj->abji', g_abab[oa, vb, va, vb], r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('kbcd,daki,cj->abji', g_aaaa[oa, va, va, va], r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('bkcd,daik,cj->abji', g_abab[va, ob, va, vb], r2_bbbb, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('kadc,dbjk,ci->abji', g_abab[oa, vb, va, vb], r2_aaaa, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('kacd,bdjk,ci->abji', g_bbbb[ob, vb, vb, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('bkdc,dajk,ci->abji', g_abab[va, ob, va, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baab += -0.50 * einsum('kacd,bk,cdji->abji', g_abab[oa, vb, va, vb], r1_aa, r2_abab, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_baab += -0.50 * einsum('kadc,bk,dcji->abji', g_abab[oa, vb, va, vb], r1_aa, r2_abab, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_baab += -0.50 * einsum('bkcd,ak,cdji->abji', g_abab[va, ob, va, vb], r1_bb, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baab += -0.50 * einsum('bkdc,ak,dcji->abji', g_abab[va, ob, va, vb], r1_bb, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  0.50 * einsum('kacd,bj,cdki->abji', g_abab[oa, vb, va, vb], r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  0.50 * einsum('kadc,bj,dcki->abji', g_abab[oa, vb, va, vb], r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baab += -0.50 * einsum('kacd,bj,cdik->abji', g_bbbb[ob, vb, vb, vb], r1_aa, r2_bbbb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baab += -0.50 * einsum('kbcd,ai,cdjk->abji', g_aaaa[oa, va, va, va], r1_bb, r2_aaaa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  0.50 * einsum('bkcd,ai,cdjk->abji', g_abab[va, ob, va, vb], r1_bb, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  0.50 * einsum('bkdc,ai,dcjk->abji', g_abab[va, ob, va, vb], r1_bb, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('lkcd,ai,dbjl,ck->abji', g_aaaa[oa, oa, va, va], t1_bb, r2_aaaa, r1_aa, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('lkdc,ai,dbjl,ck->abji', g_abab[oa, ob, va, vb], t1_bb, r2_aaaa, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('klcd,ai,bdjl,ck->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('lkcd,ai,bdjl,ck->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('lkcd,bj,dali,ck->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_abab, r1_aa, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('lkdc,bj,dali,ck->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('klcd,bj,dail,ck->abji', g_abab[oa, ob, va, vb], t1_aa, r2_bbbb, r1_aa, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('lkcd,bj,dail,ck->abji', g_bbbb[ob, ob, vb, vb], t1_aa, r2_bbbb, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('lkcd,bl,daji,ck->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_abab, r1_aa, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('lkdc,bl,daji,ck->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('klcd,al,bdji,ck->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('lkcd,al,bdji,ck->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('klcd,di,bajl,ck->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('lkcd,di,bajl,ck->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('lkcd,dj,bali,ck->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_abab, r1_aa, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('lkdc,dj,bali,ck->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('lkcd,dl,baji,ck->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('lkdc,dl,baji,ck->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('klcd,dl,baji,ck->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('lkcd,dl,baji,ck->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  0.50 * einsum('lkcd,ai,dblk,cj->abji', g_aaaa[oa, oa, va, va], t1_bb, r2_aaaa, r1_aa, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab += -0.50 * einsum('lkcd,ai,bdlk,cj->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab += -0.50 * einsum('klcd,ai,bdkl,cj->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab += -0.50 * einsum('lkdc,bj,dalk,ci->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab += -0.50 * einsum('kldc,bj,dakl,ci->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  0.50 * einsum('lkcd,bj,dalk,ci->abji', g_bbbb[ob, ob, vb, vb], t1_aa, r2_bbbb, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('lkcd,bl,daki,cj->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('lkcd,bl,daik,cj->abji', g_abab[oa, ob, va, vb], t1_aa, r2_bbbb, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('klcd,al,bdki,cj->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('lkdc,bl,dajk,ci->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('kldc,al,dbjk,ci->abji', g_abab[oa, ob, va, vb], t1_bb, r2_aaaa, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('lkcd,al,bdjk,ci->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  0.50 * einsum('lkcd,di,balk,cj->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  0.50 * einsum('klcd,di,bakl,cj->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  0.50 * einsum('lkdc,dj,balk,ci->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  0.50 * einsum('kldc,dj,bakl,ci->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('lkcd,dl,baki,cj->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('klcd,dl,baki,cj->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('lkdc,dl,bajk,ci->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('lkcd,dl,bajk,ci->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  0.50 * einsum('lkcd,ai,bk,cdjl->abji', g_aaaa[oa, oa, va, va], t1_bb, r1_aa, r2_aaaa, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab += -0.50 * einsum('klcd,ai,bk,cdjl->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab += -0.50 * einsum('kldc,ai,bk,dcjl->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab += -0.50 * einsum('lkcd,bj,ak,cdli->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab += -0.50 * einsum('lkdc,bj,ak,dcli->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  0.50 * einsum('lkcd,bj,ak,cdil->abji', g_bbbb[ob, ob, vb, vb], t1_aa, r1_bb, r2_bbbb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  0.50 * einsum('lkcd,bl,ak,cdji->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  0.50 * einsum('lkdc,bl,ak,dcji->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  0.50 * einsum('klcd,al,bk,cdji->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  0.50 * einsum('kldc,al,bk,dcji->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('lkcd,di,ak,cbjl->abji', g_abab[oa, ob, va, vb], t1_bb, r1_bb, r2_aaaa, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('lkcd,di,ak,bcjl->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r1_bb, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('klcd,di,cajl,bk->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('lkdc,dj,ak,bcli->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('lkcd,dj,cali,bk->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_abab, r1_aa, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('kldc,dj,cail,bk->abji', g_abab[oa, ob, va, vb], t1_aa, r2_bbbb, r1_aa, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('lkdc,dl,ak,bcji->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('lkcd,dl,ak,bcji->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r1_bb, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('lkcd,dl,caji,bk->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('klcd,dl,caji,bk->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  0.250 * einsum('lkcd,ai,bj,cdlk->abji', g_aaaa[oa, oa, va, va], t1_bb, r1_aa, r2_aaaa, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  0.250 * einsum('lkcd,ai,bj,cdlk->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  0.250 * einsum('klcd,ai,bj,cdkl->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  0.250 * einsum('lkdc,ai,bj,dclk->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  0.250 * einsum('kldc,ai,bj,dckl->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  0.250 * einsum('lkcd,ai,bj,cdlk->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r1_aa, r2_bbbb, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  0.250 * einsum('lkcd,bj,ai,cdlk->abji', g_aaaa[oa, oa, va, va], t1_aa, r1_bb, r2_aaaa, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  0.250 * einsum('lkcd,bj,ai,cdlk->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  0.250 * einsum('klcd,bj,ai,cdkl->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  0.250 * einsum('lkdc,bj,ai,dclk->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  0.250 * einsum('kldc,bj,ai,dckl->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  0.250 * einsum('lkcd,bj,ai,cdlk->abji', g_bbbb[ob, ob, vb, vb], t1_aa, r1_bb, r2_bbbb, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baab += -0.50 * einsum('klcd,al,bj,cdki->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baab += -0.50 * einsum('kldc,al,bj,dcki->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baab += -0.50 * einsum('lkcd,al,bj,cdik->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r1_aa, r2_bbbb, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baab += -0.50 * einsum('lkcd,bl,ai,cdjk->abji', g_aaaa[oa, oa, va, va], t1_aa, r1_bb, r2_aaaa, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab += -0.50 * einsum('lkcd,bl,ai,cdjk->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab += -0.50 * einsum('lkdc,bl,ai,dcjk->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab += -0.50 * einsum('lkcd,di,calk,bj->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_baab += -0.50 * einsum('klcd,di,cakl,bj->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_baab += -0.50 * einsum('lkcd,di,calk,bj->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_bbbb, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_baab += -0.50 * einsum('lkcd,dj,ai,cblk->abji', g_aaaa[oa, oa, va, va], t1_aa, r1_bb, r2_aaaa, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baab += -0.50 * einsum('lkdc,dj,ai,bclk->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baab += -0.50 * einsum('kldc,dj,ai,bckl->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('lkcd,dl,caki,bj->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('lkdc,dl,caik,bj->abji', g_abab[oa, ob, va, vb], t1_aa, r2_bbbb, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('klcd,dl,caki,bj->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('lkcd,dl,caik,bj->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_bbbb, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('lkcd,dl,ai,cbjk->abji', g_aaaa[oa, oa, va, va], t1_aa, r1_bb, r2_aaaa, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab +=  1.00 * einsum('lkdc,dl,ai,bcjk->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('klcd,dl,ai,cbjk->abji', g_abab[oa, ob, va, vb], t1_bb, r1_bb, r2_aaaa, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baab += -1.00 * einsum('lkcd,dl,ai,bcjk->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r1_bb, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+
+    # manually added diagonal part
+    # cc_j_w_doubles_baab -= E_CC * r2_baab
+    return cc_j_w_doubles_baab
+
+
+def get_cc_j_w_doubles_baba(
+    uhf_scf_data: Intermediates,
+    uhf_ccsd_data: UHF_CCSD_Data,
+    vector: Spin_MBE,
+    E_CC: float,
+) -> NDArray:
+    """ tensor_subscripts: ('a', 'b', 'j', 'i') """
+    r1_aa = vector.singles[E1_spin.aa]
+    r1_bb = vector.singles[E1_spin.bb]
+    r2_aaaa = vector.doubles[E2_spin.aaaa]
+    r2_abab = vector.doubles[E2_spin.abab]
+    r2_baba = vector.doubles[E2_spin.baba]
+    r2_bbbb = vector.doubles[E2_spin.bbbb]
+    f_aa = uhf_scf_data.f_aa
+    f_bb = uhf_scf_data.f_bb
+    g_aaaa = uhf_scf_data.g_aaaa
+    g_abab = uhf_scf_data.g_abab
+    g_bbbb = uhf_scf_data.g_bbbb
+    kd_aa =  uhf_scf_data.identity_aa
+    kd_bb =  uhf_scf_data.identity_bb
+    va = uhf_scf_data.va
+    vb = uhf_scf_data.vb
+    oa = uhf_scf_data.oa
+    ob = uhf_scf_data.ob
+    t1_aa = uhf_ccsd_data.t1_aa
+    t1_bb = uhf_ccsd_data.t1_bb
+    t2_aaaa = uhf_ccsd_data.t2_aaaa
+    t2_abab = uhf_ccsd_data.t2_abab
+    t2_bbbb = uhf_ccsd_data.t2_bbbb
+    
+    cc_j_w_doubles_baba = -1.00 * einsum('kc,baij,ck->abji', f_aa[oa, va], r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('kc,baij,ck->abji', f_bb[ob, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('kc,baik,cj->abji', f_bb[ob, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('kc,bakj,ci->abji', f_aa[oa, va], r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('kc,ak,bcij->abji', f_bb[ob, vb], r1_bb, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('kc,caij,bk->abji', f_aa[oa, va], r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('kc,aj,cbik->abji', f_aa[oa, va], r1_bb, r2_aaaa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('kc,aj,bcik->abji', f_bb[ob, vb], r1_bb, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('kc,cakj,bi->abji', f_aa[oa, va], r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('kc,cajk,bi->abji', f_bb[ob, vb], r2_bbbb, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('klcj,bail,ck->abji', g_abab[oa, ob, va, ob], r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('lkcj,bail,ck->abji', g_bbbb[ob, ob, vb, ob], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('lkci,balj,ck->abji', g_aaaa[oa, oa, va, oa], r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('lkic,balj,ck->abji', g_abab[oa, ob, oa, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -0.50 * einsum('lkcj,balk,ci->abji', g_abab[oa, ob, va, ob], r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_baba += -0.50 * einsum('klcj,bakl,ci->abji', g_abab[oa, ob, va, ob], r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_baba += -0.50 * einsum('lkic,balk,cj->abji', g_abab[oa, ob, oa, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -0.50 * einsum('klic,bakl,cj->abji', g_abab[oa, ob, oa, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('lkcj,ak,cbil->abji', g_abab[oa, ob, va, ob], r1_bb, r2_aaaa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('lkcj,ak,bcil->abji', g_bbbb[ob, ob, vb, ob], r1_bb, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('klcj,cail,bk->abji', g_abab[oa, ob, va, ob], r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('lkic,ak,bclj->abji', g_abab[oa, ob, oa, vb], r1_bb, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('lkci,calj,bk->abji', g_aaaa[oa, oa, va, oa], r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('klic,cajl,bk->abji', g_abab[oa, ob, oa, vb], r2_bbbb, r1_aa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  0.50 * einsum('lkcj,calk,bi->abji', g_abab[oa, ob, va, ob], r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_baba +=  0.50 * einsum('klcj,cakl,bi->abji', g_abab[oa, ob, va, ob], r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_baba +=  0.50 * einsum('lkcj,calk,bi->abji', g_bbbb[ob, ob, vb, ob], r2_bbbb, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_baba +=  0.50 * einsum('lkci,aj,cblk->abji', g_aaaa[oa, oa, va, oa], r1_bb, r2_aaaa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  0.50 * einsum('lkic,aj,bclk->abji', g_abab[oa, ob, oa, vb], r1_bb, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  0.50 * einsum('klic,aj,bckl->abji', g_abab[oa, ob, oa, vb], r1_bb, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('kacd,bdij,ck->abji', g_abab[oa, vb, va, vb], r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('kacd,bdij,ck->abji', g_bbbb[ob, vb, vb, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('kbcd,daij,ck->abji', g_aaaa[oa, va, va, va], r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('bkdc,daij,ck->abji', g_abab[va, ob, va, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('kadc,dbik,cj->abji', g_abab[oa, vb, va, vb], r2_aaaa, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('kacd,bdik,cj->abji', g_bbbb[ob, vb, vb, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('bkdc,daik,cj->abji', g_abab[va, ob, va, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('kacd,bdkj,ci->abji', g_abab[oa, vb, va, vb], r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('kbcd,dakj,ci->abji', g_aaaa[oa, va, va, va], r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('bkcd,dajk,ci->abji', g_abab[va, ob, va, vb], r2_bbbb, r1_aa, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_baba +=  0.50 * einsum('kacd,bk,cdij->abji', g_abab[oa, vb, va, vb], r1_aa, r2_abab, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_baba +=  0.50 * einsum('kadc,bk,dcij->abji', g_abab[oa, vb, va, vb], r1_aa, r2_abab, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles_baba +=  0.50 * einsum('bkcd,ak,cdij->abji', g_abab[va, ob, va, vb], r1_bb, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  0.50 * einsum('bkdc,ak,dcij->abji', g_abab[va, ob, va, vb], r1_bb, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  0.50 * einsum('kbcd,aj,cdik->abji', g_aaaa[oa, va, va, va], r1_bb, r2_aaaa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -0.50 * einsum('bkcd,aj,cdik->abji', g_abab[va, ob, va, vb], r1_bb, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -0.50 * einsum('bkdc,aj,dcik->abji', g_abab[va, ob, va, vb], r1_bb, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -0.50 * einsum('kacd,bi,cdkj->abji', g_abab[oa, vb, va, vb], r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -0.50 * einsum('kadc,bi,dckj->abji', g_abab[oa, vb, va, vb], r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  0.50 * einsum('kacd,bi,cdjk->abji', g_bbbb[ob, vb, vb, vb], r1_aa, r2_bbbb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('lkcd,bi,dalj,ck->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_abab, r1_aa, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('lkdc,bi,dalj,ck->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('klcd,bi,dajl,ck->abji', g_abab[oa, ob, va, vb], t1_aa, r2_bbbb, r1_aa, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('lkcd,bi,dajl,ck->abji', g_bbbb[ob, ob, vb, vb], t1_aa, r2_bbbb, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('lkcd,aj,dbil,ck->abji', g_aaaa[oa, oa, va, va], t1_bb, r2_aaaa, r1_aa, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('lkdc,aj,dbil,ck->abji', g_abab[oa, ob, va, vb], t1_bb, r2_aaaa, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('klcd,aj,bdil,ck->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('lkcd,aj,bdil,ck->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('lkcd,bl,daij,ck->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_abab, r1_aa, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('lkdc,bl,daij,ck->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('klcd,al,bdij,ck->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('lkcd,al,bdij,ck->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('lkcd,di,balj,ck->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_abab, r1_aa, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('lkdc,di,balj,ck->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('klcd,dj,bail,ck->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('lkcd,dj,bail,ck->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('lkcd,dl,baij,ck->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('lkdc,dl,baij,ck->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('klcd,dl,baij,ck->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('lkcd,dl,baij,ck->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  0.50 * einsum('lkdc,bi,dalk,cj->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  0.50 * einsum('kldc,bi,dakl,cj->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba += -0.50 * einsum('lkcd,bi,dalk,cj->abji', g_bbbb[ob, ob, vb, vb], t1_aa, r2_bbbb, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba += -0.50 * einsum('lkcd,aj,dblk,ci->abji', g_aaaa[oa, oa, va, va], t1_bb, r2_aaaa, r1_aa, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  0.50 * einsum('lkcd,aj,bdlk,ci->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  0.50 * einsum('klcd,aj,bdkl,ci->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('lkdc,bl,daik,cj->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('kldc,al,dbik,cj->abji', g_abab[oa, ob, va, vb], t1_bb, r2_aaaa, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('lkcd,al,bdik,cj->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('lkcd,bl,dakj,ci->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('lkcd,bl,dajk,ci->abji', g_abab[oa, ob, va, vb], t1_aa, r2_bbbb, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('klcd,al,bdkj,ci->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 2), (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -0.50 * einsum('lkdc,di,balk,cj->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba += -0.50 * einsum('kldc,di,bakl,cj->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba += -0.50 * einsum('lkcd,dj,balk,ci->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -0.50 * einsum('klcd,dj,bakl,ci->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('lkdc,dl,baik,cj->abji', g_abab[oa, ob, va, vb], t1_aa, r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('lkcd,dl,baik,cj->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_abab, r1_bb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('lkcd,dl,bakj,ci->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('klcd,dl,bakj,ci->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  0.50 * einsum('lkcd,bi,ak,cdlj->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  0.50 * einsum('lkdc,bi,ak,dclj->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba += -0.50 * einsum('lkcd,bi,ak,cdjl->abji', g_bbbb[ob, ob, vb, vb], t1_aa, r1_bb, r2_bbbb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba += -0.50 * einsum('lkcd,aj,bk,cdil->abji', g_aaaa[oa, oa, va, va], t1_bb, r1_aa, r2_aaaa, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  0.50 * einsum('klcd,aj,bk,cdil->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  0.50 * einsum('kldc,aj,bk,dcil->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba += -0.50 * einsum('lkcd,bl,ak,cdij->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba += -0.50 * einsum('lkdc,bl,ak,dcij->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba += -0.50 * einsum('klcd,al,bk,cdij->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba += -0.50 * einsum('kldc,al,bk,dcij->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('lkdc,di,ak,bclj->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('lkcd,di,calj,bk->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_abab, r1_aa, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('kldc,di,cajl,bk->abji', g_abab[oa, ob, va, vb], t1_aa, r2_bbbb, r1_aa, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('lkcd,dj,ak,cbil->abji', g_abab[oa, ob, va, vb], t1_bb, r1_bb, r2_aaaa, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('lkcd,dj,ak,bcil->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r1_bb, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('klcd,dj,cail,bk->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('lkdc,dl,ak,bcij->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('lkcd,dl,ak,bcij->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r1_bb, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('lkcd,dl,caij,bk->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('klcd,dl,caij,bk->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba += -0.250 * einsum('lkcd,bi,aj,cdlk->abji', g_aaaa[oa, oa, va, va], t1_aa, r1_bb, r2_aaaa, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -0.250 * einsum('lkcd,bi,aj,cdlk->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -0.250 * einsum('klcd,bi,aj,cdkl->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -0.250 * einsum('lkdc,bi,aj,dclk->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -0.250 * einsum('kldc,bi,aj,dckl->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -0.250 * einsum('lkcd,bi,aj,cdlk->abji', g_bbbb[ob, ob, vb, vb], t1_aa, r1_bb, r2_bbbb, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -0.250 * einsum('lkcd,aj,bi,cdlk->abji', g_aaaa[oa, oa, va, va], t1_bb, r1_aa, r2_aaaa, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -0.250 * einsum('lkcd,aj,bi,cdlk->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -0.250 * einsum('klcd,aj,bi,cdkl->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -0.250 * einsum('lkdc,aj,bi,dclk->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -0.250 * einsum('kldc,aj,bi,dckl->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -0.250 * einsum('lkcd,aj,bi,cdlk->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r1_aa, r2_bbbb, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  0.50 * einsum('lkcd,bl,aj,cdik->abji', g_aaaa[oa, oa, va, va], t1_aa, r1_bb, r2_aaaa, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  0.50 * einsum('lkcd,bl,aj,cdik->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  0.50 * einsum('lkdc,bl,aj,dcik->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  0.50 * einsum('klcd,al,bi,cdkj->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  0.50 * einsum('kldc,al,bi,dckj->abji', g_abab[oa, ob, va, vb], t1_bb, r1_aa, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  0.50 * einsum('lkcd,al,bi,cdjk->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r1_aa, r2_bbbb, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  0.50 * einsum('lkcd,di,aj,cblk->abji', g_aaaa[oa, oa, va, va], t1_aa, r1_bb, r2_aaaa, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  0.50 * einsum('lkdc,di,aj,bclk->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  0.50 * einsum('kldc,di,aj,bckl->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  0.50 * einsum('lkcd,dj,calk,bi->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  0.50 * einsum('klcd,dj,cakl,bi->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  0.50 * einsum('lkcd,dj,calk,bi->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_bbbb, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('lkcd,dl,aj,cbik->abji', g_aaaa[oa, oa, va, va], t1_aa, r1_bb, r2_aaaa, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('lkdc,dl,aj,bcik->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('klcd,dl,aj,cbik->abji', g_abab[oa, ob, va, vb], t1_bb, r1_bb, r2_aaaa, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('lkcd,dl,aj,bcik->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r1_bb, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('lkcd,dl,cakj,bi->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_baba +=  1.00 * einsum('lkdc,dl,cajk,bi->abji', g_abab[oa, ob, va, vb], t1_aa, r2_bbbb, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('klcd,dl,cakj,bi->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles_baba += -1.00 * einsum('lkcd,dl,cajk,bi->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_bbbb, r1_aa, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+
+    # manually added diagonal part -- this one is zero -- it does not appear
+    # anywhere else
+    # cc_j_w_doubles_baba -= E_CC * r2_baba
+    return cc_j_w_doubles_baba
+
+
+def get_cc_j_w_doubles_bbbb(
+    uhf_scf_data: Intermediates,
+    uhf_ccsd_data: UHF_CCSD_Data,
+    vector: Spin_MBE,
+    E_CC: float,
+) -> NDArray:
+    """ tensor_subscripts: ('a', 'b', 'j', 'i') """
+    r1_aa = vector.singles[E1_spin.aa]
+    r1_bb = vector.singles[E1_spin.bb]
+    r2_aaaa = vector.doubles[E2_spin.aaaa]
+    r2_abab = vector.doubles[E2_spin.abab]
+    r2_baba = vector.doubles[E2_spin.baba]
+    r2_bbbb = vector.doubles[E2_spin.bbbb]
+    f_aa = uhf_scf_data.f_aa
+    f_bb = uhf_scf_data.f_bb
+    g_aaaa = uhf_scf_data.g_aaaa
+    g_abab = uhf_scf_data.g_abab
+    g_bbbb = uhf_scf_data.g_bbbb
+    kd_aa =  uhf_scf_data.identity_aa
+    kd_bb =  uhf_scf_data.identity_bb
+    va = uhf_scf_data.va
+    vb = uhf_scf_data.vb
+    oa = uhf_scf_data.oa
+    ob = uhf_scf_data.ob
+    t1_aa = uhf_ccsd_data.t1_aa
+    t1_bb = uhf_ccsd_data.t1_bb
+    t2_aaaa = uhf_ccsd_data.t2_aaaa
+    t2_abab = uhf_ccsd_data.t2_abab
+    t2_bbbb = uhf_ccsd_data.t2_bbbb
+    
+    cc_j_w_doubles_bbbb =  1.00 * einsum('kc,abij,ck->abji', f_aa[oa, va], r2_bbbb, r1_aa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00 * einsum('kc,abij,ck->abji', f_bb[ob, vb], r2_bbbb, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    contracted_intermediate = -1.00 * einsum('kc,abik,cj->abji', f_bb[ob, vb], r2_bbbb, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('kc,ak,cbij->abji', f_bb[ob, vb], r1_bb, r2_bbbb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->baji', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('kc,aj,cbki->abji', f_aa[oa, va], r1_bb, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('kc,aj,cbik->abji', f_bb[ob, vb], r1_bb, r2_bbbb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('klcj,abil,ck->abji', g_abab[oa, ob, va, ob], r2_bbbb, r1_aa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('lkcj,abil,ck->abji', g_bbbb[ob, ob, vb, ob], r2_bbbb, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate) 
+    contracted_intermediate =  0.50 * einsum('lkcj,ablk,ci->abji', g_bbbb[ob, ob, vb, ob], r2_bbbb, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('lkcj,ak,cbli->abji', g_abab[oa, ob, va, ob], r1_bb, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('lkcj,ak,cbil->abji', g_bbbb[ob, ob, vb, ob], r1_bb, r2_bbbb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -0.50 * einsum('lkcj,ai,cblk->abji', g_abab[oa, ob, va, ob], r1_bb, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -0.50 * einsum('klcj,ai,cbkl->abji', g_abab[oa, ob, va, ob], r1_bb, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -0.50 * einsum('lkcj,ai,cblk->abji', g_bbbb[ob, ob, vb, ob], r1_bb, r2_bbbb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('kacd,dbij,ck->abji', g_abab[oa, vb, va, vb], r2_bbbb, r1_aa, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->baji', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('kacd,dbij,ck->abji', g_bbbb[ob, vb, vb, vb], r2_bbbb, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->baji', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('kadc,dbki,cj->abji', g_abab[oa, vb, va, vb], r2_abab, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('kacd,dbik,cj->abji', g_bbbb[ob, vb, vb, vb], r2_bbbb, r1_bb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  0.50 * einsum('kacd,bk,cdij->abji', g_bbbb[ob, vb, vb, vb], r1_bb, r2_bbbb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->baji', contracted_intermediate) 
+    contracted_intermediate =  0.50 * einsum('kacd,bj,cdki->abji', g_abab[oa, vb, va, vb], r1_bb, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  0.50 * einsum('kadc,bj,dcki->abji', g_abab[oa, vb, va, vb], r1_bb, r2_abab, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -0.50 * einsum('kacd,bj,cdik->abji', g_bbbb[ob, vb, vb, vb], r1_bb, r2_bbbb, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('lkcd,bi,dalj,ck->abji', g_aaaa[oa, oa, va, va], t1_bb, r2_abab, r1_aa, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('lkdc,bi,dalj,ck->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('klcd,bi,dajl,ck->abji', g_abab[oa, ob, va, vb], t1_bb, r2_bbbb, r1_aa, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('lkcd,bi,dajl,ck->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_bbbb, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('klcd,bl,daij,ck->abji', g_abab[oa, ob, va, vb], t1_bb, r2_bbbb, r1_aa, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->baji', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('lkcd,bl,daij,ck->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_bbbb, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->baji', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('klcd,di,abjl,ck->abji', g_abab[oa, ob, va, vb], t1_bb, r2_bbbb, r1_aa, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('lkcd,di,abjl,ck->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_bbbb, r1_bb, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate) 
+    cc_j_w_doubles_bbbb += -1.00 * einsum('lkcd,dl,abij,ck->abji', g_aaaa[oa, oa, va, va], t1_aa, r2_bbbb, r1_aa, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00 * einsum('lkdc,dl,abij,ck->abji', g_abab[oa, ob, va, vb], t1_aa, r2_bbbb, r1_bb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00 * einsum('klcd,dl,abij,ck->abji', g_abab[oa, ob, va, vb], t1_bb, r2_bbbb, r1_aa, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_bbbb += -1.00 * einsum('lkcd,dl,abij,ck->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_bbbb, r1_bb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    contracted_intermediate =  0.50 * einsum('lkdc,bi,dalk,cj->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  0.50 * einsum('kldc,bi,dakl,cj->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -0.50 * einsum('lkcd,bi,dalk,cj->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_bbbb, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('kldc,bl,daki,cj->abji', g_abab[oa, ob, va, vb], t1_bb, r2_abab, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('lkcd,bl,daik,cj->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_bbbb, r1_bb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -0.50 * einsum('lkcd,di,ablk,cj->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_bbbb, r1_bb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('lkdc,dl,abik,cj->abji', g_abab[oa, ob, va, vb], t1_aa, r2_bbbb, r1_bb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('lkcd,dl,abik,cj->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r2_bbbb, r1_bb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate) 
+    contracted_intermediate =  0.50 * einsum('lkcd,bi,ak,cdlj->abji', g_abab[oa, ob, va, vb], t1_bb, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  0.50 * einsum('lkdc,bi,ak,dclj->abji', g_abab[oa, ob, va, vb], t1_bb, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -0.50 * einsum('lkcd,bi,ak,cdjl->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r1_bb, r2_bbbb, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -0.50 * einsum('lkcd,bl,ak,cdij->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r1_bb, r2_bbbb, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->baji', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('lkcd,di,ak,cblj->abji', g_abab[oa, ob, va, vb], t1_bb, r1_bb, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('lkcd,di,ak,cbjl->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r1_bb, r2_bbbb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('lkdc,dl,ak,cbij->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_bbbb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->baji', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('lkcd,dl,ak,cbij->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r1_bb, r2_bbbb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->baji', contracted_intermediate) 
+    contracted_intermediate = -0.250 * einsum('lkcd,bi,aj,cdlk->abji', g_aaaa[oa, oa, va, va], t1_bb, r1_bb, r2_aaaa, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -0.250 * einsum('lkcd,bi,aj,cdlk->abji', g_abab[oa, ob, va, vb], t1_bb, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -0.250 * einsum('klcd,bi,aj,cdkl->abji', g_abab[oa, ob, va, vb], t1_bb, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -0.250 * einsum('lkdc,bi,aj,dclk->abji', g_abab[oa, ob, va, vb], t1_bb, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -0.250 * einsum('kldc,bi,aj,dckl->abji', g_abab[oa, ob, va, vb], t1_bb, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -0.250 * einsum('lkcd,bi,aj,cdlk->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r1_bb, r2_bbbb, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  0.50 * einsum('klcd,bl,aj,cdki->abji', g_abab[oa, ob, va, vb], t1_bb, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  0.50 * einsum('kldc,bl,aj,dcki->abji', g_abab[oa, ob, va, vb], t1_bb, r1_bb, r2_abab, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  0.50 * einsum('lkcd,bl,aj,cdik->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r1_bb, r2_bbbb, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  0.50 * einsum('lkcd,di,aj,cblk->abji', g_abab[oa, ob, va, vb], t1_bb, r1_bb, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  0.50 * einsum('klcd,di,aj,cbkl->abji', g_abab[oa, ob, va, vb], t1_bb, r1_bb, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  0.50 * einsum('lkcd,di,aj,cblk->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r1_bb, r2_bbbb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('lkcd,dl,aj,cbki->abji', g_aaaa[oa, oa, va, va], t1_aa, r1_bb, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('lkdc,dl,aj,cbik->abji', g_abab[oa, ob, va, vb], t1_aa, r1_bb, r2_bbbb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('klcd,dl,aj,cbki->abji', g_abab[oa, ob, va, vb], t1_bb, r1_bb, r2_abab, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('lkcd,dl,aj,cbik->abji', g_bbbb[ob, ob, vb, vb], t1_bb, r1_bb, r2_bbbb, optimize=['einsum_path', (0, 1), (1, 2), (0, 1)])
+    cc_j_w_doubles_bbbb +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abji->abij', contracted_intermediate)  + -1.00000 * einsum('abji->baji', contracted_intermediate)  +  1.00000 * einsum('abji->baij', contracted_intermediate) 
+
+    # manually added diagonal part
+    cc_j_w_doubles_bbbb -= E_CC * r2_bbbb
+    return cc_j_w_doubles_bbbb
