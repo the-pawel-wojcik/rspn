@@ -42,11 +42,12 @@ def build_singles_block():
     pq = pdaggerq.pq_helper('fermi')
 
     projection = 'e1(i,a)'
-    vector = ['r1', 'r2']
 
-    # The f part of H
-    pq.add_st_operator(1.0, [projection, 'f', *vector], ['t1', 't2'])
-    pq.add_st_operator(1.0, [projection, 'v', *vector], ['t1', 't2'])
+    pq.add_st_operator(1.0, [projection, 'f', 'r1'], ['t1', 't2'])
+    pq.add_st_operator(1.0, [projection, 'v', 'r1'], ['t1', 't2'])
+
+    pq.add_st_operator(1.0, [projection, 'f', 'r2'], ['t1', 't2'])
+    pq.add_st_operator(1.0, [projection, 'v', 'r2'], ['t1', 't2'])
 
     pq.simplify()
 
@@ -58,16 +59,19 @@ def build_doubles_block():
     pq = pdaggerq.pq_helper('fermi')
     projection = 'e2(i,j,b,a)'
     vector = ['r1', 'r2']
-    pq.add_st_operator(1.0, [projection, 'f', *vector], ['t1', 't2'])
-    pq.add_st_operator(1.0, [projection, 'v', *vector], ['t1', 't2'])
+    pq.add_st_operator(1.0, [projection, 'f', 'r1'], ['t1', 't2'])
+    pq.add_st_operator(1.0, [projection, 'v', 'r1'], ['t1', 't2'])
+
+    pq.add_st_operator(1.0, [projection, 'f', 'r2'], ['t1', 't2'])
+    pq.add_st_operator(1.0, [projection, 'v', 'r2'], ['t1', 't2'])
     pq.simplify()
     return pq
 
 
 def main():
 
-    do_singles = True
-    do_doubles = False
+    do_singles = False
+    do_doubles = True
 
     if do_singles:
         pq = build_singles_block()
