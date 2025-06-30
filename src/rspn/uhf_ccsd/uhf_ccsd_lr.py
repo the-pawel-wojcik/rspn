@@ -12,10 +12,10 @@ import rspn.uhf_ccsd.equations.eta.doubles as eta_doubles
 from rspn.uhf_ccsd._lheecc import build_pol_xA_F_xB
 from rspn.uhf_ccsd._jacobian import build_cc_jacobian
 from rspn.uhf_ccsd._nuOpCC import build_nu_bar_V_cc
-# from rspn.uhf_ccsd._jacobian_action import Minus_UHF_CCSD_Jacobian_action
-from rspn.uhf_ccsd._jacobian_action_Stephen import (
-    Minus_UHF_CCSD_Jacobian_action
-)
+from rspn.uhf_ccsd._jacobian_action import Minus_UHF_CCSD_Jacobian_action
+# from rspn.uhf_ccsd._jacobian_action_Stephen import (
+#     Minus_UHF_CCSD_Jacobian_action
+# )
 
 
 @dataclass
@@ -73,28 +73,29 @@ class UHF_CCSD_LR:
                 dims=self.assign_dims(),
             )
             t_response = self.find_t_response(
-                cc_jacobian,
-                cc_electric_dipole
+                minus_cc_jacobian=-cc_jacobian,
+                cc_mu=cc_electric_dipole,
             )
         else:
-            # # Rain's approach
-            # jacobian_op = Minus_UHF_CCSD_Jacobian_action(
-            #     uhf_hf_data=self.uhf_scf_data,
-            #     uhf_ccsd_data=self.uhf_ccsd_data,
-            # )
-
-            # Stephen's approach
-            ccsd = UHF_CCSD(scf_data=self.uhf_scf_data)
-            ccsd.data = self.uhf_ccsd_data
-            uhf_ccsd_energy = ccsd.get_energy()
-
-            jacobian_op = Minus_UHF_CCSD_Jacobian_action(
+            # Rain's approach
+            minus_jacobian_op = Minus_UHF_CCSD_Jacobian_action(
                 uhf_hf_data=self.uhf_scf_data,
                 uhf_ccsd_data=self.uhf_ccsd_data,
-                cc_energy=uhf_ccsd_energy,
             )
+
+            # # Stephen's approach
+            # ccsd = UHF_CCSD(scf_data=self.uhf_scf_data)
+            # ccsd.data = self.uhf_ccsd_data
+            # uhf_ccsd_energy = ccsd.get_energy()
+            #
+            # minus_jacobian_op = Minus_UHF_CCSD_Jacobian_action(
+            #     uhf_hf_data=self.uhf_scf_data,
+            #     uhf_ccsd_data=self.uhf_ccsd_data,
+            #     cc_energy=uhf_ccsd_energy,
+            # )
+
             t_response = self.find_t_response(
-                cc_jacobian=jacobian_op,
+                minus_cc_jacobian=minus_jacobian_op,
                 cc_mu=cc_electric_dipole
             )
 
@@ -190,7 +191,7 @@ class UHF_CCSD_LR:
 
     def find_t_response(
         self,
-        cc_jacobian: NDArray | LinearOperator,
+        minus_cc_jacobian: NDArray | LinearOperator,
         cc_mu: dict[Descartes, dict[str, NDArray]],
     ) -> dict[Descartes, dict[str, NDArray]]:
         dims = self.assign_dims()
@@ -204,7 +205,7 @@ class UHF_CCSD_LR:
                 )
             )
             gmres_output = gmres(
-                -cc_jacobian,
+                minus_cc_jacobian,
                 rhs,
                 atol=self.CONFIG.gmres_threshold,
             )

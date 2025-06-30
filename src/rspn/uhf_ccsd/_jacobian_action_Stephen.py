@@ -1,6 +1,7 @@
 from chem.ccsd.containers import E1_spin, E2_spin, Spin_MBE, UHF_CCSD_Data
 from chem.ccsd.equations.util import GeneratorsInput
 from chem.hf.intermediates_builders import Intermediates
+import numpy as np
 from numpy.typing import NDArray
 from rspn.uhf_ccsd.equations.cc_jacobian_contract_Stephen.singles import (
     get_cc_j_w_singles_aa,
@@ -45,9 +46,10 @@ class Minus_UHF_CCSD_Jacobian_action(LinearOperator):
 
         jacobian_dimension = Spin_MBE.get_vector_dim(dims)
 
-        # the ones below are required by LinearOperator
-        self.dtype = None
-        self.shape = (jacobian_dimension, jacobian_dimension)
+        # LinearOperator requires specification of dtype and shape
+        # dtype set to None results in an erorr in gmres
+        shape = (jacobian_dimension, jacobian_dimension)
+        super().__init__(dtype=np.float64, shape=shape)
 
     def _matvec(self, x: NDArray) -> NDArray:
 

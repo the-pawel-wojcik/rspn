@@ -12,10 +12,10 @@ from rspn.uhf_ccsd.uhf_ccsd_lr import UHF_CCSD_LR, UHF_CCSD_LR_config
             UHF_CCSD_LR_config(store_jacobian=True),
             id='store_jacobian',
         ),
-        # pytest.param(
-        #     UHF_CCSD_LR_config(store_jacobian=False),
-        #     id='no_store_jacobian',
-        # ),
+        pytest.param(
+            UHF_CCSD_LR_config(store_jacobian=False),
+            id='no_store_jacobian',
+        ),
     ),
 )
 def test_polarizabilities(lr_config: UHF_CCSD_LR_config):

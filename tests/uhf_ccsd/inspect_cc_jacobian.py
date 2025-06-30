@@ -15,7 +15,7 @@ def jacobian_factory():
         uhf_scf_data=ccsd.scf_data,
         uhf_ccsd_data=ccsd.data,
     )
-    lr_config = UHF_CCSD_LR_config(BUILD_JACOBIAN=True)
+    lr_config = UHF_CCSD_LR_config(store_jacobian=True)
     lr = UHF_CCSD_LR(ccsd.data, ccsd.scf_data, lr_config)
     cc_jacobian = build_cc_jacobian(kwargs=kwargs, dims=lr.assign_dims())
     return cc_jacobian
