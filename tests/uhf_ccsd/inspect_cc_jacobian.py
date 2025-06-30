@@ -62,5 +62,30 @@ def save_cc_jacobian():
         pickle.dump(cc_jacobian, bak_file)
 
 
+def show_part_of_jacobian():
+    with open('pickles/cc_jacobian_water_sto3G@HF.pkl', 'rb') as bak_file:
+        jacobian = pickle.load(bak_file)
+
+    with np.printoptions(precision=3, suppress=True):
+
+        print("aa - aa")
+        aa_aa = jacobian[0:10, 0:10]
+        print(aa_aa)
+
+        print("aa - bb")
+        aa_bb = jacobian[0:10, 10:20]
+        print(aa_bb)
+
+        for idx in range(10):
+            print(f"aa - aaaa part {idx}")
+            print(jacobian[0:10, 20 + 10 * idx: 20 + 10 * (idx + 1)])
+
+        for idx in range(10):
+            print(f"aa - aaaa part {idx}")
+            print(jacobian[0:10, 20 + 10 * idx: 20 + 10 * (idx + 1)])
+
+
 if __name__ == "__main__":
-    view_the_jacobian()
+    # view_the_jacobian()
+    show_part_of_jacobian()
+    # save_cc_jacobian()

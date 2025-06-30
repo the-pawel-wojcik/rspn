@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from chem.ccsd.uhf_ccsd import UHF_CCSD_Data
+from chem.ccsd.uhf_ccsd import UHF_CCSD, UHF_CCSD_Data
 from chem.hf.intermediates_builders import Intermediates
 from chem.ccsd.equations.util import GeneratorsInput
 from chem.meta.coordinates import Descartes, CARTESIAN
@@ -12,13 +12,16 @@ import rspn.uhf_ccsd.equations.eta.doubles as eta_doubles
 from rspn.uhf_ccsd._lheecc import build_pol_xA_F_xB
 from rspn.uhf_ccsd._jacobian import build_cc_jacobian
 from rspn.uhf_ccsd._nuOpCC import build_nu_bar_V_cc
-from rspn.uhf_ccsd._jacobian_action import Minus_UHF_CCSD_Jacobian_action
+# from rspn.uhf_ccsd._jacobian_action import Minus_UHF_CCSD_Jacobian_action
+from rspn.uhf_ccsd._jacobian_action_Stephen import (
+    Minus_UHF_CCSD_Jacobian_action
+)
 
 
 @dataclass
 class UHF_CCSD_LR_config:
     """ 
-    BUILD_JACOBIAN: One implementation build the whole CC Jacobian matrix and
+    store_jacobian: One implementation builds the whole CC Jacobian matrix and
     uses it to solve the equation 
     Jacobian @ response_vector = "external_field_operator"
 
@@ -28,12 +31,21 @@ class UHF_CCSD_LR_config:
 
     Set to False to save memory.
     """
-    RESPONSE_THRESHOLD: float = 1e-5
-    BUILD_JACOBIAN: bool = False
+    gmres_threshold: float = 1e-5
+    store_jacobian: bool = False
+    verbose: int = 1
     SPIN_BLOCKS: tuple[str, ...] = (
         'aa', 'bb',
         'aaaa', 'abab', 'abba', 'baab', 'baba', 'bbbb',
     )  # TODO: these should be replaced with E1_Spin and E2_Spin
+
+
+    def __str__(self) -> str:
+        msg = ""
+        msg += f"  Response threshold: {self.gmres_threshold}\n"
+        msg += f"  Build CC Jacobian: {self.store_jacobian}\n"
+        msg += f"  Verbose: {self.verbose}\n"
+        return msg
 
 
 
@@ -44,13 +56,18 @@ class UHF_CCSD_LR:
     CONFIG: UHF_CCSD_LR_config = field(default_factory=UHF_CCSD_LR_config)
 
     def find_polarizabilities(self) -> Polarizability:
+        if self.CONFIG.verbose > 0:
+            print("Finding UHF-CCSD-LR polarizabilities.")
+            print("Configuration:")
+            print(self.CONFIG)
+
         builders_input = GeneratorsInput(
             uhf_scf_data=self.uhf_scf_data,
             uhf_ccsd_data=self.uhf_ccsd_data,
         )
 
         cc_electric_dipole = build_nu_bar_V_cc(input=builders_input)
-        if self.CONFIG.BUILD_JACOBIAN:
+        if self.CONFIG.store_jacobian:
             cc_jacobian = build_cc_jacobian(
                 kwargs=builders_input,
                 dims=self.assign_dims(),
@@ -60,9 +77,21 @@ class UHF_CCSD_LR:
                 cc_electric_dipole
             )
         else:
+            # # Rain's approach
+            # jacobian_op = Minus_UHF_CCSD_Jacobian_action(
+            #     uhf_hf_data=self.uhf_scf_data,
+            #     uhf_ccsd_data=self.uhf_ccsd_data,
+            # )
+
+            # Stephen's approach
+            ccsd = UHF_CCSD(scf_data=self.uhf_scf_data)
+            ccsd.data = self.uhf_ccsd_data
+            uhf_ccsd_energy = ccsd.get_energy()
+
             jacobian_op = Minus_UHF_CCSD_Jacobian_action(
                 uhf_hf_data=self.uhf_scf_data,
                 uhf_ccsd_data=self.uhf_ccsd_data,
+                cc_energy=uhf_ccsd_energy,
             )
             t_response = self.find_t_response(
                 cc_jacobian=jacobian_op,
@@ -177,7 +206,7 @@ class UHF_CCSD_LR:
             gmres_output = gmres(
                 -cc_jacobian,
                 rhs,
-                atol=self.CONFIG.RESPONSE_THRESHOLD,
+                atol=self.CONFIG.gmres_threshold,
             )
             exit_code: int = gmres_output[1]
             if exit_code != 0:
