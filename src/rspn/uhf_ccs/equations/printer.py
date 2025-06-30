@@ -103,7 +103,7 @@ def print_function_header(
     l1_aa = uhf_ccs_lambda_data.l1_aa
     l1_bb = uhf_ccs_lambda_data.l1_bb'''
 
-    body += f'\n{TAB}'
+    body += '\n'
 
     print(body)
 

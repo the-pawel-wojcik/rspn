@@ -188,7 +188,7 @@ def get_cc_j_singles_singles_bbbb(
     ob = uhf_data.ob
     t1_aa = uhf_ccs_data.t1_aa
     t1_bb = uhf_ccs_data.t1_bb
-    
+
     cc_j_singles_singles_bbbb = -1.00 * einsum('ab,ji->aibj', kd_bb[vb, vb], f_bb[ob, ob])
     cc_j_singles_singles_bbbb +=  1.00 * einsum('ij,ab->aibj', kd_bb[ob, ob], f_bb[vb, vb])
     cc_j_singles_singles_bbbb += -1.00 * einsum('ij,kb,ak->aibj', kd_bb[ob, ob], f_bb[ob, vb], t1_bb, optimize=['einsum_path', (1, 2), (0, 1)])
