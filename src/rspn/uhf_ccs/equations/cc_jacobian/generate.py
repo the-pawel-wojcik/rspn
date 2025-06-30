@@ -17,7 +17,7 @@ Refs:
 of Chemical Physics 93, 3333 (1990).
 """
 from rspn.uhf_ccs.equations.printer import (
-        DefineSections, print_to_numpy, print_imports,
+    DefineSections, print_to_numpy, print_imports,
 )
 import pdaggerq
 
