@@ -18,10 +18,10 @@ which can be implemented with pdaggerq
 
 Refs:
 [1] H. Koch and P. Jørgensen, Coupled cluster response functions, The Journal
-of Chemical Physics 93, 3333 (1990).
-"""
+of Chemical Physics 93, 3333 (1990). """
+
 from rspn.uhf_ccsd.equations.printer import (
-        DefineSections, print_to_numpy, print_imports,
+    DefineSections, print_to_numpy, print_imports,
 )
 import pdaggerq
 
@@ -84,8 +84,8 @@ def build_doubles_block():
 
 def main():
 
-    do_singles = True
-    do_doubles = False
+    do_singles = False
+    do_doubles = True
 
     if do_singles:
         pq = build_singles_block()
@@ -103,6 +103,8 @@ def main():
                 'r1_bb = vector.singles[E1_spin.bb]',
                 'r2_aaaa = vector.doubles[E2_spin.aaaa]',
                 'r2_abab = vector.doubles[E2_spin.abab]',
+                'r2_abba = vector.doubles[E2_spin.abba]',
+                'r2_baab = vector.doubles[E2_spin.baab]',
                 'r2_baba = vector.doubles[E2_spin.baba]',
                 'r2_bbbb = vector.doubles[E2_spin.bbbb]',
             ],
@@ -124,6 +126,8 @@ def main():
                 'r1_bb = vector.singles[E1_spin.bb]',
                 'r2_aaaa = vector.doubles[E2_spin.aaaa]',
                 'r2_abab = vector.doubles[E2_spin.abab]',
+                'r2_abba = vector.doubles[E2_spin.abba]',
+                'r2_baab = vector.doubles[E2_spin.baab]',
                 'r2_baba = vector.doubles[E2_spin.baba]',
                 'r2_bbbb = vector.doubles[E2_spin.bbbb]',
             ],

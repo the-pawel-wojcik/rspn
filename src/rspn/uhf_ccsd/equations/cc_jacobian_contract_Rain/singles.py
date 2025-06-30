@@ -15,6 +15,8 @@ def get_cc_j_w_singles_aa(
     r1_bb = vector.singles[E1_spin.bb]
     r2_aaaa = vector.doubles[E2_spin.aaaa]
     r2_abab = vector.doubles[E2_spin.abab]
+    r2_abba = vector.doubles[E2_spin.abba]
+    r2_baab = vector.doubles[E2_spin.baab]
     r2_baba = vector.doubles[E2_spin.baba]
     r2_bbbb = vector.doubles[E2_spin.bbbb]
     f_aa = uhf_scf_data.f_aa
@@ -107,6 +109,8 @@ def get_cc_j_w_singles_bb(
     r1_bb = vector.singles[E1_spin.bb]
     r2_aaaa = vector.doubles[E2_spin.aaaa]
     r2_abab = vector.doubles[E2_spin.abab]
+    r2_abba = vector.doubles[E2_spin.abba]
+    r2_baab = vector.doubles[E2_spin.baab]
     r2_baba = vector.doubles[E2_spin.baba]
     r2_bbbb = vector.doubles[E2_spin.bbbb]
     f_aa = uhf_scf_data.f_aa
