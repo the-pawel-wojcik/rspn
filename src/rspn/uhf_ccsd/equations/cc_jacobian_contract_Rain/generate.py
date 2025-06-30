@@ -36,15 +36,18 @@ def build_singles_block():
     pq = pdaggerq.pq_helper('fermi')
 
     projection = 'e1(i,a)'
-    vector = ['r1', 'r2']
 
     # The f part of H
-    pq.add_st_operator(1.0, [projection, 'f', *vector], ['t1', 't2'])
-    pq.add_st_operator(-1.0, [projection, *vector, 'f'], ['t1', 't2'])
+    pq.add_st_operator(1.0, [projection, 'f', 'r1'], ['t1', 't2'])
+    pq.add_st_operator(1.0, [projection, 'f', 'r2'], ['t1', 't2'])
+    pq.add_st_operator(-1.0, [projection, 'r1', 'f'], ['t1', 't2'])
+    pq.add_st_operator(-1.0, [projection, 'r2', 'f'], ['t1', 't2'])
 
     # The v part of H
-    pq.add_st_operator(1.0, [projection, 'v', *vector], ['t1', 't2'])
-    pq.add_st_operator(-1.0, [projection, *vector, 'v'], ['t1', 't2'])
+    pq.add_st_operator(1.0, [projection, 'v', 'r1'], ['t1', 't2'])
+    pq.add_st_operator(1.0, [projection, 'v', 'r2'], ['t1', 't2'])
+    pq.add_st_operator(-1.0, [projection, 'r1', 'v'], ['t1', 't2'])
+    pq.add_st_operator(-1.0, [projection, 'r2', 'v'], ['t1', 't2'])
 
     pq.simplify()
 
@@ -61,15 +64,18 @@ def build_doubles_block():
     pq = pdaggerq.pq_helper('fermi')
 
     projection = 'e2(i,j,b,a)'
-    vector = ['r1', 'r2']
 
     # The f part of H
-    pq.add_st_operator(1.0, [projection, 'f', *vector], ['t1', 't2'])
-    pq.add_st_operator(-1.0, [projection, *vector, 'f'], ['t1', 't2'])
+    pq.add_st_operator(1.0, [projection, 'f', 'r1'], ['t1', 't2'])
+    pq.add_st_operator(1.0, [projection, 'f', 'r2'], ['t1', 't2'])
+    pq.add_st_operator(-1.0, [projection, 'r1', 'f'], ['t1', 't2'])
+    pq.add_st_operator(-1.0, [projection, 'r2', 'f'], ['t1', 't2'])
 
     # The v part of H
-    pq.add_st_operator(1.0, [projection, 'v', *vector], ['t1', 't2'])
-    pq.add_st_operator(-1.0, [projection, *vector, 'v'], ['t1', 't2'])
+    pq.add_st_operator(1.0, [projection, 'v', 'r1'], ['t1', 't2'])
+    pq.add_st_operator(1.0, [projection, 'v', 'r2'], ['t1', 't2'])
+    pq.add_st_operator(-1.0, [projection, 'r1', 'v'], ['t1', 't2'])
+    pq.add_st_operator(-1.0, [projection, 'r2', 'v'], ['t1', 't2'])
 
     pq.simplify()
 
@@ -78,8 +84,8 @@ def build_doubles_block():
 
 def main():
 
-    do_singles = False
-    do_doubles = True
+    do_singles = True
+    do_doubles = False
 
     if do_singles:
         pq = build_singles_block()
