@@ -130,10 +130,17 @@ def test_Jacobian_build_vs_Jacobian_action_on_versors():
         fast_sigma = Spin_MBE.from_flattened_NDArray(
             vector=fast_sigma_ndarray, uhf_scf_data=ccsd.scf_data,
         )
-        fast_sigma.pretty_print_mbe()
+        for compared_block in E2_spin:
+            # fast_sigma.pretty_print_mbe()
+            with open(f'fast_{compared_block}.txt', 'w') as txt:
+                print("Fast sigma", file=txt)
+                fast_sigma.pretty_print_doubles_block(compared_block, file=txt)
 
-        lean_sigma = lean_sigma_build(versor, ccsd, **kwargs)
-        lean_sigma.pretty_print_mbe()
+            lean_sigma = lean_sigma_build(versor, ccsd, **kwargs)
+            # lean_sigma.pretty_print_mbe()
+            with open(f'lean_{compared_block}.txt', 'w') as txt:
+                print("Lean sigma", file=txt)
+                lean_sigma.pretty_print_doubles_block(compared_block, file=txt)
 
         # assert fast_sigma == lean_sigma
         break
