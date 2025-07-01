@@ -22,11 +22,8 @@ def prepare_water_ccpVDZ():
     hf_data = hf(geometry=water_geometry, basis='cc-pvdz',)
     intermediates = extract_intermediates(hf_data.wfn)
     ccsd = UHF_CCSD(intermediates)
-    ccsd.verbose = 1
     ccsd.solve_cc_equations()
     ccsd.solve_lambda_equations()
-    # changed from
-    # with open('pickles/uhf_ccsd_lambda.pkl', 'wb') as bak_file:
     with open('pickles/water_ccpVDZ.pkl', 'wb') as bak_file:
         pickle.dump(ccsd, bak_file)
 

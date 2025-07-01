@@ -17,7 +17,6 @@ def solve_and_save_water_sto3g_at_HF():
     hf_result = hf(geometry=geometry, basis='sto-3g')
     intermediates = extract_intermediates(hf_result.wfn)
     ccsd = UHF_CCSD(intermediates)
-    ccsd.verbose = 1
     ccsd.solve_cc_equations()
     ccsd.solve_lambda_equations()
     with open('pickles/water_sto3g@HF.pkl', 'wb') as bak_file:
