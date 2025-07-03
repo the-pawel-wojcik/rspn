@@ -2,9 +2,13 @@ import pickle
 
 from chem.ccsd.equations.util import GeneratorsInput
 from chem.ccsd.uhf_ccsd import UHF_CCSD
-from rspn.uhf_ccsd.uhf_ccsd_lr import UHF_CCSD_LR, UHF_CCSD_LR_config
+from rspn.uhf_ccsd.uhf_ccsd_lr import (
+    UHF_CCSD_LR,
+    UHF_CCSD_LR_config,
+    t_response_to_Spin_MBE,
+)
 from rspn.uhf_ccsd._jacobian_action import Minus_UHF_CCSD_Jacobian_action
-from rspn.uhf_ccsd._lheecc import build_pol_xA_F_xB
+from rspn.uhf_ccsd._lhtwcc import build_pol_xA_F_xB
 from rspn.uhf_ccsd._nuOpCC import build_nu_bar_V_cc
 
 
@@ -33,10 +37,11 @@ def test_polarizabilities():
     fmt = '=^50'
     print(f'{'η^A X^B':{fmt}}')
     print(pol_etaA_xB)
+    t_response_mbe = t_response_to_Spin_MBE(t_response)
     pol_xA_F_xB = build_pol_xA_F_xB(
         kwargs=builder_input,
-        t_res_A=t_response,
-        t_res_B=t_response,
+        t_res_A=t_response_mbe,
+        t_res_B=t_response_mbe,
     )
     print(f'{'X^B F X^B':{fmt}}')
     print(pol_xA_F_xB)
