@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from chem.ccsd.uhf_ccsd import UHF_CCSD, UHF_CCSD_Data
+from chem.ccsd.uhf_ccsd import UHF_CCSD_Data
 from chem.hf.intermediates_builders import Intermediates
 from chem.ccsd.equations.util import GeneratorsInput
 from chem.meta.coordinates import Descartes, CARTESIAN

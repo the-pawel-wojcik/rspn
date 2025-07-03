@@ -20,7 +20,7 @@ def print_imports() -> None:
     print('from numpy.typing import NDArray')
     print('from chem.hf.intermediates_builders import Intermediates')
     print('from chem.ccsd.uhf_ccsd import UHF_CCSD_Data')
-    print('from chem.ccsd.containers import Spin_MBE, E1_spin, E2_spin')
+    print('from chem.meta.spin_mbe import Spin_MBE, E1_spin, E2_spin')
 
 
 def print_function_header(

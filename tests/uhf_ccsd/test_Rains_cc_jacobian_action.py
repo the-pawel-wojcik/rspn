@@ -2,10 +2,11 @@ import pickle
 import pytest
 
 from chem.ccsd.equations.util import GeneratorsInput
-from chem.ccsd.containers import Spin_MBE
+from chem.meta.spin_mbe import Spin_MBE
 from numpy.typing import NDArray
 from rspn.uhf_ccsd._jacobian import build_cc_jacobian
 from chem.ccsd.uhf_ccsd import UHF_CCSD
+from chem.hf.util import turn_UHF_Data_to_UHF_ov_data
 from rspn.uhf_ccsd.uhf_ccsd_lr import UHF_CCSD_LR, UHF_CCSD_LR_config
 from rspn.uhf_ccsd._jacobian_action import Minus_UHF_CCSD_Jacobian_action
 import numpy as np
@@ -53,25 +54,20 @@ def test_Jacobian_build_vs_Jacobian_action():
 
     for test_vector in test_vectors:
         # trim out the part that is not touched by the action
-        test_vector_mbe = Spin_MBE.from_flattened_NDArray(
-            vector=test_vector, uhf_scf_data=ccsd.scf_data,
-        )
+        uhf_ov_data = turn_UHF_Data_to_UHF_ov_data(ccsd.scf_data)
+        test_vector_mbe = Spin_MBE.from_NDArray(test_vector, uhf_ov_data)
         test_vector_mbe.pretty_print_mbe()
         # test_vector_mbe.doubles[E2_spin.baab] *= 0.0
         # test_vector_mbe.doubles[E2_spin.abba] *= 0.0
         # test_vector = test_vector_mbe.flatten()
 
         out_vector = - cc_jacobian @ test_vector
-        sigma_brute_force = Spin_MBE.from_flattened_NDArray(
-            vector=out_vector, uhf_scf_data=ccsd.scf_data,
-        )
+        sigma_brute_force = Spin_MBE.from_NDArray(out_vector, uhf_ov_data)
         sigma_brute_force.pretty_print_mbe()
 
-        sigma_elegant = Spin_MBE.from_flattened_NDArray(
-            vector=minus_cc_Jacobian_action.matvec(test_vector),
-            uhf_scf_data=ccsd.scf_data,
-        )
-        sigma_elegant.pretty_print_mbe()
+        sigma_elegant = minus_cc_Jacobian_action @ test_vector
+        sigma_elegant_mbe = Spin_MBE.from_NDArray(sigma_elegant, uhf_ov_data)
+        sigma_elegant_mbe.pretty_print_mbe()
         break
 
 

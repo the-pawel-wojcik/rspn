@@ -1,6 +1,8 @@
-from chem.ccsd.containers import E1_spin, E2_spin, Spin_MBE, UHF_CCSD_Data
+from chem.ccsd.uhf_ccsd import UHF_CCSD_Data
+from chem.meta.spin_mbe import E1_spin, E2_spin, Spin_MBE
 from chem.ccsd.equations.util import GeneratorsInput
 from chem.hf.intermediates_builders import Intermediates
+from chem.hf.util import turn_NDArray_to_Spin_MBE, turn_UHF_Data_to_UHF_ov_data
 from numpy.typing import NDArray
 import numpy as np
 from rspn.uhf_ccsd.equations.cc_jacobian_contract_Rain.singles import (
@@ -36,20 +38,15 @@ class Minus_UHF_CCSD_Jacobian_action(LinearOperator):
             uhf_scf_data=uhf_hf_data,
             uhf_ccsd_data=uhf_ccsd_data,
         )
-        dims, slices, shapes = Spin_MBE.find_dims_slices_shapes(uhf_hf_data)
-        self.dims = dims
-        self.slices = slices
-        self.shapes = shapes
-
-        jacobian_dimension = Spin_MBE.get_vector_dim(dims)
-
+        self.uhf_ov_data = turn_UHF_Data_to_UHF_ov_data(uhf_hf_data)
+        jacobian_dimension = self.uhf_ov_data.get_vector_dim()
         # the ones below are required by LinearOperator
         shape = (jacobian_dimension, jacobian_dimension)
         super().__init__(dtype=np.float64, shape=shape)
 
     def _matvec(self, x: NDArray) -> NDArray:
 
-        inp_vec = Spin_MBE.from_flattened_NDArray(x, self.uhf_hf_data)
+        inp_vec = turn_NDArray_to_Spin_MBE(x, self.uhf_ov_data)
         sigma_elegant = Spin_MBE()
         sigma_elegant.singles[E1_spin.aa] = get_cc_j_w_singles_aa(
             **self.kwargs,
