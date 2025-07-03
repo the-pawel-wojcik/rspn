@@ -1,15 +1,18 @@
 from dataclasses import dataclass, field
 from chem.ccsd.uhf_ccsd import UHF_CCSD_Data
 from chem.hf.intermediates_builders import Intermediates
+from chem.hf.util import E1_spin, E2_spin
 from chem.ccsd.equations.util import GeneratorsInput
 from chem.meta.coordinates import Descartes, CARTESIAN
 from chem.meta.polarizability import Polarizability
+from chem.meta.spin_mbe import Spin_MBE
 import numpy as np
 from numpy.typing import NDArray
 from scipy.sparse.linalg import LinearOperator, gmres
 import rspn.uhf_ccsd.equations.eta.singles as eta_singles
 import rspn.uhf_ccsd.equations.eta.doubles as eta_doubles
 from rspn.uhf_ccsd._lheecc import build_pol_xA_F_xB
+from rspn.uhf_ccsd._lhtwcc import build_pol_xA_F_xB as build_pol_xA_F_xB_wo_store
 from rspn.uhf_ccsd._jacobian import build_cc_jacobian
 from rspn.uhf_ccsd._nuOpCC import build_nu_bar_V_cc
 from rspn.uhf_ccsd._jacobian_action import Minus_UHF_CCSD_Jacobian_action
@@ -33,6 +36,7 @@ class UHF_CCSD_LR_config:
     """
     gmres_threshold: float = 1e-5
     store_jacobian: bool = False
+    store_lHeecc: bool = False
     verbose: int = 1
     SPIN_BLOCKS: tuple[str, ...] = (
         'aa', 'bb',
@@ -43,7 +47,8 @@ class UHF_CCSD_LR_config:
     def __str__(self) -> str:
         msg = ""
         msg += f"  Response threshold: {self.gmres_threshold}\n"
-        msg += f"  Build CC Jacobian: {self.store_jacobian}\n"
+        msg += f"  Store CC Jacobian: {self.store_jacobian}\n"
+        msg += f"  Store <ᴧ|[[H,τ_μ],τ_ν]|CC>: {self.store_lHeecc}\n"
         msg += f"  Verbose: {self.verbose}\n"
         return msg
 
@@ -103,9 +108,15 @@ class UHF_CCSD_LR:
 
         # TODO: all operators work only for the electric dipole operator
         pol_etaA_xB = self._build_pol_eta_X(eta_mu, t_response)
-        pol_xA_F_xB = build_pol_xA_F_xB(
-            builders_input, t_res_A=t_response, t_res_B=t_response,
-        )
+        if self.CONFIG.store_lHeecc is True:
+            pol_xA_F_xB = build_pol_xA_F_xB(
+                builders_input, t_res_A=t_response, t_res_B=t_response,
+            )
+        else:
+            t_response_mbe = t_response_to_Spin_MBE(t_response)
+            pol_xA_F_xB = build_pol_xA_F_xB_wo_store(
+                builders_input, t_res_A=t_response_mbe, t_res_B=t_response_mbe,
+            )
         # when there is only one operator this term is the same as the first
         # one pol_etaB_xA = self._build_pol_eta_X(eta_mu, t_response)
         pol_etaB_xA = pol_etaA_xB
@@ -266,3 +277,27 @@ class UHF_CCSD_LR:
         self.dims['baba'] = nvb * nva * nob * noa
         self.dims['bbbb'] = nvb * nvb * nob * nob
         return self.dims
+
+
+def tmp_helper(untyped_spin_mbe: dict[str, NDArray]) -> Spin_MBE:
+    vector_mbe = Spin_MBE()
+    vector_mbe.singles[E1_spin.aa] = untyped_spin_mbe['aa']
+    vector_mbe.singles[E1_spin.bb] = untyped_spin_mbe['bb']
+
+    vector_mbe.doubles[E2_spin.aaaa] = untyped_spin_mbe['aaaa']
+    vector_mbe.doubles[E2_spin.abab] = untyped_spin_mbe['abab']
+    vector_mbe.doubles[E2_spin.abba] = untyped_spin_mbe['abba']
+    vector_mbe.doubles[E2_spin.baab] = untyped_spin_mbe['baab']
+    vector_mbe.doubles[E2_spin.baba] = untyped_spin_mbe['baba']
+    vector_mbe.doubles[E2_spin.bbbb] = untyped_spin_mbe['bbbb']
+
+    return vector_mbe
+
+def t_response_to_Spin_MBE(
+    t_response: dict[Descartes, dict[str, NDArray]]
+) -> dict[Descartes, Spin_MBE]:
+    mbe_version = dict()
+    for key, value in t_response.items():
+        mbe_version[key] = tmp_helper(value)
+
+    return mbe_version
