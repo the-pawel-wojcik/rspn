@@ -1,0 +1,123 @@
+from dataclasses import dataclass, field
+
+from chem.ccsd.containers import GHF_CCSD_Data
+from chem.ccsd.equations.ghf.util import GHF_Generators_Input
+from chem.hf.ghf_data import GHF_Data
+from chem.meta.coordinates import Descartes
+from chem.meta.polarizability import Polarizability
+import numpy as np
+from numpy.typing import NDArray
+from rspn.ghf_ccsd._nuOpCC import build_nu_bar_V_cc
+from rspn.ghf_ccsd._jacobian import build_cc_jacobian
+from scipy.sparse.linalg import LinearOperator, gmres
+
+
+@dataclass
+class GHF_CCSD_LR_config:
+    """ 
+    store_jacobian: One implementation builds the whole CC Jacobian matrix and
+    uses it to solve the equation 
+    Jacobian @ response_vector = "external_field_operator"
+
+    The other implementation does not store the whole matrix but only
+    implements the operator that takes an input_vector and returns the vector
+    Jacobian @ input_vector. The second approach saves a ton of memory.
+
+    Set to False to save memory.
+    """
+    gmres_threshold: float = 1e-5
+    store_jacobian: bool = False
+    store_lHeecc: bool = False
+    verbose: int = 1
+
+    def __str__(self) -> str:
+        msg = "GHF-CCSD-LR config\n"
+        msg += f"  Response threshold: {self.gmres_threshold}\n"
+        msg += f"  Store CC Jacobian: {self.store_jacobian}\n"
+        msg += f"  Store <ᴧ|[[H,τ_μ],τ_ν]|CC>: {self.store_lHeecc}\n"
+        msg += f"  Verbose: {self.verbose}\n"
+        return msg
+
+
+
+@dataclass
+class GHF_CCSD_LR:
+    ghf_data: GHF_Data
+    ghf_ccsd_data: GHF_CCSD_Data
+    CONFIG: GHF_CCSD_LR_config = field(default_factory=GHF_CCSD_LR_config)
+
+    def find_polarizabilities(self) -> Polarizability:
+        if self.CONFIG.verbose > 0:
+            print("Finding UHF-CCSD-LR polarizabilities.")
+            print("Configuration:")
+            print(self.CONFIG)
+
+        builders_input = GHF_Generators_Input(
+            ghf_data=self.ghf_data,
+            ghf_ccsd_data=self.ghf_ccsd_data,
+        )
+
+        cc_electric_dipole = build_nu_bar_V_cc(input=builders_input)
+
+        if self.CONFIG.store_jacobian:
+            cc_jacobian = build_cc_jacobian(
+                kwargs=builders_input,
+            )
+            t_response = self.find_t_response(
+                minus_cc_jacobian=-cc_jacobian,
+                cc_mu=cc_electric_dipole,
+            )
+        else:
+            raise NotImplementedError("GHF-CCSD Jacobian action.")
+
+    def find_t_response(
+        self,
+        minus_cc_jacobian: NDArray | LinearOperator,
+        cc_mu: dict[Descartes, dict[str, NDArray]],
+    ) -> dict[Descartes, dict[str, NDArray]]:
+        t_response_mu = {}
+        for coord in Descartes:
+            mu = cc_mu[coord]
+            rhs = np.vstack(
+                (mu['singles'].reshape(-1, 1), mu['doubles'].reshape(-1, 1),)
+            )
+            gmres_output = gmres(
+                minus_cc_jacobian,
+                rhs,
+                atol=self.CONFIG.gmres_threshold,
+            )
+            exit_code: int = gmres_output[1]
+            if exit_code != 0:
+                msg = f'gmres didn\'t find the response vector for mu {coord}.'
+                raise RuntimeError(msg)
+
+            scf = self.ghf_data
+            nmo = scf.nmo
+            no = scf.no
+            nv = scf.nv
+
+            slices = {
+                'singles': slice(0, nmo),
+                'doubles': slice(nmo, None),
+            }
+            dims = {
+                'singles': nv*no,
+                'doubles': nv*nv*no*no,
+            }
+            current_size = 0
+            for block in ['singles', 'doubles']:
+                block_dim = dims[block]
+                slices[block] = slice(current_size, current_size + block_dim)
+                current_size += block_dim
+
+            shapes = {
+                'singles': (nv, no),
+                'doubles': (nv, nv, no, no),
+            }
+
+            response: NDArray = gmres_output[0]
+            t_response_mu[coord] = {
+                block: response[slices[block]].reshape(shapes[block])
+                for block in ['singles', 'doubles']
+            }
+        return t_response_mu
