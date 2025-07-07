@@ -9,6 +9,8 @@ import numpy as np
 from numpy.typing import NDArray
 from rspn.ghf_ccsd._nuOpCC import build_nu_bar_V_cc
 from rspn.ghf_ccsd._jacobian import build_cc_jacobian
+import rspn.ghf_ccsd.equations.eta.singles as eta_singles
+import rspn.ghf_ccsd.equations.eta.doubles as eta_doubles
 from scipy.sparse.linalg import LinearOperator, gmres
 
 
@@ -70,6 +72,8 @@ class GHF_CCSD_LR:
         else:
             raise NotImplementedError("GHF-CCSD Jacobian action.")
 
+        eta_mu = self._find_eta_mu()
+
     def find_t_response(
         self,
         minus_cc_jacobian: NDArray | LinearOperator,
@@ -121,3 +125,26 @@ class GHF_CCSD_LR:
                 for block in ['singles', 'doubles']
             }
         return t_response_mu
+
+    def _find_eta_mu(self) -> dict[Descartes, NDArray]:
+        """ mu stands for the electric dipole moment. It is a special case of a
+        general perturbation operator. """
+        operators = {
+            direction: self.ghf_data.mu[direction]
+            for direction in Descartes
+        }
+
+        etas = {}
+        for direction in Descartes:
+            etas[direction] = dict()
+            etas[direction]['singles'] = eta_singles.get_eta(
+                self.ghf_data,
+                self.ghf_ccsd_data,
+                operators[direction],
+            )
+            etas[direction]['doubles'] = eta_doubles.get_eta(
+                self.ghf_data,
+                self.ghf_ccsd_data,
+                operators[direction],
+            )
+        return etas
