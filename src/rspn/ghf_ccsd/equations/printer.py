@@ -64,7 +64,7 @@ def print_function_header(
 
     if DefineSections.IDENTITY not in defines_exclude:
         body += '''
-    kd =  uhf_scf_data.identity_singles'''
+    kd =  ghf_data.identity_singles'''
 
     if DefineSections.SLICES not in defines_exclude:
         body += '''
