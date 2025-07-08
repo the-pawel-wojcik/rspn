@@ -73,6 +73,9 @@ class GHF_CCSD_LR:
             raise NotImplementedError("GHF-CCSD Jacobian action.")
 
         eta_mu = self._find_eta_mu()
+        # TODO: generalize to operators other than electric dipole
+        pol_etaA_xB = self._build_pol_eta_X(eta_mu, t_response)
+        return pol_etaA_xB
 
     def find_t_response(
         self,
@@ -126,7 +129,7 @@ class GHF_CCSD_LR:
             }
         return t_response_mu
 
-    def _find_eta_mu(self) -> dict[Descartes, NDArray]:
+    def _find_eta_mu(self) -> dict[Descartes, dict[str, NDArray]]:
         """ mu stands for the electric dipole moment. It is a special case of a
         general perturbation operator. """
         operators = {
@@ -148,3 +151,29 @@ class GHF_CCSD_LR:
                 operators[direction],
             )
         return etas
+
+    def _build_pol_eta_X(
+        self,
+        eta: dict[Descartes, dict[str, NDArray]],
+        t_response: dict[Descartes, dict[str, NDArray]],
+    ) -> Polarizability:
+        r"""
+        Calculates
+        sum _mu \eta _\mu X _\mu
+        """
+        pol = Polarizability.from_builder(
+            builder=lambda first, second: float(
+                np.einsum(
+                    'ai,ai->',
+                    eta[first]['singles'],
+                    t_response[second]['singles'],
+                )
+                +
+                np.einsum(
+                    'abji,abji->',
+                    eta[first]['doubles'],
+                    t_response[second]['doubles'],
+                )
+            ),
+        )
+        return pol
