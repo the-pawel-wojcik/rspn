@@ -2,9 +2,10 @@ from dataclasses import dataclass, field
 
 from chem.ccsd.containers import GHF_CCSD_Data
 from chem.ccsd.equations.ghf.util import GHF_Generators_Input
-from chem.hf.ghf_data import GHF_Data
+from chem.hf.ghf_data import GHF_Data, ghf_data_to_GHF_ov_data
 from chem.meta.coordinates import Descartes
 from chem.meta.polarizability import Polarizability
+from chem.meta.ghf_ccsd_mbe import GHF_CCSD_MBE
 import numpy as np
 from numpy.typing import NDArray
 from rspn.ghf_ccsd._nuOpCC import build_nu_bar_V_cc
@@ -40,7 +41,6 @@ class GHF_CCSD_LR_config:
         msg += f"  Store <ᴧ|[[H,τ_μ],τ_ν]|CC>: {self.store_lHeecc}\n"
         msg += f"  Verbose: {self.verbose}\n"
         return msg
-
 
 
 @dataclass
@@ -96,9 +96,11 @@ class GHF_CCSD_LR:
         t_response_mu = {}
         for coord in Descartes:
             mu = cc_mu[coord]
-            rhs = np.vstack(
-                (mu['singles'].reshape(-1, 1), mu['doubles'].reshape(-1, 1),)
+            rhs_mbe = GHF_CCSD_MBE(
+                singles=mu['singles'],
+                doubles=mu['doubles'],
             )
+            rhs = rhs_mbe.flatten()
             gmres_output = gmres(
                 minus_cc_jacobian,
                 rhs,
@@ -109,34 +111,12 @@ class GHF_CCSD_LR:
                 msg = f'gmres didn\'t find the response vector for mu {coord}.'
                 raise RuntimeError(msg)
 
-            scf = self.ghf_data
-            nmo = scf.nmo
-            no = scf.no
-            nv = scf.nv
-
-            slices = {
-                'singles': slice(0, nmo),
-                'doubles': slice(nmo, None),
-            }
-            dims = {
-                'singles': nv*no,
-                'doubles': nv*nv*no*no,
-            }
-            current_size = 0
-            for block in ['singles', 'doubles']:
-                block_dim = dims[block]
-                slices[block] = slice(current_size, current_size + block_dim)
-                current_size += block_dim
-
-            shapes = {
-                'singles': (nv, no),
-                'doubles': (nv, nv, no, no),
-            }
-
             response: NDArray = gmres_output[0]
+            ghf_ov_data = ghf_data_to_GHF_ov_data(self.ghf_data)
+            response_mbe = GHF_CCSD_MBE.from_NDArray(response, ghf_ov_data)
             t_response_mu[coord] = {
-                block: response[slices[block]].reshape(shapes[block])
-                for block in ['singles', 'doubles']
+                'singles': response_mbe.singles,
+                'doubles': response_mbe.doubles,
             }
         return t_response_mu
 
