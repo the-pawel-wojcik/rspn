@@ -29,21 +29,21 @@ def build_pol_xA_F_xB(
             )
             +
             np.einsum(
-                'ai,aibckj,bckj->',
+                'ai,aibcjk,bcjk->',
                 t_res_A[first]['singles'],
                 f_e1_e2,
                 t_res_B[second]['doubles'],
             )
             +
             np.einsum(
-                'abji,abjick,ck->',
+                'abij,abijck,ck->',
                 t_res_A[first]['doubles'],
                 f_e2_e1,
                 t_res_B[second]['singles'],
             )
             +
             np.einsum(
-                'abji,abjicdlk,cdlk->',
+                'abij,abijcdkl,cdkl->',
                 t_res_A[first]['doubles'],
                 f_e2_e2,
                 t_res_B[second]['doubles'],

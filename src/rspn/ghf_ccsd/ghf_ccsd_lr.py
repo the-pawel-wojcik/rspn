@@ -161,7 +161,7 @@ class GHF_CCSD_LR:
                 )
                 +
                 np.einsum(
-                    'abji,abji->',
+                    'abij,abij->',
                     eta[first]['doubles'],
                     t_response[second]['doubles'],
                 )

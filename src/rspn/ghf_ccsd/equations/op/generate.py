@@ -59,7 +59,7 @@ def doubles():
         print_to_numpy(
             pq,
             tensor_name=f'mu{component}_doubles',
-            tensor_subscripts=('a', 'b', 'j', 'i'),
+            tensor_subscripts=('a', 'b', 'i', 'j'),
             defines_exclude={
                 DefineSections.IDENTITY,
                 DefineSections.FOCK,

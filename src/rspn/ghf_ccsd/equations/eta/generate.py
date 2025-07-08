@@ -91,7 +91,7 @@ def main():
         print_to_numpy(
             pq,
             tensor_name='eta',
-            tensor_subscripts=('a', 'b', 'j', 'i'),
+            tensor_subscripts=('a', 'b', 'i', 'j'),
             defines_exclude={
                 DefineSections.FOCK,
                 DefineSections.FLUCTUATION,

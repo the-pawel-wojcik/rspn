@@ -184,7 +184,7 @@ def main():
         print_to_numpy(
             pq,
             tensor_name='lhe1e2cc',
-            tensor_subscripts=('a', 'i', 'b', 'c', 'k', 'j'),
+            tensor_subscripts=('a', 'i', 'b', 'c', 'j', 'k'),
         )
 
     elif args.ds:
@@ -192,7 +192,7 @@ def main():
         print_to_numpy(
             pq,
             tensor_name='lhe2e1cc',
-            tensor_subscripts=('a', 'b', 'j', 'i', 'c', 'k'),
+            tensor_subscripts=('a', 'b', 'i', 'j', 'c', 'k'),
         )
 
     elif args.dd:
@@ -200,7 +200,7 @@ def main():
         print_to_numpy(
             pq,
             tensor_name='lhe2e2cc',
-            tensor_subscripts=('a', 'b', 'j', 'i', 'c', 'd', 'l', 'k'),
+            tensor_subscripts=('a', 'b', 'i', 'j', 'c', 'd', 'k', 'l'),
         )
 
 
