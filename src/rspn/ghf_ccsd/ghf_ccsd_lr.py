@@ -9,6 +9,7 @@ import numpy as np
 from numpy.typing import NDArray
 from rspn.ghf_ccsd._nuOpCC import build_nu_bar_V_cc
 from rspn.ghf_ccsd._jacobian import build_cc_jacobian
+from rspn.ghf_ccsd._lheecc import build_pol_xA_F_xB
 import rspn.ghf_ccsd.equations.eta.singles as eta_singles
 import rspn.ghf_ccsd.equations.eta.doubles as eta_doubles
 from scipy.sparse.linalg import LinearOperator, gmres
@@ -29,7 +30,7 @@ class GHF_CCSD_LR_config:
     """
     gmres_threshold: float = 1e-5
     store_jacobian: bool = False
-    store_lHeecc: bool = False
+    store_lHeecc: bool = True
     verbose: int = 1
 
     def __str__(self) -> str:
@@ -71,11 +72,21 @@ class GHF_CCSD_LR:
             )
         else:
             raise NotImplementedError("GHF-CCSD Jacobian action.")
-
         eta_mu = self._find_eta_mu()
         # TODO: generalize to operators other than electric dipole
         pol_etaA_xB = self._build_pol_eta_X(eta_mu, t_response)
-        return pol_etaA_xB
+        # when there is only one operator this term is the same as the first
+        # one pol_etaB_xA = self._build_pol_eta_X(eta_mu, t_response)
+        pol_etaB_xA = pol_etaA_xB
+
+        if self.CONFIG.store_lHeecc is True:
+            pol_xA_F_xB = build_pol_xA_F_xB(
+                builders_input, t_res_A=t_response, t_res_B=t_response,
+            )
+        else:
+            raise NotImplementedError("On-the-fly contraction F response.")
+
+        return pol_etaA_xB + pol_xA_F_xB + pol_etaB_xA
 
     def find_t_response(
         self,
