@@ -131,6 +131,7 @@ class GHF_CCSD_LR:
         etas = {}
         for direction in Descartes:
             etas[direction] = dict()
+            etas[direction]['ref'] = np.float64(0.0)
             etas[direction]['singles'] = eta_singles.get_eta(
                 self.ghf_data,
                 self.ghf_ccsd_data,

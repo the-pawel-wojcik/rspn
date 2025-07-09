@@ -15,11 +15,8 @@ def test_eta_works():
     lr = GHF_CCSD_LR(ccsd.ghf_data, ccsd.data, lr_config)
     eta_mu = lr._find_eta_mu()
     assert set(eta_mu) == {coord for coord in Descartes}
-    for key, val in eta_mu.items():
-        assert set(val) == {'singles', 'doubles'}
+    for _, val in eta_mu.items():
+        assert set(val) == {'ref', 'singles', 'doubles'}
+        assert val['ref'].ndim == 0
         assert val['singles'].shape == (4, 10)
         assert val['doubles'].shape == (4, 4, 10, 10)
-
-
-if __name__ == "__main__":
-    test_eta_works()
