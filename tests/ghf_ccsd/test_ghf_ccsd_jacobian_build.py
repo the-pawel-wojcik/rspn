@@ -1,5 +1,6 @@
 from contextlib import contextmanager
 import pickle
+from numpy.typing import NDArray
 import pytest
 from time import perf_counter
 
@@ -100,6 +101,49 @@ def timeit(header: str=''):
     print(f'[{end-start:.3f} s] {header} time.')
 
 
+def compare_singles(jacobian: NDArray, singles_singles: NDArray) -> None:
+    print(f'{singles_singles.shape=}')
+    print('0,0 - singles')
+    print(f'  {jacobian[0,0:10]}\n  {singles_singles[0,0,0,:]}')
+    print(f'  {jacobian[0,10:20]}\n  {singles_singles[0,0,1,:]}')
+    print(f'  {jacobian[0,20:30]}\n  {singles_singles[0,0,2,:]}')
+    print(f'  {jacobian[0,30:40]}\n  {singles_singles[0,0,3,:]}')
+    print('0,1 - singles')
+    print(f'  {jacobian[1,0:10]}\n  {singles_singles[0,1,0,:]}')
+    print(f'  {jacobian[1,10:20]}\n  {singles_singles[0,1,1,:]}')
+    print(f'  {jacobian[1,20:30]}\n  {singles_singles[0,1,2,:]}')
+    print(f'  {jacobian[1,30:40]}\n  {singles_singles[0,1,3,:]}')
+    print('3,9 - singles')
+    print(f'  {jacobian[39,0:10]}\n  {singles_singles[3,9,0,:]}')
+    print(f'  {jacobian[39,10:20]}\n  {singles_singles[3,9,1,:]}')
+    print(f'  {jacobian[39,20:30]}\n  {singles_singles[3,9,2,:]}')
+    print(f'  {jacobian[39,30:40]}\n  {singles_singles[3,9,3,:]}')
+
+
+def compare_sd(
+    jacobian: NDArray,
+    sd: NDArray,
+    singles: tuple[int, int] = (0, 0),
+    doubles: tuple[int, int] = (0, 0),
+) -> None:
+    sv = singles[0]
+    so = singles[1]
+    lft = 10 * sv + so
+    dvl = doubles[0]  # doubles virtual left
+    dvr = doubles[1]  # doubles virtual right
+    for so in range(10):
+        print(f'{sv},{so} - doubles ({dvl},{dvr},:,:)')
+        base = 40 + 100 * (dvr + 4 * dvl)
+        for dol in range(10):
+            jac_block = jacobian[lft,base + 10 * dol:base + 10 * (dol + 1)]
+            sd_block = sd[sv,so,dvl,dvr,dol,:]
+            jack_norm = np.linalg.norm(jac_block)
+            if jack_norm > 1e-3:
+                print(f'  {jac_block}')
+                print(f'  {sd_block}')
+            assert np.allclose(jac_block, sd_block, atol=1e-6)
+
+
 def test_cc_jacobian_to_NDArray_translation():
     with open('pickles/water_sto3g@HF.pkl', 'rb') as bak_file:
         ccsd: GHF_CCSD = pickle.load(bak_file)
@@ -136,22 +180,14 @@ def test_cc_jacobian_to_NDArray_translation():
         ])
 
     np.set_printoptions(precision=3, suppress=True)
-    print(f'{singles_singles.shape=}')
-    print('0,0 - singles')
-    print(f'  {jacobian[0,0:10]}\n  {singles_singles[0,0,0,:]}')
-    print(f'  {jacobian[0,10:20]}\n  {singles_singles[0,0,1,:]}')
-    print(f'  {jacobian[0,20:30]}\n  {singles_singles[0,0,2,:]}')
-    print(f'  {jacobian[0,30:40]}\n  {singles_singles[0,0,3,:]}')
-    print('0,1 - singles')
-    print(f'  {jacobian[1,0:10]}\n  {singles_singles[0,1,0,:]}')
-    print(f'  {jacobian[1,10:20]}\n  {singles_singles[0,1,1,:]}')
-    print(f'  {jacobian[1,20:30]}\n  {singles_singles[0,1,2,:]}')
-    print(f'  {jacobian[1,30:40]}\n  {singles_singles[0,1,3,:]}')
-    print('3,9 - singles')
-    print(f'  {jacobian[39,0:10]}\n  {singles_singles[3,9,0,:]}')
-    print(f'  {jacobian[39,10:20]}\n  {singles_singles[3,9,1,:]}')
-    print(f'  {jacobian[39,20:30]}\n  {singles_singles[3,9,2,:]}')
-    print(f'  {jacobian[39,30:40]}\n  {singles_singles[3,9,3,:]}')
+    # compare_singles(jacobian, singles_singles)
+    compare_sd(jacobian, singles_doubles, doubles=(0, 1))
+    
+
+    print(f'{np.linalg.norm(singles_singles)=}')
+    print(f'{np.linalg.norm(singles_doubles)=}')
+    print(f'{np.linalg.norm(doubles_singles)=}')
+    print(f'{np.linalg.norm(doubles_doubles)=}')
 
 
 if __name__ == "__main__":
