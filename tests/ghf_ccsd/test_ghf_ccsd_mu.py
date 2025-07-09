@@ -18,8 +18,9 @@ def test_cc_mu():
     cced_interation_op = build_nu_bar_V_cc(input=input)
     assert set(cced_interation_op) == {coord for coord in CARTESIAN}
     for _, val in cced_interation_op.items():
-        assert set(val) == {'singles', 'doubles',}
+        assert set(val) == {'ref', 'singles', 'doubles',}
 
+        assert val['ref'].ndim == 0
         assert val['singles'].shape == (4, 10)
         assert val['doubles'].shape == (4, 4, 10, 10)
 

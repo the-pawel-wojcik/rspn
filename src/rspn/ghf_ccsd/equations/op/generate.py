@@ -24,6 +24,29 @@ from rspn.ghf_ccsd.equations.printer import (
 from chem.meta.coordinates import CARTESIAN
 
 
+def reference():
+    print_imports()
+    for component in CARTESIAN:
+        pq = pdaggerq.pq_helper('fermi')
+        pq.add_st_operator(1.0, ['h'], ['t1', 't2'])
+        pq.simplify()
+        extra_definitions = (
+            f'h = ghf_data.mu[Descartes.{component}]',
+        )
+        print_to_numpy(
+            pq,
+            tensor_name=f'mu{component}_ref',
+            tensor_subscripts=(),
+            defines_exclude={
+                DefineSections.IDENTITY,
+                DefineSections.FOCK,
+                DefineSections.FLUCTUATION,
+                DefineSections.LAMBDA_AMPS,
+            },
+            extra_definitions=extra_definitions,
+        )
+
+
 def singles():
     print_imports()
     for component in CARTESIAN:
@@ -73,12 +96,16 @@ def doubles():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     options = parser.add_mutually_exclusive_group()
+    options.add_argument('--reference', default=False, action='store_true')
     options.add_argument('--singles', default=False, action='store_true')
     options.add_argument('--doubles', default=False, action='store_true')
     args = parser.parse_args()
 
-    if args.singles:
+    if args.reference:
+        reference()
+
+    elif args.singles:
         singles()
 
-    if args.doubles:
+    elif args.doubles:
         doubles()

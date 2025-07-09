@@ -16,6 +16,11 @@ of Chemical Physics 93, 3333 (1990).
 from chem.ccsd.equations.ghf.util import GHF_Generators_Input
 from chem.meta.coordinates import Descartes, CARTESIAN
 from numpy.typing import NDArray
+from rspn.ghf_ccsd.equations.op.ref import (
+    get_mux_ref,
+    get_muy_ref,
+    get_muz_ref,
+)
 from rspn.ghf_ccsd.equations.op.singles import (
     get_mux_singles,
     get_muy_singles,
@@ -45,18 +50,21 @@ def _build_helper(
 
     if coord == Descartes.x:
         return {
+            'ref': get_mux_ref(**input),
             'singles': get_mux_singles(**input),
             'doubles': get_mux_doubles(**input),
         }
 
     elif coord == Descartes.y:
         return {
+            'ref': get_muy_ref(**input),
             'singles': get_muy_singles(**input),
             'doubles': get_muy_doubles(**input),
         }
 
     elif coord == Descartes.z:
         return {
+            'ref': get_muz_ref(**input),
             'singles': get_muz_singles(**input),
             'doubles': get_muz_doubles(**input),
         }
