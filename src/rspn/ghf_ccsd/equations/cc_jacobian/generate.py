@@ -10,7 +10,7 @@ The above can be translated to
 
 A _μν = <HF| tau * _μ [\bar{H}, tau_ν] |HF>
 
-which can be implemented with pdaggerq
+which can be implemented with pdaggerq.
 
 Refs:
 [1] H. Koch and P. Jørgensen, Coupled cluster response functions, The Journal
@@ -22,6 +22,38 @@ from rspn.ghf_ccsd.equations.printer import (
         DefineSections, print_to_numpy, print_imports,
 )
 import pdaggerq
+
+
+def build_ref_singles_block():
+    """ Builds A _{ai}"""
+    pq = pdaggerq.pq_helper('fermi')
+
+    # commutator
+    pq.add_st_operator(1.0, ['f', 'e1(a,i)'], ['t1', 't2'])
+    pq.add_st_operator(-1.0, ['e1(a,i)', 'f'], ['t1', 't2'])
+
+    pq.add_st_operator(1.0, ['v', 'e1(a,i)'], ['t1', 't2'])
+    pq.add_st_operator(-1.0, ['e1(a,i)', 'v'], ['t1', 't2'])
+
+    pq.simplify()
+
+    return pq
+
+
+def build_ref_doubles_block():
+    """ Builds A _{abij} """
+    pq = pdaggerq.pq_helper('fermi')
+
+    # commutator
+    pq.add_st_operator(1.0, ['f', 'e2(a,b,j,i)'], ['t1', 't2'])
+    pq.add_st_operator(-1.0, ['e2(a,b,j,i)', 'f'], ['t1', 't2'])
+
+    pq.add_st_operator(1.0, ['v', 'e2(a,b,j,i)'], ['t1', 't2'])
+    pq.add_st_operator(-1.0, ['e2(a,b,j,i)', 'v'], ['t1', 't2'])
+
+    pq.simplify()
+
+    return pq
 
 
 def build_singles_singles_block():
@@ -103,13 +135,35 @@ def build_doubles_doubles_block():
 def main():
     parser = argparse.ArgumentParser()
     options = parser.add_mutually_exclusive_group()
+    options.add_argument('--rs', default=False, action='store_true')
+    options.add_argument('--rd', default=False, action='store_true')
     options.add_argument('--ss', default=False, action='store_true')
     options.add_argument('--sd', default=False, action='store_true')
     options.add_argument('--ds', default=False, action='store_true')
     options.add_argument('--dd', default=False, action='store_true')
     args = parser.parse_args()
 
-    if args.ss:
+    if args.rs:
+        pq = build_ref_singles_block()
+        print_imports()
+        print_to_numpy(
+            pq,
+            tensor_name='cc_j_ref_singles',
+            defines_exclude={DefineSections.LAMBDA_AMPS},
+            tensor_subscripts=('a', 'i'),
+        )
+
+    elif args.rd:
+        pq = build_ref_doubles_block()
+        print_imports()
+        print_to_numpy(
+            pq,
+            tensor_name='cc_j_ref_doubles',
+            defines_exclude={DefineSections.LAMBDA_AMPS},
+            tensor_subscripts=('a', 'b',  'i', 'j'),
+        )
+
+    elif args.ss:
         pq = build_singles_singles_block()
         print_imports()
         print_to_numpy(

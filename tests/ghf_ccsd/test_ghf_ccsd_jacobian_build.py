@@ -8,6 +8,12 @@ from chem.ccsd.ghf_ccsd import GHF_CCSD
 from chem.ccsd.equations.ghf.util import GHF_Generators_Input
 import numpy as np
 from numpy.typing import NDArray
+from rspn.ghf_ccsd.equations.cc_jacobian.ref_singles import (
+    get_cc_j_ref_singles
+)
+from rspn.ghf_ccsd.equations.cc_jacobian.ref_doubles import (
+    get_cc_j_ref_doubles
+)
 from rspn.ghf_ccsd.ghf_ccsd_lr import build_cc_jacobian
 from rspn.ghf_ccsd.equations.cc_jacobian.singles_singles import (
     get_cc_j_singles_singles,
@@ -35,6 +41,7 @@ def humanify(size_bytes: float) -> str:
 
 
 # this one takes too long for a regular test
+# @pytest.mark.skip
 def test_cc_jacobian_build():
     with open('pickles/water_sto3g@HF.pkl', 'rb') as bak_file:
         ccsd: GHF_CCSD = pickle.load(bak_file)
@@ -45,37 +52,57 @@ def test_cc_jacobian_build():
     )
     print('Building the GHF CCSD Jacobian matrix.')
 
+    print('Ref-Singles:')
+    ref_singles = get_cc_j_ref_singles(**builders_input,)
+    print('Ready.')
+    print(f'Size = {humanify(ref_singles.nbytes)}.')
+    print(f'Shape = {ref_singles.shape}')
+    print(f'Norm = {np.linalg.norm(ref_singles)}')
+    assert ref_singles.shape == (4, 10)
+    print()
+    print('Ref-Doubles:')
+    ref_doubles = get_cc_j_ref_doubles(**builders_input,)
+    print('Ready.')
+    print(f'Size = {humanify(ref_doubles.nbytes)}.')
+    print(f'Shape = {ref_doubles.shape}')
+    print(f'Norm = {np.linalg.norm(ref_doubles)}')
+    assert ref_doubles.shape == (4, 4, 10, 10)
+    print()
     print('Singles-Singles:')
     singles_singles = get_cc_j_singles_singles(**builders_input,)
     print('Ready.')
-    print(f'Size = {humanify(singles_singles.nbytes)}.')  # 282 KiB
+    print(f'Size = {humanify(singles_singles.nbytes)}.')
     print(f'Shape = {singles_singles.shape}')
+    print(f'Norm = {np.linalg.norm(singles_singles)}')
     assert singles_singles.shape == (4, 10, 4, 10)
     print()
     print('Singles-Doubles:')
     singles_doubles = get_cc_j_singles_doubles(**builders_input,)
     print('Ready.')
-    print(f'Size = {humanify(singles_doubles.nbytes)}.')  # 78.5 MiB
+    print(f'Size = {humanify(singles_doubles.nbytes)}.')
     print(f'Shape = {singles_doubles.shape}')
+    print(f'Norm = {np.linalg.norm(singles_doubles)}')
     assert singles_doubles.shape == (4, 10, 4, 4, 10, 10)
-    print()
     print()
     print('Doubles-Singles:')
     doubles_singles = get_cc_j_doubles_singles(**builders_input,)
     print('Ready.')
-    print(f'Size = {humanify(doubles_singles.nbytes)}.')  # 78.5 MiB
-    print(f'Shape = {doubles_singles.shape}')  # (54150, 190)
+    print(f'Size = {humanify(doubles_singles.nbytes)}.')
+    print(f'Shape = {doubles_singles.shape}')
+    print(f'Norm = {np.linalg.norm(doubles_singles)}')
     assert doubles_singles.shape == (4, 4, 10, 10, 4, 10,)
     print()
     print('Doubles-Doubles:')
     doubles_doubles = get_cc_j_doubles_doubles(**builders_input,)
     print('Ready.')
-    print(f'Size = {humanify(doubles_doubles.nbytes)}.')  # ??? 23 GiB
-    print(f'Shape = {doubles_doubles.shape}')  # (54150, 54150)
+    print(f'Size = {humanify(doubles_doubles.nbytes)}.')
+    print(f'Shape = {doubles_doubles.shape}')
+    print(f'Norm = {np.linalg.norm(doubles_doubles)}')
     assert doubles_doubles.shape == (4, 4, 10, 10, 4, 4, 10, 10,)
     print()
 
 
+# @pytest.mark.skip
 def test_cc_jacobian_spectrum():
     with open('pickles/water_sto3g@HF.pkl', 'rb') as bak_file:
         ccsd: GHF_CCSD = pickle.load(bak_file)
@@ -104,11 +131,11 @@ def timeit(header: str=''):
 
 
 def singles_mbidx_to_idx(sv: int, so: int) -> int:
-    return sv * 10 + so
+    return sv * 10 + so + 1
 
 
 def doubles_mbidx_to_idx(dvl: int, dvr: int, dol:int, dor: int) -> int:
-    return dor + 10 * dol + 100 * dvr + 400 * dvl + 40
+    return dor + 10 * dol + 100 * dvr + 400 * dvl + 40 + 1
 
 
 def compare_singles(
@@ -118,26 +145,24 @@ def compare_singles(
 ) -> None:
     assert singles_singles.shape == (4, 10, 4, 10)
     # lsv = left singles virtual
-    for lsv in range(4):
-        for lso in range(10):
-            for rsv in range(4):
-                if verbose is True:
-                    print(f'singles({lsv},{lso}) - singles({rsv}, :)')
-                    left = singles_mbidx_to_idx(sv=lsv, so=lso)
-                    right_start = singles_mbidx_to_idx(sv=rsv, so=0)
-                    jacobian_block = jacobian[left,right_start:right_start+10] 
-                    ss_block = singles_singles[lsv, lso, rsv, :]
-                    assert np.allclose(
-                        jacobian_block,
-                        ss_block,
-                        ALL_CLOSE_THRESH
-                    )
-                    if verbose is True:
-                        jb_norm = np.linalg.norm(jacobian_block)
-                        ssb_norm = np.linalg.norm(ss_block)
-                        assert np.isclose(jb_norm, ssb_norm, ALL_CLOSE_THRESH)
-                        print(f'  {jacobian_block}')
-                        print(f'  {ss_block}')
+    for lsv, lso, rsv in product(range(4), range(10), range(4)):
+        if verbose is True:
+            print(f'singles({lsv},{lso}) - singles({rsv}, :)')
+        left = singles_mbidx_to_idx(sv=lsv, so=lso)
+        right_start = singles_mbidx_to_idx(sv=rsv, so=0)
+        jacobian_block = jacobian[left,right_start:right_start+10] 
+        ss_block = singles_singles[lsv, lso, rsv, :]
+        assert np.allclose(
+            jacobian_block,
+            ss_block,
+            ALL_CLOSE_THRESH
+        )
+        if verbose is True:
+            jb_norm = np.linalg.norm(jacobian_block)
+            ssb_norm = np.linalg.norm(ss_block)
+            assert np.isclose(jb_norm, ssb_norm, ALL_CLOSE_THRESH)
+            print(f'  {jacobian_block}')
+            print(f'  {ss_block}')
 
 
 def compare_sd(
@@ -232,6 +257,10 @@ def test_cc_jacobian_to_NDArray_translation():
         ghf_ccsd_data=ccsd.data,
     )
 
+    with timeit('reference-singles build'):
+        ref_singles = get_cc_j_ref_singles(**builders_input,)
+    with timeit('reference-doubles build'):
+        ref_doubles = get_cc_j_ref_doubles(**builders_input,)
     with timeit('singles-singles build'):
         singles_singles = get_cc_j_singles_singles(**builders_input,)
     with timeit('singles-doubles build'):
@@ -243,16 +272,24 @@ def test_cc_jacobian_to_NDArray_translation():
 
     no = ccsd.ghf_data.no
     nv = ccsd.ghf_data.nv
+    dim_r = 1
     dim_s = nv * no
     dim_d = nv * nv * no * no
 
     with timeit('reshape'):
         jacobian = np.block([
             [
+                np.zeros(shape=(dim_r, dim_r)),
+                ref_singles.reshape(dim_r, dim_s),
+                ref_doubles.reshape(dim_r, dim_d),
+            ],
+            [
+                np.zeros(shape=(dim_s, dim_r)),
                 singles_singles.reshape(dim_s, dim_s),
                 singles_doubles.reshape(dim_s, dim_d),
             ],
             [
+                np.zeros(shape=(dim_d, dim_r)),
                 doubles_singles.reshape(dim_d, dim_s),
                 doubles_doubles.reshape(dim_d, dim_d),
             ],
@@ -261,21 +298,9 @@ def test_cc_jacobian_to_NDArray_translation():
     np.set_printoptions(precision=3, suppress=True)
     with timeit('Checking singles-singles'):
         compare_singles(jacobian, singles_singles)
-    for sv in range(4):
-        for dvl in range(4):
-            for dvr in range(4):
-                compare_sd(jacobian, singles_doubles,
-                           sv=sv, doubles_vv=(dvl, dvr))
-
-    for sv in range(4):
-        for dvl in range(4):
-            for dvr in range(4):
-                compare_ds(jacobian, doubles_singles,
-                           sv=sv, doubles_vv=(dvl, dvr))
-
+    for sv, dvl, dvr in product(range(4), range(4), range(4)):
+        compare_sd(jacobian, singles_doubles, sv=sv, doubles_vv=(dvl, dvr))
+    for sv, dvl, dvr in product(range(4), range(4), range(4)):
+        compare_ds(jacobian, doubles_singles, sv=sv, doubles_vv=(dvl, dvr))
     with timeit('Checking doubles-doubles'):
         compare_doubles(jacobian, doubles_doubles)
-
-
-if __name__ == "__main__":
-    test_cc_jacobian_build()
