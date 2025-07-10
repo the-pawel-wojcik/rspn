@@ -17,7 +17,6 @@ from rspn.ghf_ccsd.equations.cc_jacobian.doubles_doubles import (
 def build_cc_jacobian(
     kwargs: GHF_Generators_Input,
 ):
-    # TODO: it is likely here
     no = kwargs['ghf_data'].no
     nv = kwargs['ghf_data'].nv
     dim_s = nv * no

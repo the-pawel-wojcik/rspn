@@ -126,7 +126,7 @@ def main():
             pq,
             tensor_name='cc_j_singles_doubles',
             defines_exclude={DefineSections.LAMBDA_AMPS},
-            tensor_subscripts=('a', 'i', 'b', 'c', 'k', 'j'),
+            tensor_subscripts=('a', 'i', 'b', 'c', 'j', 'k'),
         )
 
     elif args.ds:
@@ -136,7 +136,7 @@ def main():
             pq,
             tensor_name='cc_j_doubles_singles',
             defines_exclude={DefineSections.LAMBDA_AMPS},
-            tensor_subscripts=('a', 'b', 'j', 'i', 'c', 'k'),
+            tensor_subscripts=('a', 'b', 'i', 'j', 'c', 'k'),
         )
 
     elif args.dd:
@@ -146,7 +146,7 @@ def main():
             pq,
             tensor_name='cc_j_doubles_doubles',
             defines_exclude={DefineSections.LAMBDA_AMPS},
-            tensor_subscripts=('a', 'b', 'j', 'i', 'c', 'd', 'l', 'k'),
+            tensor_subscripts=('a', 'b', 'i', 'j', 'c', 'd', 'k', 'l'),
         )
 
 
