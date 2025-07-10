@@ -9,7 +9,7 @@ from rspn.ghf_ccsd._jacobian import build_cc_jacobian
 from rspn.ghf_ccsd._nuOpCC import build_nu_bar_V_cc
 
 
-def test_t_response_shapes():
+def test_t_response_structure():
     with open('pickles/water_sto3g@HF.pkl', 'rb') as bak_file:
         ccsd: GHF_CCSD = pickle.load(bak_file)
 
@@ -26,12 +26,4 @@ def test_t_response_shapes():
     )
     assert set(t_mu_resp.keys()) == {Descartes.x, Descartes.y, Descartes.z}
     t_mu_res_x = t_mu_resp[Descartes.x]
-    assert set(t_mu_res_x.keys()) == {'singles', 'doubles'}
-    singles = t_mu_res_x['singles']
-    assert singles.shape == (4, 10)
-    doubles = t_mu_res_x['doubles']
-    assert doubles.shape == (4, 4, 10, 10)
-
-
-if __name__ == "__main__":
-    test_t_response_shapes()
+    assert t_mu_res_x.shape == (310,)
