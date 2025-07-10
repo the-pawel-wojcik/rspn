@@ -204,25 +204,25 @@ class GHF_CCSD_LR:
     def _build_pol_eta_X(
         self,
         eta: dict[Descartes, dict[str, NDArray]],
-        t_response: dict[Descartes, dict[str, NDArray]],
+        t_response: dict[Descartes, NDArray],
     ) -> Polarizability:
         r"""
         Calculates
         sum _mu \eta _\mu X _\mu
         """
+        ghf_ov_data = ghf_data_to_GHF_ov_data(self.ghf_data)
+        # convert eta an NDArray with singly-couted indices of doubles
+        # use the converted build into the GHF_CCSD_MBE
+        single_counted_eta = {
+            direction: GHF_CCSD_MBE(
+                singles=value['singles'],
+                doubles=value['doubles'],
+            ).flatten_single_count(ghf_ov_data)
+            for direction, value in eta.items()
+        }
         pol = Polarizability.from_builder(
             builder=lambda first, second: float(
-                np.einsum(
-                    'ai,ai->',
-                    eta[first]['singles'],
-                    t_response[second]['singles'],
-                )
-                +
-                np.einsum(
-                    'abij,abij->',
-                    eta[first]['doubles'],
-                    t_response[second]['doubles'],
-                )
+                single_counted_eta[first] @ t_response[second]
             ),
         )
         return pol
