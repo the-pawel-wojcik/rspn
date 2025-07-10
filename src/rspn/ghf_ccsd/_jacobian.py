@@ -15,6 +15,34 @@ from rspn.ghf_ccsd.equations.cc_jacobian.doubles_doubles import (
 )
 
 
+def single_count_sd_and_ds(
+    *,
+    raw_sd: NDArray,
+    raw_ds: NDArray,
+    nv: int,
+    no: int,
+) -> tuple[NDArray, NDArray]:
+    assert raw_sd.shape == (nv, no, nv, nv, no, no)
+    assert raw_ds.shape == (nv, nv, no, no, nv, no)
+    dim_s = nv * no
+    dim_d = ((nv - 1) * nv // 2) * ((no - 1) * no // 2)
+    sd = np.zeros(shape=(dim_s, dim_d))
+    ds = np.zeros(shape=(dim_d, dim_s))
+    abij = 0
+    for a in range(0, nv):
+        for b in range(a + 1, nv):
+            for i in range(0, no):
+                for j in range(i + 1, no):
+                    ck = 0 
+                    for c in range(0, nv):
+                        for k in range(0, no):
+                            sd[ck, abij] = raw_sd[c,k,a,b,i,j]
+                            ds[abij, ck] = raw_ds[a,b,i,j,c,k]
+                            ck += 1
+                    abij += 1
+    return sd, ds
+
+
 def single_count_doubles(raw_dd: NDArray, *, nv: int, no: int) -> NDArray:
     assert raw_dd.shape == (nv, nv, no, no, nv, nv, no, no)
     dim = ((nv - 1) * nv // 2) * ((no - 1) * no // 2)
@@ -41,16 +69,15 @@ def build_cc_jacobian(
     no = kwargs['ghf_data'].no
     nv = kwargs['ghf_data'].nv
     dim_s = nv * no
-    dim_d = nv * nv * no * no
     singles_singles = get_cc_j_singles_singles(**kwargs).reshape(dim_s, dim_s)
-    # singles_doubles = get_cc_j_singles_doubles(**kwargs).reshape(dim_s, dim_d)
-    # doubles_singles = get_cc_j_doubles_singles(**kwargs).reshape(dim_d, dim_s)
+    raw_sd = get_cc_j_singles_doubles(**kwargs)
+    raw_ds = get_cc_j_doubles_singles(**kwargs)
     raw_dd = get_cc_j_doubles_doubles(**kwargs)
 
     doubles_doubles = single_count_doubles(raw_dd, nv=nv, no=no)
-    single_count_dim_d = doubles_doubles.shape[0]
-    singles_doubles = np.zeros(shape=(dim_s, single_count_dim_d))
-    doubles_singles = np.zeros(shape=(single_count_dim_d, dim_s))
+    singles_doubles, doubles_singles = single_count_sd_and_ds(
+        raw_sd=raw_sd, raw_ds=raw_ds, nv=nv, no=no,
+    )
 
     jacobian = np.block([
         [singles_singles, singles_doubles,],
