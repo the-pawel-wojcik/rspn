@@ -97,6 +97,7 @@ class GHF_CCSD_LR:
         for coord in Descartes:
             mu = cc_mu[coord]
             rhs_mbe = GHF_CCSD_MBE(
+                ref=mu['ref'],
                 singles=mu['singles'],
                 doubles=mu['doubles'],
             )
@@ -115,6 +116,7 @@ class GHF_CCSD_LR:
             ghf_ov_data = ghf_data_to_GHF_ov_data(self.ghf_data)
             response_mbe = GHF_CCSD_MBE.from_NDArray(response, ghf_ov_data)
             t_response_mu[coord] = {
+                'ref': response_mbe.ref,
                 'singles': response_mbe.singles,
                 'doubles': response_mbe.doubles,
             }
@@ -155,6 +157,8 @@ class GHF_CCSD_LR:
         """
         pol = Polarizability.from_builder(
             builder=lambda first, second: float(
+                eta[first]['ref'] * t_response[second]['ref']
+                +
                 np.einsum(
                     'ai,ai->',
                     eta[first]['singles'],
