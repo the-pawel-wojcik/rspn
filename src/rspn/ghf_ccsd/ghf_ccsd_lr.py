@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from enum import StrEnum, auto
 
 from chem.ccsd.containers import GHF_CCSD_Data
 from chem.ccsd.equations.ghf.util import GHF_Generators_Input
@@ -13,7 +14,16 @@ from rspn.ghf_ccsd._jacobian import build_cc_jacobian
 from rspn.ghf_ccsd._lheecc import build_pol_xA_F_xB
 import rspn.ghf_ccsd.equations.eta.singles as eta_singles
 import rspn.ghf_ccsd.equations.eta.doubles as eta_doubles
-from scipy.sparse.linalg import LinearOperator, gmres
+from scipy.sparse.linalg import LinearOperator, gmres, spilu
+
+
+class Preconditioner(StrEnum):
+    diagonal = auto()
+    incomplete_LU = auto()
+
+
+class InitalGuess(StrEnum):
+    last_converged = auto()
 
 
 @dataclass
@@ -28,8 +38,14 @@ class GHF_CCSD_LR_config:
     Jacobian @ input_vector. The second approach saves a ton of memory.
 
     Set to False to save memory.
+
+    In order to find the response vector, this implementation uses the GMRES
+    method. There `gmres_` keywords help with configuration of GMRES.
     """
     gmres_threshold: float = 1e-5
+    gmres_maxiter: int = 100
+    gmres_preconditioner: None | Preconditioner = None
+    gmres_guess: None | InitalGuess = None
     store_jacobian: bool = False
     store_lHeecc: bool = True
     verbose: int = 1
@@ -101,10 +117,35 @@ class GHF_CCSD_LR:
                 doubles=mu['doubles'],
             )
             rhs = rhs_mbe.flatten()
+
+            # Build an inverse of a GMRES pre-conditioner
+            precond_inv = None
+            match self.CONFIG.gmres_preconditioner:
+                case Preconditioner.diagonal:
+                    precond_inv = np.eye(N=len(rhs))
+                case Preconditioner.incomplete_LU:
+                    precond_inv = spilu(minus_cc_jacobian)
+
+            initial_guess = None
+            match self.CONFIG.gmres_guess:
+                case InitalGuess.last_converged:
+                    # if some oder direction was already solved use the
+                    # resulting response vector as the inital guess
+                    if len(t_response_mu) != 0:
+                        _, first_response = next(iter(t_response_mu.items()))
+                        first_response_mbe = GHF_CCSD_MBE(
+                            singles=first_response['singles'],
+                            doubles=first_response['doubles'],
+                        )
+                        initial_guess = first_response_mbe.flatten()
+
             gmres_output = gmres(
                 minus_cc_jacobian,
                 rhs,
                 atol=self.CONFIG.gmres_threshold,
+                maxiter=self.CONFIG.gmres_maxiter,
+                x0=initial_guess,
+                M=precond_inv,
             )
             exit_code: int = gmres_output[1]
             if exit_code != 0:
