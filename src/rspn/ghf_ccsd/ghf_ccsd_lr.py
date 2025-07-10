@@ -46,6 +46,7 @@ class GHF_CCSD_LR_config:
     gmres_maxiter: int = 100
     gmres_preconditioner: None | Preconditioner = None
     gmres_guess: None | InitalGuess = None
+    gmres_verbose: bool = False
     store_jacobian: bool = False
     store_lHeecc: bool = True
     verbose: int = 1
@@ -139,6 +140,13 @@ class GHF_CCSD_LR:
                         )
                         initial_guess = first_response_mbe.flatten()
 
+            callback = None
+            callback_type = 'pr_norm'
+            if self.CONFIG.gmres_verbose is True:
+                callback = lambda norm: print(
+                    f"\t[GMRES] Residue norm = {norm:.4f}."
+                )
+
             gmres_output = gmres(
                 minus_cc_jacobian,
                 rhs,
@@ -146,6 +154,8 @@ class GHF_CCSD_LR:
                 maxiter=self.CONFIG.gmres_maxiter,
                 x0=initial_guess,
                 M=precond_inv,
+                callback=callback,
+                callback_type=callback_type,
             )
             exit_code: int = gmres_output[1]
             if exit_code != 0:
