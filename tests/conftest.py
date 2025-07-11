@@ -1,8 +1,10 @@
+from pathlib import Path
+import pytest
 import pickle
 
+from chem.ccsd.ghf_ccsd import GHF_CCSD
 from chem.hf.electronic_structure import hf
 from chem.hf.ghf_data import wfn_to_GHF_Data
-from chem.ccsd.ghf_ccsd import GHF_CCSD
 
 
 def solve_and_save_water_sto3g_at_HF():
@@ -23,5 +25,19 @@ def solve_and_save_water_sto3g_at_HF():
         pickle.dump(ccsd, bak_file)
 
 
-if __name__ == "__main__":
+pickles = Path('pickles/')
+if not pickles.is_dir():
+    print('Creating the pickles/ directory')
+    pickles.mkdir()
+
+
+water_sto3g_pkl_path = Path('pickles/water_sto3g@HF.pkl')
+if not water_sto3g_pkl_path.is_file():
     solve_and_save_water_sto3g_at_HF()
+
+
+@pytest.fixture(scope="module")
+def water_sto3g() -> GHF_CCSD:
+    with open('pickles/water_sto3g@HF.pkl', 'rb') as bak_file:
+        ccsd: GHF_CCSD = pickle.load(bak_file)
+    return ccsd

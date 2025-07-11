@@ -1,6 +1,3 @@
-import pickle
-import pytest
-
 from chem.ccsd.equations.ghf.util import GHF_Generators_Input
 from chem.ccsd.ghf_ccsd import GHF_CCSD
 from chem.meta.coordinates import Descartes
@@ -9,14 +6,11 @@ from rspn.ghf_ccsd._jacobian import build_cc_jacobian
 from rspn.ghf_ccsd._nuOpCC import build_nu_bar_V_cc
 
 
-def test_t_response_shapes():
-    with open('pickles/water_sto3g@HF.pkl', 'rb') as bak_file:
-        ccsd: GHF_CCSD = pickle.load(bak_file)
-
-    lr = GHF_CCSD_LR(ccsd.ghf_data, ccsd.data)
+def test_t_response_shapes(water_sto3g: GHF_CCSD) -> None:
+    lr = GHF_CCSD_LR(water_sto3g.ghf_data, water_sto3g.data)
     builder_input = GHF_Generators_Input(
-        ghf_data=ccsd.ghf_data,
-        ghf_ccsd_data=ccsd.data,
+        ghf_data=water_sto3g.ghf_data,
+        ghf_ccsd_data=water_sto3g.data,
     )
     cc_jacobian = build_cc_jacobian(kwargs=builder_input)
     cced_interaction_op = build_nu_bar_V_cc(input=builder_input)
@@ -31,7 +25,3 @@ def test_t_response_shapes():
     assert singles.shape == (4, 10)
     doubles = t_mu_res_x['doubles']
     assert doubles.shape == (4, 4, 10, 10)
-
-
-if __name__ == "__main__":
-    test_t_response_shapes()
