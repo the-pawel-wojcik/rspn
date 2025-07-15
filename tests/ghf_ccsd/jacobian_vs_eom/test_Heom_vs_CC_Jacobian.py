@@ -1,4 +1,4 @@
-import pickle 
+import pickle
 
 from chem.ccsd.ghf_ccsd import GHF_CCSD, GHF_Generators_Input
 from DrDePrince_Heom import build_eom_ccsd_H
@@ -54,3 +54,22 @@ def test_Heom_vs_Jacobian():
     ghf_ccsd_jacobian = ghf_ccsd_jacobian - np.diag(ghf_ccsd_jacobian.diagonal())
 
     assert np.allclose(ghf_ccsd_jacobian, eom_ccsd_H)
+
+
+def test_spectrum_of_Heom():
+    # prepare_Heom()
+    with open('pickles/water_sto3g_eom_ccsd_H.pkl', 'rb') as file:
+        eom_ccsd_H = pickle.load(file)
+
+    eom_ccsd_H_evals = np.linalg.eigvals(eom_ccsd_H)
+    print()
+    sorted_spectrum = sorted(eom_ccsd_H_evals, key=lambda z: z)
+    print(f"Lowest eigenvalue: {sorted_spectrum[0]}")
+    excitation_spectrum = sorted_spectrum - sorted_spectrum[0]
+    print(f"Excitation spectrum")
+    for eval in excitation_spectrum:
+        print(f'{eval.real:+12.6f}', end='')
+        if abs(eval.imag) > 1e-6:
+            print(f'{eval.real:+12.6f}i')
+        else:
+            print('')
