@@ -44,7 +44,7 @@ def solve_ghf_ccsd_for_water_ccpVDZ_at_HF() -> GHF_CCSD:
 
 @pytest.fixture(scope='session')
 def ghf_ccsd_water_sto3g(pytestconfig: Config) -> GHF_CCSD:
-    pickles_dir = pytestconfig.rootpath / Path('pickles')
+    pickles_dir = pytestconfig.rootpath / Path('tests/pickles')
     if not pickles_dir.is_dir():
         pickles_dir.mkdir()
 
@@ -61,7 +61,7 @@ def ghf_ccsd_water_sto3g(pytestconfig: Config) -> GHF_CCSD:
 
 @pytest.fixture(scope='session')
 def ghf_ccsd_water_ccpVDZ(pytestconfig: Config) -> GHF_CCSD:
-    pickles_dir = pytestconfig.rootpath / Path('pickles')
+    pickles_dir = pytestconfig.rootpath / Path('tests/pickles')
     if not pickles_dir.is_dir():
         pickles_dir.mkdir()
 

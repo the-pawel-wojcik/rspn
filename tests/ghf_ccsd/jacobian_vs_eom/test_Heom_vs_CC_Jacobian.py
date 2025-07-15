@@ -15,7 +15,7 @@ def eom_ccsd_H(
     ghf_ccsd_water_sto3g: GHF_CCSD,
     pytestconfig: Config,
 ) -> NDArray:
-    pickles_dir = pytestconfig.rootpath / Path('pickles')
+    pickles_dir = pytestconfig.rootpath / Path('tests/pickles')
     if not pickles_dir.is_dir():
         pickles_dir.mkdir()
 
@@ -47,7 +47,7 @@ def ghf_ccsd_Jacobian_water_sto3g(
     ghf_ccsd_water_sto3g: GHF_CCSD,
     pytestconfig: Config,
 ) -> NDArray:
-    pickles_dir = pytestconfig.rootpath / Path('pickles')
+    pickles_dir = pytestconfig.rootpath / Path('tests/pickles')
     if not pickles_dir.is_dir():
         pickles_dir.mkdir()
 
