@@ -1,5 +1,3 @@
-import pickle
-
 from chem.ccsd.ghf_ccsd import GHF_CCSD
 from chem.ccsd.equations.ghf.util import GHF_Generators_Input
 import numpy as np
@@ -9,21 +7,20 @@ from rspn.ghf_ccsd.ghf_ccsd_lr import build_cc_jacobian
 
 def split_roots_into_singles_and_degenerate(
     eigenvalues: NDArray,
-) -> tuple[NDArray, list[dict[str, int | float]]]:
-    singlets = list()
-    degenerates = list()
+) -> tuple[list[float], list[dict[str, int | float]]]:
+    singlets: list[float] = list()
+    degenerates: list[dict[str, int | float]] = list()
 
     # split the eigenvalues into degenerte ones and non-degenerate ones
     evals_iter = iter(sorted(eigenvalues, key=lambda z: abs(z)))
     current_triple = [next(evals_iter) for _ in range(3)]
     degenate_bunch = list()
+
     # handle the starting edge case explicitly
     if np.isclose(current_triple[0], current_triple[1], 1e-12):
         degenate_bunch.append(current_triple[0])
     else:
         singlets.append(current_triple[0])
-    # handle the first one explicitly
-
 
     for eval in evals_iter:
         if np.isclose(current_triple[0], current_triple[1], 1e-12):
@@ -56,17 +53,13 @@ def split_roots_into_singles_and_degenerate(
     return singlets, degenerates
 
 
-def test_cc_jacobian_spectrum():
-    with open('pickles/water_sto3g@HF.pkl', 'rb') as bak_file:
-        ccsd: GHF_CCSD = pickle.load(bak_file)
-
+def test_cc_jacobian_spectrum(ghf_ccsd_water_sto3g: GHF_CCSD) -> None:
     builders_input = GHF_Generators_Input(
-        ghf_data=ccsd.ghf_data,
-        ghf_ccsd_data=ccsd.data,
+        ghf_data=ghf_ccsd_water_sto3g.ghf_data,
+        ghf_ccsd_data=ghf_ccsd_water_sto3g.data,
     )
 
     cc_jacobian = build_cc_jacobian(builders_input)
-    print(f'{cc_jacobian.shape=}')
     eigenvalues = np.linalg.eigvals(cc_jacobian)
     singlets, degenerates = split_roots_into_singles_and_degenerate(eigenvalues)
 
@@ -77,6 +70,7 @@ def test_cc_jacobian_spectrum():
             print(f'{eval.real:+12.6f}i')
         else:
             print('')
+
     print("Degenerate energies:")
     for deg in degenerates:
         eval = deg['value']

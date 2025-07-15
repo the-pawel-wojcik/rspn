@@ -1,22 +1,18 @@
-import pickle
-
 from chem.ccsd.ghf_ccsd import GHF_CCSD
 from chem.ccsd.equations.ghf.util import GHF_Generators_Input
 import numpy as np
 from rspn.ghf_ccsd.ghf_ccsd_lr import build_cc_jacobian
 
 
-def test_cc_jacobian_spectrum():
-    with open('pickles/water_sto3g@HF.pkl', 'rb') as bak_file:
-        ccsd: GHF_CCSD = pickle.load(bak_file)
-
+def test_cc_jacobian_spectrum(ghf_ccsd_water_sto3g: GHF_CCSD) -> None:
     builders_input = GHF_Generators_Input(
-        ghf_data=ccsd.ghf_data,
-        ghf_ccsd_data=ccsd.data,
+        ghf_data=ghf_ccsd_water_sto3g.ghf_data,
+        ghf_ccsd_data=ghf_ccsd_water_sto3g.data,
     )
 
-    no = ccsd.ghf_data.no
-    nv = ccsd.ghf_data.nv
+    ghf_data = ghf_ccsd_water_sto3g.ghf_data
+    no = ghf_data.no
+    nv = ghf_data.nv
     dim_s = nv * no
     cc_jacobian = build_cc_jacobian(builders_input)
     cc_jacobian_ss = cc_jacobian[:dim_s, :dim_s]
