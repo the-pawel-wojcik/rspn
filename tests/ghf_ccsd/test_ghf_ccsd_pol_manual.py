@@ -1,5 +1,3 @@
-import pickle
-
 from chem.ccsd.equations.ghf.util import GHF_Generators_Input
 from chem.ccsd.ghf_ccsd import GHF_CCSD
 from rspn.ghf_ccsd.ghf_ccsd_lr import GHF_CCSD_LR, GHF_CCSD_LR_config
@@ -8,10 +6,8 @@ from rspn.ghf_ccsd._nuOpCC import build_nu_bar_V_cc
 from rspn.ghf_ccsd._lheecc import build_pol_xA_F_xB
 
 
-def test_polarizabilities():
-    with open('pickles/water_sto3g@HF.pkl', 'rb') as bak_file:
-        ccsd: GHF_CCSD = pickle.load(bak_file)
-
+def test_polarizabilities(ghf_ccsd_water_sto3g: GHF_CCSD) -> None:
+    ccsd = ghf_ccsd_water_sto3g
     lr_config = GHF_CCSD_LR_config(store_jacobian=True)
     lr = GHF_CCSD_LR(ccsd.ghf_data, ccsd.data, lr_config)
     builder_input = GHF_Generators_Input(
@@ -35,7 +31,3 @@ def test_polarizabilities():
     print(pol_xA_F_xB)
     print(f'{' Polarizability ':{fmt}}')
     print(pol_etaA_xB + pol_xA_F_xB + pol_etaA_xB)
-
-
-if __name__ == "__main__":
-    test_polarizabilities()

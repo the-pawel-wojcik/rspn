@@ -1,6 +1,3 @@
-import pickle
-import pytest
-
 from chem.ccsd.equations.ghf.util import GHF_Generators_Input
 from chem.ccsd.ghf_ccsd import GHF_CCSD
 from chem.meta.coordinates import Descartes
@@ -9,10 +6,8 @@ from rspn.ghf_ccsd._jacobian import build_cc_jacobian
 from rspn.ghf_ccsd._nuOpCC import build_nu_bar_V_cc
 
 
-def test_t_response_structure():
-    with open('pickles/water_sto3g@HF.pkl', 'rb') as bak_file:
-        ccsd: GHF_CCSD = pickle.load(bak_file)
-
+def test_t_response_structure(ghf_ccsd_water_sto3g: GHF_CCSD) -> None:
+    ccsd = ghf_ccsd_water_sto3g
     lr = GHF_CCSD_LR(ccsd.ghf_data, ccsd.data)
     builder_input = GHF_Generators_Input(
         ghf_data=ccsd.ghf_data,
