@@ -1,5 +1,3 @@
-import pickle
-
 from chem.ccs.uhf_ccs import UHF_CCS, UHF_CCS_InputPair
 from rspn.uhf_ccs._jacobian import (
     cc_jacobian_singles_singles,
@@ -16,17 +14,14 @@ def humanify(size_bytes: float) -> str:
     return f'{size_bytes:.2f} PiB'
 
 
-def test_cc_jacobian_build():
-    with open('../pickles/water_uhf_ccs_lambda_sto3g.pkl', 'rb') as bak_file:
-        ccs: UHF_CCS = pickle.load(bak_file)
-
+def test_cc_jacobian_build(uhf_ccs_water_sto3g: UHF_CCS) -> None:
     builders_input = UHF_CCS_InputPair(
-        uhf_data=ccs.scf_data,
-        uhf_ccs_data=ccs.data,
+        uhf_data=uhf_ccs_water_sto3g.scf_data,
+        uhf_ccs_data=uhf_ccs_water_sto3g.data,
     )
     print('Building the UHF CCSD Jacobian matrix.')
     print('Singles-Singles:')
-    scf_data = ccs.scf_data
+    scf_data = uhf_ccs_water_sto3g.scf_data
     nmo = scf_data.nmo
     noa = scf_data.noa
     nob = scf_data.nob
@@ -55,7 +50,3 @@ def test_cc_jacobian_build():
 
     cc_jacobian = build_cc_jacobian(kwargs=builders_input, dims=dims)
     assert np.allclose(cc_jacobian, singles_singles, atol=1e-6)
-
-
-if __name__ == "__main__":
-    test_cc_jacobian_build()

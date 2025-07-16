@@ -1,5 +1,3 @@
-import pickle
-
 from chem.ccs.equations.util import UHF_CCS_InputTriple
 from chem.ccs.uhf_ccs import UHF_CCS, UHF_CCS_InputPair
 from rspn.uhf_ccs.uhf_ccs_lr import UHF_CCS_LR
@@ -8,17 +6,15 @@ from rspn.uhf_ccs._lheecc import build_pol_xA_F_xB
 from rspn.uhf_ccs._nuOpCC import build_nu_bar_V_cc
 
 
-def test_polarizabilities():
-    with open('pickles/water_uhf_ccs_lambda_ccpVDZ.pkl', 'rb') as bak_file:
-        ccs: UHF_CCS = pickle.load(bak_file)
+def test_polarizabilities(uhf_ccs_water_sto3g: UHF_CCS) -> None:
     input_triple = UHF_CCS_InputTriple(
-        uhf_data=ccs.scf_data,
-        uhf_ccs_data=ccs.data,
-        uhf_ccs_lambda_data=ccs.cc_lambda_data,
+        uhf_data=uhf_ccs_water_sto3g.scf_data,
+        uhf_ccs_data=uhf_ccs_water_sto3g.data,
+        uhf_ccs_lambda_data=uhf_ccs_water_sto3g.cc_lambda_data,
     )
     input_pair = UHF_CCS_InputPair(
-        uhf_data=ccs.scf_data,
-        uhf_ccs_data=ccs.data,
+        uhf_data=uhf_ccs_water_sto3g.scf_data,
+        uhf_ccs_data=uhf_ccs_water_sto3g.data,
     )
     lr = UHF_CCS_LR(**input_triple)
     cc_jacobian = build_cc_jacobian(
@@ -43,7 +39,3 @@ def test_polarizabilities():
     print(pol_xA_F_xB)
     print(f'{' Polarizability ':{fmt}}')
     print(pol_etaA_xB + pol_xA_F_xB + pol_etaA_xB)
-
-
-if __name__ == "__main__":
-    test_polarizabilities()
