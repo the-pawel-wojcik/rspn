@@ -1,18 +1,15 @@
-import pickle
-import pytest
-
 from chem.ccsd.equations.util import GeneratorsInput
 from chem.ccsd.uhf_ccsd import UHF_CCSD
 from chem.meta.coordinates import Descartes
+import pytest
 from rspn.uhf_ccsd._jacobian_action import Minus_UHF_CCSD_Jacobian_action
 from rspn.uhf_ccsd.uhf_ccsd_lr import UHF_CCSD_LR
 from rspn.uhf_ccsd._jacobian import build_cc_jacobian
 from rspn.uhf_ccsd._nuOpCC import build_nu_bar_V_cc
 
 
-def test_t_response():
-    with open('pickles/water_sto3g@HF.pkl', 'rb') as bak_file:
-        ccsd: UHF_CCSD = pickle.load(bak_file)
+def test_t_response(uhf_ccsd_water_sto3g: UHF_CCSD) -> None:
+    ccsd = uhf_ccsd_water_sto3g
 
     lr = UHF_CCSD_LR(ccsd.data, ccsd.scf_data)
     builder_input = GeneratorsInput(
@@ -39,9 +36,10 @@ def test_t_response():
     assert aaaa.shape == (2, 2, 5, 5)
 
 
-def test_t_repsone_with_no_jacobian_build():
-    with open('pickles/water_sto3g@HF.pkl', 'rb') as bak_file:
-        ccsd: UHF_CCSD = pickle.load(bak_file)
+def test_t_repsone_with_no_jacobian_build(
+    uhf_ccsd_water_sto3g: UHF_CCSD,
+) -> None:
+    ccsd = uhf_ccsd_water_sto3g
 
     lr = UHF_CCSD_LR(ccsd.data, ccsd.scf_data)
     builder_input = GeneratorsInput(
@@ -66,7 +64,3 @@ def test_t_repsone_with_no_jacobian_build():
     assert aa.shape == (2, 5)
     aaaa = t_mu_res_x['aaaa']
     assert aaaa.shape == (2, 2, 5, 5)
-
-
-if __name__ == "__main__":
-    test_t_response()

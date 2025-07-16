@@ -1,15 +1,13 @@
-import pickle
-import pytest
-
 from chem.ccsd.equations.util import GeneratorsInput
-from chem.meta.spin_mbe import Spin_MBE
-from numpy.typing import NDArray
-from rspn.uhf_ccsd._jacobian import build_cc_jacobian
 from chem.ccsd.uhf_ccsd import UHF_CCSD
 from chem.hf.util import turn_UHF_Data_to_UHF_ov_data
-from rspn.uhf_ccsd.uhf_ccsd_lr import UHF_CCSD_LR, UHF_CCSD_LR_config
-from rspn.uhf_ccsd._jacobian_action import Minus_UHF_CCSD_Jacobian_action
+from chem.meta.spin_mbe import Spin_MBE
 import numpy as np
+from numpy.typing import NDArray
+import pytest
+from rspn.uhf_ccsd._jacobian import build_cc_jacobian
+from rspn.uhf_ccsd._jacobian_action import Minus_UHF_CCSD_Jacobian_action
+from rspn.uhf_ccsd.uhf_ccsd_lr import UHF_CCSD_LR, UHF_CCSD_LR_config
 
 
 def get_cc_jacobian(ccsd: UHF_CCSD) -> NDArray:
@@ -38,10 +36,10 @@ def get_cc_jacobian_action(ccsd: UHF_CCSD) -> Minus_UHF_CCSD_Jacobian_action:
 
 
 @pytest.mark.skip
-def test_Jacobian_build_vs_Jacobian_action():
-    with open('pickles/water_sto3g@HF.pkl', 'rb') as bak_file:
-        ccsd: UHF_CCSD = pickle.load(bak_file)
-
+def test_Jacobian_build_vs_Jacobian_action(
+    uhf_ccsd_water_sto3g: UHF_CCSD,
+) -> None :
+    ccsd = uhf_ccsd_water_sto3g
     cc_jacobian = get_cc_jacobian(ccsd)
     minus_cc_Jacobian_action = get_cc_jacobian_action(ccsd)
 
@@ -71,16 +69,9 @@ def test_Jacobian_build_vs_Jacobian_action():
         break
 
 
-def test_Jacobian_action_object():
-    with open('pickles/water_sto3g@HF.pkl', 'rb') as bak_file:
-        ccsd: UHF_CCSD = pickle.load(bak_file)
-
-    minus_cc_Jacobian_action = get_cc_jacobian_action(ccsd)
+def test_Jacobian_action_object(uhf_ccsd_water_sto3g: UHF_CCSD) -> None:
+    minus_cc_Jacobian_action = get_cc_jacobian_action(uhf_ccsd_water_sto3g)
     
     assert hasattr(minus_cc_Jacobian_action, 'dtype')
     assert hasattr(minus_cc_Jacobian_action, 'shape')
     assert len(minus_cc_Jacobian_action.shape) == 2
-
-
-if __name__ == "__main__":
-    test_Jacobian_build_vs_Jacobian_action()

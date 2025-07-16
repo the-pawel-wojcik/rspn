@@ -1,17 +1,15 @@
-import pickle
-import pytest
-
 from chem.ccsd.equations.util import GeneratorsInput
-from chem.meta.spin_mbe import Spin_MBE
+from chem.ccsd.uhf_ccsd import UHF_CCSD
 from chem.hf.util import turn_UHF_Data_to_UHF_ov_data
+from chem.meta.spin_mbe import Spin_MBE
+import numpy as np
 from numpy.typing import NDArray
 from rspn.uhf_ccsd._jacobian import build_cc_jacobian
-from chem.ccsd.uhf_ccsd import UHF_CCSD
+import pytest
 from rspn.uhf_ccsd.uhf_ccsd_lr import UHF_CCSD_LR, UHF_CCSD_LR_config
 from rspn.uhf_ccsd._jacobian_action_Stephen import (
     Minus_UHF_CCSD_Jacobian_action
 )
-import numpy as np
 
 
 def get_cc_jacobian(ccsd: UHF_CCSD) -> NDArray:
@@ -44,13 +42,14 @@ def get_cc_jacobian_action(ccsd: UHF_CCSD) -> Minus_UHF_CCSD_Jacobian_action:
     return minus_cc_Jacobian_action
 
 
-def test_Jacobian_build_vs_Jacobian_action():
+def test_Jacobian_build_vs_Jacobian_action(
+    uhf_ccsd_water_sto3g: UHF_CCSD,
+) -> None:
     """ Compare the results of action of the CC Jacobian on a set of test
     vectors using either the full matrix of the CC Jacobian or the on-the-fly
     constructed action of the CC Jacobian. """
 
-    with open('pickles/water_sto3g@HF.pkl', 'rb') as bak_file:
-        ccsd: UHF_CCSD = pickle.load(bak_file)
+    ccsd = uhf_ccsd_water_sto3g
     uhf_ov_data = turn_UHF_Data_to_UHF_ov_data(ccsd.scf_data)
     cc_jacobian = get_cc_jacobian(ccsd)
     minus_cc_Jacobian_action = get_cc_jacobian_action(ccsd)
@@ -86,14 +85,11 @@ def test_Jacobian_build_vs_Jacobian_action():
 
 # This will be the main test once the action works
 @pytest.mark.skip
-def test_Jacobian_action():
-    with open('pickles/water_sto3g@HF.pkl', 'rb') as bak_file:
-        ccsd: UHF_CCSD = pickle.load(bak_file)
+def test_Jacobian_action(
+    uhf_ccsd_water_sto3g: UHF_CCSD,
+) -> None:
+    ccsd = uhf_ccsd_water_sto3g
     uhf_ov_data = turn_UHF_Data_to_UHF_ov_data(ccsd.scf_data)
-    kwargs = GeneratorsInput(
-        uhf_scf_data=ccsd.scf_data,
-        uhf_ccsd_data=ccsd.data,
-    )
     m_cc_jacobian = Minus_UHF_CCSD_Jacobian_action(
         ccsd.scf_data, ccsd.data, ccsd.get_energy()
     )
@@ -106,23 +102,20 @@ def test_Jacobian_action():
         out_vector = m_cc_jacobian.matvec(test_vector)
         mbe_out = Spin_MBE.from_NDArray(out_vector, uhf_ov_data)
         # mbe_out.pretty_print_mbe()
+        # kwargs = GeneratorsInput(
+        #     uhf_scf_data=ccsd.scf_data,
+        #     uhf_ccsd_data=ccsd.data,
+        # )
         # sigma_elegant = build_elegant_sigma(test_vector, ccsd, **kwargs)
         # sigma_elegant.pretty_print_mbe()
 
         # assert -sigma_elegant == mbe_out
 
 
-def test_Jacobian_action_object():
-    with open('pickles/water_sto3g@HF.pkl', 'rb') as bak_file:
-        ccsd: UHF_CCSD = pickle.load(bak_file)
-
+def test_Jacobian_action_object(uhf_ccsd_water_sto3g: UHF_CCSD) -> None:
+    ccsd = uhf_ccsd_water_sto3g
     minus_cc_Jacobian_action = get_cc_jacobian_action(ccsd)
     
     assert hasattr(minus_cc_Jacobian_action, 'dtype')
     assert hasattr(minus_cc_Jacobian_action, 'shape')
     assert len(minus_cc_Jacobian_action.shape) == 2
-
-
-if __name__ == "__main__":
-    test_Jacobian_build_vs_Jacobian_action()
-    # test_Jacobian_action()
