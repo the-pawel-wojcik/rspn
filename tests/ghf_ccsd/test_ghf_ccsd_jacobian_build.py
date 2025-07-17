@@ -1,6 +1,7 @@
 from contextlib import contextmanager
 from itertools import product
 from time import perf_counter
+from typing import Generator
 
 from chem.ccsd.ghf_ccsd import GHF_CCSD
 from chem.ccsd.equations.ghf.util import GHF_Generators_Input
@@ -32,11 +33,10 @@ def humanify(size_bytes: float) -> str:
     return f'{size_bytes:.2f} PiB'
 
 
-# this one takes too long for a regular test
-def test_cc_jacobian_build(water_sto3g: GHF_CCSD) -> None:
+def test_cc_jacobian_build(ghf_ccsd_water_sto3g: GHF_CCSD) -> None:
     builders_input = GHF_Generators_Input(
-        ghf_data=water_sto3g.ghf_data,
-        ghf_ccsd_data=water_sto3g.data,
+        ghf_data=ghf_ccsd_water_sto3g.ghf_data,
+        ghf_ccsd_data=ghf_ccsd_water_sto3g.data,
     )
     print('Building the GHF CCSD Jacobian matrix.')
 
@@ -71,10 +71,10 @@ def test_cc_jacobian_build(water_sto3g: GHF_CCSD) -> None:
     print()
 
 
-def test_cc_jacobian_spectrum(water_sto3g: GHF_CCSD) -> None:
+def test_cc_jacobian_spectrum(ghf_ccsd_water_sto3g: GHF_CCSD) -> None:
     builders_input = GHF_Generators_Input(
-        ghf_data=water_sto3g.ghf_data,
-        ghf_ccsd_data=water_sto3g.data,
+        ghf_data=ghf_ccsd_water_sto3g.ghf_data,
+        ghf_ccsd_data=ghf_ccsd_water_sto3g.data,
     )
 
     cc_jacobian = build_cc_jacobian(builders_input)
@@ -88,7 +88,7 @@ def test_cc_jacobian_spectrum(water_sto3g: GHF_CCSD) -> None:
 
 
 @contextmanager
-def timeit(header: str=''):
+def timeit(header: str='') -> Generator[None, None, None]:
     start = perf_counter()
     yield
     end = perf_counter()
@@ -215,10 +215,12 @@ def compare_doubles(
             print(f'  {ss_block}')
 
 
-def test_cc_jacobian_to_NDArray_translation(water_sto3g: GHF_CCSD) -> None:
+def test_cc_jacobian_to_NDArray_translation(
+    ghf_ccsd_water_sto3g: GHF_CCSD,
+) -> None:
     builders_input = GHF_Generators_Input(
-        ghf_data=water_sto3g.ghf_data,
-        ghf_ccsd_data=water_sto3g.data,
+        ghf_data=ghf_ccsd_water_sto3g.ghf_data,
+        ghf_ccsd_data=ghf_ccsd_water_sto3g.data,
     )
 
     with timeit('singles-singles build'):
@@ -230,7 +232,7 @@ def test_cc_jacobian_to_NDArray_translation(water_sto3g: GHF_CCSD) -> None:
     with timeit('doubles-doubles build'):
         doubles_doubles = get_cc_j_doubles_doubles(**builders_input,)
 
-    ghf_data = water_sto3g.ghf_data
+    ghf_data = ghf_ccsd_water_sto3g.ghf_data
     no = ghf_data.no
     nv = ghf_data.nv
     dim_s = nv * no

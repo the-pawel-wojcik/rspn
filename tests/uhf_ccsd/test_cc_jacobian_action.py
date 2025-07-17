@@ -1,13 +1,12 @@
-import pickle
-import pytest
-
 from chem.ccsd.equations.util import GeneratorsInput
 from chem.meta.spin_mbe import E1_spin, E2_spin, Spin_MBE
 from chem.hf.util import turn_UHF_Data_to_UHF_ov_data
+import numpy as np
 from numpy.typing import NDArray
 from rspn.uhf_ccsd._jacobian import build_cc_jacobian
 from rspn.uhf_ccsd._jacobian_action import Minus_UHF_CCSD_Jacobian_action
 from chem.ccsd.uhf_ccsd import UHF_CCSD
+import pytest
 from rspn.uhf_ccsd.uhf_ccsd_lr import UHF_CCSD_LR, UHF_CCSD_LR_config
 from rspn.uhf_ccsd.equations.cc_jacobian_contract_Rain.singles import (
     get_cc_j_w_singles_aa,
@@ -21,7 +20,6 @@ from rspn.uhf_ccsd.equations.cc_jacobian_contract_Rain.doubles import (
     get_cc_j_w_doubles_baba,
     get_cc_j_w_doubles_bbbb,
 )
-import numpy as np
 
 
 def lean_sigma_build(
@@ -74,9 +72,11 @@ def lean_sigma_build(
     return sigma_elegant
 
 
-def get_ingredients() -> tuple[NDArray, UHF_CCSD, GeneratorsInput]:
-    with open('pickles/water_sto3g@HF.pkl', 'rb') as bak_file:
-        ccsd: UHF_CCSD = pickle.load(bak_file)
+@pytest.fixture
+def ingredients(
+    uhf_ccsd_water_sto3g: UHF_CCSD
+) -> tuple[NDArray, UHF_CCSD, GeneratorsInput]:
+    ccsd = uhf_ccsd_water_sto3g
 
     lr_config = UHF_CCSD_LR_config(store_jacobian=True)
     lr = UHF_CCSD_LR(ccsd.data, ccsd.scf_data, lr_config)
@@ -93,8 +93,10 @@ def get_ingredients() -> tuple[NDArray, UHF_CCSD, GeneratorsInput]:
 
 
 @pytest.mark.skip
-def test_Jacobian_build_vs_Jacobian_action_on_random_vectors():
-    cc_jacobian, ccsd, kwargs = get_ingredients()
+def test_Jacobian_build_vs_Jacobian_action_on_random_vectors(
+    ingredients: tuple[NDArray, UHF_CCSD, GeneratorsInput]
+) -> None:
+    cc_jacobian, ccsd, kwargs = ingredients
     uhf_ov_data = turn_UHF_Data_to_UHF_ov_data(ccsd.scf_data)
 
     # Generate random test vectors
@@ -115,8 +117,10 @@ def test_Jacobian_build_vs_Jacobian_action_on_random_vectors():
         assert lean_sigma == fast_sigma
 
 
-def test_Jacobian_build_vs_Jacobian_action_on_versors():
-    cc_jacobian, ccsd, kwargs = get_ingredients()
+def test_Jacobian_build_vs_Jacobian_action_on_versors(
+    ingredients: tuple[NDArray, UHF_CCSD, GeneratorsInput]
+) -> None:
+    cc_jacobian, ccsd, kwargs = ingredients
     uhf_ov_data = turn_UHF_Data_to_UHF_ov_data(ccsd.scf_data)
 
     TEST_VERSORS_COUNT = 10
@@ -130,7 +134,7 @@ def test_Jacobian_build_vs_Jacobian_action_on_versors():
     for versor in test_versors:
         fast_sigma_ndarray = cc_jacobian @ versor
         fast_sigma = Spin_MBE.from_NDArray(fast_sigma_ndarray, uhf_ov_data)
-        for compared_block in E2_spin:
+        for _ in E2_spin:
             fast_sigma.pretty_print_mbe()
 
             # with open(f'fast_{compared_block}.txt', 'w') as txt:
@@ -149,10 +153,8 @@ def test_Jacobian_build_vs_Jacobian_action_on_versors():
 
 
 @pytest.mark.skip
-def test_Jacobian_action():
-    with open('pickles/water_sto3g@HF.pkl', 'rb') as bak_file:
-        ccsd: UHF_CCSD = pickle.load(bak_file)
-
+def test_Jacobian_action(uhf_ccsd_water_sto3g: UHF_CCSD) -> None:
+    ccsd = uhf_ccsd_water_sto3g
     uhf_ov_data = turn_UHF_Data_to_UHF_ov_data(ccsd.scf_data)
     kwargs = GeneratorsInput(
         uhf_scf_data=ccsd.scf_data,
@@ -172,7 +174,3 @@ def test_Jacobian_action():
         # sigma_elegant.pretty_print_mbe()
 
         assert -sigma_elegant == mbe_out
-
-
-if __name__ == "__main__":
-    test_Jacobian_action()

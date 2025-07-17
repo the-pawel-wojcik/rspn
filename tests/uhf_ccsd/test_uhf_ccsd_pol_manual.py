@@ -1,5 +1,3 @@
-import pickle
-
 from chem.ccsd.equations.util import GeneratorsInput
 from chem.ccsd.uhf_ccsd import UHF_CCSD
 from rspn.uhf_ccsd.uhf_ccsd_lr import UHF_CCSD_LR, UHF_CCSD_LR_config
@@ -8,10 +6,8 @@ from rspn.uhf_ccsd._lheecc import build_pol_xA_F_xB
 from rspn.uhf_ccsd._nuOpCC import build_nu_bar_V_cc
 
 
-def test_polarizabilities():
-    with open('pickles/water_sto3g@HF.pkl', 'rb') as bak_file:
-        ccsd: UHF_CCSD = pickle.load(bak_file)
-
+def test_polarizabilities(uhf_ccsd_water_sto3g: UHF_CCSD) -> None:
+    ccsd = uhf_ccsd_water_sto3g
     lr_config = UHF_CCSD_LR_config(store_jacobian=True)
     lr = UHF_CCSD_LR(ccsd.data, ccsd.scf_data, lr_config)
     builder_input = GeneratorsInput(
@@ -38,7 +34,3 @@ def test_polarizabilities():
     print(pol_xA_F_xB)
     print(f'{' Polarizability ':{fmt}}')
     print(pol_etaA_xB + pol_xA_F_xB + pol_etaA_xB)
-
-
-if __name__ == "__main__":
-    test_polarizabilities()

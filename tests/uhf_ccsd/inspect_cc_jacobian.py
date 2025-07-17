@@ -1,29 +1,31 @@
-import pickle
-
 from chem.ccsd.equations.util import GeneratorsInput
 from chem.ccsd.uhf_ccsd import UHF_CCSD
+from numpy.typing import NDArray
 from rspn.uhf_ccsd.uhf_ccsd_lr import UHF_CCSD_LR, UHF_CCSD_LR_config
 from rspn.uhf_ccsd._jacobian import build_cc_jacobian
 import numpy as np
+import pytest
 
 
-def jacobian_factory():
-    with open('pickles/water_sto3g@HF.pkl', 'rb') as bak_file:
-        ccsd: UHF_CCSD = pickle.load(bak_file)
-
+@pytest.fixture(scope='session')
+def uhf_ccsd_jacobian_water_sto3g(uhf_ccsd_water_sto3g: UHF_CCSD) -> NDArray:
     kwargs = GeneratorsInput(
-        uhf_scf_data=ccsd.scf_data,
-        uhf_ccsd_data=ccsd.data,
+        uhf_scf_data=uhf_ccsd_water_sto3g.scf_data,
+        uhf_ccsd_data=uhf_ccsd_water_sto3g.data,
     )
     lr_config = UHF_CCSD_LR_config(store_jacobian=True)
-    lr = UHF_CCSD_LR(ccsd.data, ccsd.scf_data, lr_config)
+    lr = UHF_CCSD_LR(
+        uhf_ccsd_water_sto3g.data,
+        uhf_ccsd_water_sto3g.scf_data,
+        lr_config,
+    )
     cc_jacobian = build_cc_jacobian(kwargs=kwargs, dims=lr.assign_dims())
     return cc_jacobian
 
 
-def view_the_jacobian():
-    cc_jacobian = jacobian_factory()
-
+@pytest.mark.skip
+def test_view_the_jacobian(uhf_ccsd_jacobian_water_sto3g: NDArray) -> None:
+    cc_jacobian = uhf_ccsd_jacobian_water_sto3g
     # for id, eval in enumerate(np.sort(cc_jacobian.diagonal())):
     #     print(f'{id:>3}: {eval:.4f}')
 
@@ -38,8 +40,11 @@ def view_the_jacobian():
         print(f'{id:>3}: {val}')
 
 
-def look_at_the_eigensystem():
-    cc_jacobian = jacobian_factory()
+@pytest.mark.skip
+def test_look_at_the_eigensystem(
+    uhf_ccsd_jacobian_water_sto3g: NDArray,
+) -> None:
+    cc_jacobian = uhf_ccsd_jacobian_water_sto3g
     evals, evecs = np.linalg.eig(cc_jacobian)
 
     sorting_indices = np.argsort(evals)
@@ -56,18 +61,11 @@ def look_at_the_eigensystem():
     print(f'{vector.T @ cc_jacobian @ vector=}')
 
 
-def save_cc_jacobian():
-    cc_jacobian = jacobian_factory()
-    with open('pickles/cc_jacobian_water_sto3G@HF.pkl', 'wb') as bak_file:
-        pickle.dump(cc_jacobian, bak_file)
-
-
-def show_part_of_jacobian():
-    with open('pickles/cc_jacobian_water_sto3G@HF.pkl', 'rb') as bak_file:
-        jacobian = pickle.load(bak_file)
+@pytest.mark.skip
+def test_show_part_of_jacobian(uhf_ccsd_jacobian_water_sto3g: NDArray) -> None:
+    jacobian = uhf_ccsd_jacobian_water_sto3g
 
     with np.printoptions(precision=3, suppress=True):
-
         print("aa - aa")
         aa_aa = jacobian[0:10, 0:10]
         print(aa_aa)
@@ -83,9 +81,3 @@ def show_part_of_jacobian():
         for idx in range(10):
             print(f"aa - aaaa part {idx}")
             print(jacobian[0:10, 20 + 10 * idx: 20 + 10 * (idx + 1)])
-
-
-if __name__ == "__main__":
-    # view_the_jacobian()
-    show_part_of_jacobian()
-    # save_cc_jacobian()

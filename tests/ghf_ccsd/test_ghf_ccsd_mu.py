@@ -4,10 +4,10 @@ from chem.meta.coordinates import Descartes
 from rspn.ghf_ccsd._nuOpCC import build_nu_bar_V_cc
 
 
-def test_cc_mu(water_sto3g: GHF_CCSD) -> None:
+def test_cc_mu(ghf_ccsd_water_sto3g: GHF_CCSD) -> None:
     input = GHF_Generators_Input(
-        ghf_data=water_sto3g.ghf_data,
-        ghf_ccsd_data=water_sto3g.data,
+        ghf_data=ghf_ccsd_water_sto3g.ghf_data,
+        ghf_ccsd_data=ghf_ccsd_water_sto3g.data,
     )
     cced_interation_op = build_nu_bar_V_cc(input=input)
     assert set(cced_interation_op) == {coord for coord in Descartes}

@@ -1,5 +1,3 @@
-import pickle
-
 from chem.ccs.equations.util import UHF_CCS_InputPair
 from chem.ccs.uhf_ccs import UHF_CCS
 from chem.meta.coordinates import CARTESIAN, Descartes
@@ -7,12 +5,10 @@ import numpy as np
 from rspn.uhf_ccs._nuOpCC import build_nu_bar_V_cc
 
 
-def test_cc_mu():
-    with open('../pickles/water_uhf_ccs_lambda_sto3g.pkl', 'rb') as bak_file:
-        ccs: UHF_CCS = pickle.load(bak_file)
+def test_cc_mu(uhf_ccs_water_sto3g: UHF_CCS) -> None:
     input = UHF_CCS_InputPair(
-        uhf_data=ccs.scf_data,
-        uhf_ccs_data=ccs.data,
+        uhf_data=uhf_ccs_water_sto3g.scf_data,
+        uhf_ccs_data=uhf_ccs_water_sto3g.data,
     )
     cc_interation_operator = build_nu_bar_V_cc(input=input)
     # TODO: Test the values
@@ -22,7 +18,7 @@ def test_cc_mu():
         assert val['aa'].shape == (2, 5)
         assert val['bb'].shape == (2, 5)
 
-    uhf_data = ccs.scf_data
+    uhf_data = uhf_ccs_water_sto3g.scf_data
     uhf_data.mua_x
     uhf_dipole_operator = {
         Descartes.x: {
@@ -57,7 +53,3 @@ def test_cc_mu():
         for cart, matrix in cc_interation_operator.items():
             print(matrix['aa'])
             print(uhf_dipole_operator[cart]['aa'])
-
-
-if __name__ == "__main__":
-    test_cc_mu()

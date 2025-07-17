@@ -6,11 +6,12 @@ from rspn.ghf_ccsd._jacobian import build_cc_jacobian
 from rspn.ghf_ccsd._nuOpCC import build_nu_bar_V_cc
 
 
-def test_t_response_shapes(water_sto3g: GHF_CCSD) -> None:
-    lr = GHF_CCSD_LR(water_sto3g.ghf_data, water_sto3g.data)
+def test_t_response_structure(ghf_ccsd_water_sto3g: GHF_CCSD) -> None:
+    ccsd = ghf_ccsd_water_sto3g
+    lr = GHF_CCSD_LR(ccsd.ghf_data, ccsd.data)
     builder_input = GHF_Generators_Input(
-        ghf_data=water_sto3g.ghf_data,
-        ghf_ccsd_data=water_sto3g.data,
+        ghf_data=ccsd.ghf_data,
+        ghf_ccsd_data=ccsd.data,
     )
     cc_jacobian = build_cc_jacobian(kwargs=builder_input)
     cced_interaction_op = build_nu_bar_V_cc(input=builder_input)
@@ -20,8 +21,4 @@ def test_t_response_shapes(water_sto3g: GHF_CCSD) -> None:
     )
     assert set(t_mu_resp.keys()) == {Descartes.x, Descartes.y, Descartes.z}
     t_mu_res_x = t_mu_resp[Descartes.x]
-    assert set(t_mu_res_x.keys()) == {'singles', 'doubles'}
-    singles = t_mu_res_x['singles']
-    assert singles.shape == (4, 10)
-    doubles = t_mu_res_x['doubles']
-    assert doubles.shape == (4, 4, 10, 10)
+    assert t_mu_res_x.shape == (310,)

@@ -1,18 +1,15 @@
-import pickle
-import pytest
-
 from chem.ccsd.equations.util import GeneratorsInput
 from rspn.uhf_ccsd._jacobian import build_cc_jacobian
 from chem.ccsd.uhf_ccsd import UHF_CCSD
-from rspn.uhf_ccsd.uhf_ccsd_lr import UHF_CCSD_LR
 import numpy as np
+import pytest
+from rspn.uhf_ccsd.uhf_ccsd_lr import UHF_CCSD_LR
 
 
 # Broken
 @pytest.mark.skip
-def test_cc_diagonalization():
-    with open('pickles/water_sto3g@HF.pkl', 'rb') as bak_file:
-        ccsd: UHF_CCSD = pickle.load(bak_file)
+def test_cc_diagonalization(uhf_ccsd_water_sto3g: UHF_CCSD) -> None:
+    ccsd = uhf_ccsd_water_sto3g
 
     lr = UHF_CCSD_LR(ccsd.data, ccsd.scf_data)
     kwargs = GeneratorsInput(
@@ -38,7 +35,3 @@ def test_cc_diagonalization():
         np.diag(evals),
         atol=1e-2,
     )
-
-
-if __name__ == "__main__":
-    test_cc_diagonalization()

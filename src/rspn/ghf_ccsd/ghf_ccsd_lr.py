@@ -109,15 +109,17 @@ class GHF_CCSD_LR:
         self,
         minus_cc_jacobian: NDArray | LinearOperator,
         cc_mu: dict[Descartes, dict[str, NDArray]],
-    ) -> dict[Descartes, dict[str, NDArray]]:
+    # ) -> dict[Descartes, dict[str, NDArray]]:
+    ) -> dict[Descartes, NDArray]:
         t_response_mu = {}
+        ghf_ov_data = ghf_data_to_GHF_ov_data(self.ghf_data)
         for coord in Descartes:
             mu = cc_mu[coord]
             rhs_mbe = GHF_CCSD_MBE(
                 singles=mu['singles'],
                 doubles=mu['doubles'],
             )
-            rhs = rhs_mbe.flatten()
+            rhs = rhs_mbe.flatten_single_count(ghf_ov_data)
 
             # Build an inverse of a GMRES pre-conditioner
             precond_inv = None
@@ -138,8 +140,12 @@ class GHF_CCSD_LR:
                             singles=first_response['singles'],
                             doubles=first_response['doubles'],
                         )
-                        initial_guess = first_response_mbe.flatten()
+                        initial_guess = (
+                            first_response_mbe.flatten_single_count(
+                                ghf_ov_data
+                        ))
 
+                                
             callback = None
             callback_type = 'pr_norm'
             if self.CONFIG.gmres_verbose is True:
@@ -163,12 +169,13 @@ class GHF_CCSD_LR:
                 raise RuntimeError(msg)
 
             response: NDArray = gmres_output[0]
-            ghf_ov_data = ghf_data_to_GHF_ov_data(self.ghf_data)
-            response_mbe = GHF_CCSD_MBE.from_NDArray(response, ghf_ov_data)
-            t_response_mu[coord] = {
-                'singles': response_mbe.singles,
-                'doubles': response_mbe.doubles,
-            }
+            t_response_mu[coord] = response
+            # ghf_ov_data = ghf_data_to_GHF_ov_data(self.ghf_data)
+            # response_mbe = GHF_CCSD_MBE.from_NDArray(response, ghf_ov_data)
+            # t_response_mu[coord] = {
+            #     'singles': response_mbe.singles,
+            #     'doubles': response_mbe.doubles,
+            # }
         return t_response_mu
 
     def _find_eta_mu(self) -> dict[Descartes, dict[str, NDArray]]:
@@ -197,25 +204,25 @@ class GHF_CCSD_LR:
     def _build_pol_eta_X(
         self,
         eta: dict[Descartes, dict[str, NDArray]],
-        t_response: dict[Descartes, dict[str, NDArray]],
+        t_response: dict[Descartes, NDArray],
     ) -> Polarizability:
         r"""
         Calculates
         sum _mu \eta _\mu X _\mu
         """
+        ghf_ov_data = ghf_data_to_GHF_ov_data(self.ghf_data)
+        # convert eta an NDArray with singly-couted indices of doubles
+        # use the converted build into the GHF_CCSD_MBE
+        single_counted_eta = {
+            direction: GHF_CCSD_MBE(
+                singles=value['singles'],
+                doubles=value['doubles'],
+            ).flatten_single_count(ghf_ov_data)
+            for direction, value in eta.items()
+        }
         pol = Polarizability.from_builder(
             builder=lambda first, second: float(
-                np.einsum(
-                    'ai,ai->',
-                    eta[first]['singles'],
-                    t_response[second]['singles'],
-                )
-                +
-                np.einsum(
-                    'abij,abij->',
-                    eta[first]['doubles'],
-                    t_response[second]['doubles'],
-                )
+                single_counted_eta[first] @ t_response[second]
             ),
         )
         return pol

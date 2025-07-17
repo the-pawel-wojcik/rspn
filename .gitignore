@@ -1,6 +1,7 @@
 *.txt
 timer.dat
 *.pkl
+tests/pickles
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

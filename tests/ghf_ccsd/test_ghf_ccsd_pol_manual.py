@@ -6,12 +6,13 @@ from rspn.ghf_ccsd._nuOpCC import build_nu_bar_V_cc
 from rspn.ghf_ccsd._lheecc import build_pol_xA_F_xB
 
 
-def test_polarizabilities(water_sto3g: GHF_CCSD):
+def test_polarizabilities(ghf_ccsd_water_sto3g: GHF_CCSD) -> None:
+    ccsd = ghf_ccsd_water_sto3g
     lr_config = GHF_CCSD_LR_config(store_jacobian=True)
-    lr = GHF_CCSD_LR(water_sto3g.ghf_data, water_sto3g.data, lr_config)
+    lr = GHF_CCSD_LR(ccsd.ghf_data, ccsd.data, lr_config)
     builder_input = GHF_Generators_Input(
-        ghf_data=water_sto3g.ghf_data,
-        ghf_ccsd_data=water_sto3g.data,
+        ghf_data=ccsd.ghf_data,
+        ghf_ccsd_data=ccsd.data,
     )
     cc_jacobian = build_cc_jacobian(kwargs=builder_input)
     cced_interaction_op = build_nu_bar_V_cc(input=builder_input)
