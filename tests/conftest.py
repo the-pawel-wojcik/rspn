@@ -2,7 +2,7 @@ from pathlib import Path
 import pickle
 
 from chem.ccs.uhf_ccs import UHF_CCS
-from chem.ccsd.ghf_ccsd import GHF_CCSD
+from chem.ccsd.ghf_ccsd import GHF_CCSD, GHF_CCSD_Config
 from chem.ccsd.uhf_ccsd import UHF_CCSD
 from chem.hf.electronic_structure import hf
 from chem.hf.ghf_data import wfn_to_GHF_Data
@@ -22,7 +22,19 @@ def solve_ghf_ccsd_for_water_sto3g_at_HF() -> GHF_CCSD:
     """
     hf_result = hf(geometry=geometry, basis='sto-3g')
     ghf_data = wfn_to_GHF_Data(hf_result.wfn)
-    ccsd = GHF_CCSD(ghf_data)
+    ccsd = GHF_CCSD(
+        ghf_data,
+        config=GHF_CCSD_Config(
+            verbose=1,
+            use_diis=False,
+            max_iterations=100,
+            energy_convergence=1e-12,
+            residuals_convergence=1e-12,
+            shift_1e=0.,
+            shift_2e=0.,
+            t_amp_print_threshold=1e-2,
+        )
+    )
     ccsd.solve_cc_equations()
     ccsd.solve_lambda_equations()
     return ccsd
@@ -39,7 +51,19 @@ def solve_ghf_ccsd_for_water_ccpVDZ_at_HF() -> GHF_CCSD:
     """
     hf_result = hf(geometry=geometry, basis='cc-pVDZ')
     ghf_data = wfn_to_GHF_Data(hf_result.wfn)
-    ccsd = GHF_CCSD(ghf_data)
+    ccsd = GHF_CCSD(
+        ghf_data,
+        config=GHF_CCSD_Config(
+            verbose=1,
+            use_diis=False,
+            max_iterations=100,
+            energy_convergence=1e-12,
+            residuals_convergence=1e-12,
+            shift_1e=0.,
+            shift_2e=0.,
+            t_amp_print_threshold=1e-2,
+        )
+    )
     ccsd.solve_cc_equations()
     ccsd.solve_lambda_equations()
     return ccsd
