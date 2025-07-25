@@ -14,52 +14,21 @@ Only the dipole moment operator is implemented.
 of Chemical Physics 93, 3333 (1990).
 """
 from chem.ccsd.equations.ghf.util import GHF_Generators_Input
-from chem.meta.coordinates import Descartes, CARTESIAN
+from chem.meta.coordinates import Descartes
 from numpy.typing import NDArray
-from rspn.ghf_ccsd.equations.op.singles import (
-    get_mux_singles,
-    get_muy_singles,
-    get_muz_singles,
-)
-from rspn.ghf_ccsd.equations.op.doubles import (
-    get_mux_doubles,
-    get_muy_doubles,
-    get_muz_doubles,
-)
+from rspn.ghf_ccsd.equations.op.singles import get_pert_op_bar_singles
+from rspn.ghf_ccsd.equations.op.doubles import get_pert_op_bar_doubles
 
 
 def build_nu_bar_V_cc(
     input: GHF_Generators_Input,
 ) -> dict[Descartes, dict[str, NDArray]]:
     """ V stands for the electric dipole operator. """
-    xi_mu = {}
-    for coord in CARTESIAN:
-        xi_mu[coord] = _build_helper(coord, input)
+    ghf_data = input['ghf_data']
+    xi_mu = {
+        dir: {
+            'singles': get_pert_op_bar_singles(**input, h=ghf_data.mu[dir]),
+            'doubles': get_pert_op_bar_doubles(**input, h=ghf_data.mu[dir]),
+        } for dir in Descartes
+    }
     return xi_mu
-
-
-def _build_helper(
-    coord: Descartes,
-    input: GHF_Generators_Input,
-) -> dict[str, NDArray]:
-
-    if coord == Descartes.x:
-        return {
-            'singles': get_mux_singles(**input),
-            'doubles': get_mux_doubles(**input),
-        }
-
-    elif coord == Descartes.y:
-        return {
-            'singles': get_muy_singles(**input),
-            'doubles': get_muy_doubles(**input),
-        }
-
-    elif coord == Descartes.z:
-        return {
-            'singles': get_muz_singles(**input),
-            'doubles': get_muz_doubles(**input),
-        }
-
-    else:
-        raise ValueError(f"Unknown cartesian coordinate: {coord}.")

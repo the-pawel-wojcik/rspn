@@ -20,53 +20,50 @@ from rspn.ghf_ccsd.equations.printer import (
     print_to_numpy,
     print_imports,
 )
-from chem.meta.coordinates import CARTESIAN
 
 
 def singles():
     print_imports()
-    for component in CARTESIAN:
-        pq = pdaggerq.pq_helper('fermi')
-        pq.add_st_operator(1.0, ['e1(i,a)', 'h'], ['t1', 't2'])
-        pq.simplify()
-        extra_definitions = (
-            f'h = ghf_data.mu[Descartes.{component}]',
-        )
-        print_to_numpy(
-            pq,
-            tensor_name=f'mu{component}_singles',
-            tensor_subscripts=('a', 'i'),
-            defines_exclude={
-                DefineSections.IDENTITY,
-                DefineSections.FOCK,
-                DefineSections.FLUCTUATION,
-                DefineSections.LAMBDA_AMPS,
-            },
-            extra_definitions=extra_definitions,
-        )
+    pq = pdaggerq.pq_helper('fermi')
+    pq.add_st_operator(1.0, ['e1(i,a)', 'h'], ['t1', 't2'])
+    pq.simplify()
+    extra_arguments = (
+        'h: NDArray,  # ghf_data.mu[Descartes.x|y|z]',
+    )
+    print_to_numpy(
+        pq,
+        tensor_name='pert_op_bar_singles',
+        tensor_subscripts=('a', 'i'),
+        defines_exclude={
+            DefineSections.IDENTITY,
+            DefineSections.FOCK,
+            DefineSections.FLUCTUATION,
+            DefineSections.LAMBDA_AMPS,
+        },
+        extra_arguments=extra_arguments
+    )
 
 
 def doubles():
     print_imports()
-    for component in CARTESIAN:
-        pq = pdaggerq.pq_helper('fermi')
-        pq.add_st_operator(1.0, ['e2(i,j,b,a)', 'h'], ['t1', 't2'])
-        pq.simplify()
-        extra_definitions = (
-            f'h = ghf_data.mu[Descartes.{component}]',
-        )
-        print_to_numpy(
-            pq,
-            tensor_name=f'mu{component}_doubles',
-            tensor_subscripts=('a', 'b', 'i', 'j'),
-            defines_exclude={
-                DefineSections.IDENTITY,
-                DefineSections.FOCK,
-                DefineSections.FLUCTUATION,
-                DefineSections.LAMBDA_AMPS,
-            },
-            extra_definitions=extra_definitions,
-        )
+    pq = pdaggerq.pq_helper('fermi')
+    pq.add_st_operator(1.0, ['e2(i,j,b,a)', 'h'], ['t1', 't2'])
+    pq.simplify()
+    extra_arguments = (
+        'h: NDArray,  # ghf_data.mu[Descartes.x|y|z]',
+    )
+    print_to_numpy(
+        pq,
+        tensor_name='pert_op_bar_doubles',
+        tensor_subscripts=('a', 'b', 'i', 'j'),
+        defines_exclude={
+            DefineSections.IDENTITY,
+            DefineSections.FOCK,
+            DefineSections.FLUCTUATION,
+            DefineSections.LAMBDA_AMPS,
+        },
+        extra_arguments=extra_arguments
+    )
 
 
 if __name__ == "__main__":
