@@ -5,8 +5,7 @@ $$
 \bra{0} \tau _{\nu} e ^{-T} V ^{\omega} e ^{T} \ket{0}
 $$
 
-
-The version of this prorgam at the time of writing this comment works only with
+The version of this program at the time of writing this comment works only with
 the electric dipole moment operator.
 
 Refs:
