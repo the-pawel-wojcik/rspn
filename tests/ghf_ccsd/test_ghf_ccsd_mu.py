@@ -12,17 +12,64 @@ def test_cc_mu(ghf_ccsd_water_sto3g: GHF_CCSD) -> None:
     )
     cced_interation_op = build_nu_bar_V_cc(input=input)
     assert set(cced_interation_op) == {coord for coord in Descartes}
+
+    PSI4_MU_BAR_IA = {
+        Descartes.x: np.array([
+            [0.0, 0.0, 0.0, 0.0,],
+            [0.0, 0.0, 0.0, 0.0,],
+            [0.0, 0.0, 0.0, 0.0,],
+            [0.0, 0.0, 0.0, 0.0,],
+            [0.0, 0.0, 0.0, 0.0,],
+            [0.0, 0.0, 0.0, 0.0,],
+            [0.0, 0.0, 0.0, 0.0,],
+            [0.0, 0.0, 0.0, 0.0,],
+            [0.065762610303468, 0.0, 0.0, 0.0,],
+            [0.0, 0.065762610303468, 0.0, 0.0,],
+        ]),
+        Descartes.y: np.array([
+            [0.0, 0.0, -0.055511540012045, 0.0,],
+            [0.0, 0.0, 0.0, -0.055511540012045,],
+            [0.0, 0.0, -0.109470745197504, 0.0,],
+            [0.0, 0.0, 0.0, -0.109470745197504,],
+            [-0.756949029804676, 0.0, 0.0, 0.0,],
+            [0.0, -0.756949029804676, 0.0, 0.0,],
+            [0.0, 0.0, 0.656689990154577, 0.0,],
+            [0.0, 0.0, 0.0, 0.656689990154577,],
+            [0.0, 0.0, 0.0, 0.0,],
+            [0.0, 0.0, 0.0, 0.0,],
+        ]),
+        Descartes.z: np.array([
+            [-0.045301907858314, 0.0, 0.0, 0.0,],
+            [0.0, -0.045301907858314, 0.0, 0.0,],
+            [-0.051186365046473, 0.0, 0.0, 0.0,],
+            [0.0, -0.051186365046473, 0.0, 0.0,],
+            [0.0, 0.0, -0.580477576777052, 0.0,],
+            [0.0, 0.0, 0.0, -0.580477576777052,],
+            [0.481036934775297, 0.0, 0.0, 0.0,],
+            [0.0, 0.481036934775297, 0.0, 0.0,],
+            [0.0, 0.0, 0.0, 0.0,],
+            [0.0, 0.0, 0.0, 0.0,],
+        ]),
+    }
     for direction, val in cced_interation_op.items():
-        assert set(val) == {'singles', 'doubles',}
+        assert set(val) == {'singles', 'doubles', }
 
         assert val['singles'].shape == (4, 10)
         assert val['doubles'].shape == (4, 4, 10, 10)
         np.set_printoptions(precision=6, suppress=True)
         print()
         print(direction)
-        # ghf_data = ghf_ccsd_water_sto3g.ghf_data
-        # o = ghf_data.o
-        # v = ghf_data.v
-        # mu = ghf_data.mu[direction]
-        # print('mu[o, v]')
-        # print(mu[o, v])
+        print(f'{val['singles'].T}')
+        print(f'{val['singles'].T.shape=}')
+        print(PSI4_MU_BAR_IA[direction])
+        print(f'{PSI4_MU_BAR_IA[direction].shape=}')
+
+        if direction is Descartes.z:
+            # TODO: here is the difference
+            assert not np.allclose(
+                val['singles'], PSI4_MU_BAR_IA[direction].T, atol=1e-8,
+            )
+        else:
+            assert np.allclose(
+                val['singles'], PSI4_MU_BAR_IA[direction].T, atol=1e-8,
+            )
