@@ -51,25 +51,21 @@ def test_cc_mu(ghf_ccsd_water_sto3g: GHF_CCSD) -> None:
             [0.0, 0.0, 0.0, 0.0,],
         ]),
     }
-    for direction, val in cced_interation_op.items():
-        assert set(val) == {'singles', 'doubles', }
+    for direction, mubar in cced_interation_op.items():
+        assert set(mubar) == {'singles', 'doubles', }
 
-        assert val['singles'].shape == (4, 10)
-        assert val['doubles'].shape == (4, 4, 10, 10)
+        assert mubar['singles'].shape == (4, 10)
         np.set_printoptions(precision=6, suppress=True)
         print()
         print(direction)
-        print(f'{val['singles'].T}')
-        print(f'{val['singles'].T.shape=}')
+        print(f'{mubar['singles'].T}')
+        print(f'{mubar['singles'].T.shape=}')
         print(PSI4_MU_BAR_IA[direction])
         print(f'{PSI4_MU_BAR_IA[direction].shape=}')
 
-        if direction is Descartes.z:
-            # TODO: here is the difference
-            assert not np.allclose(
-                val['singles'], PSI4_MU_BAR_IA[direction].T, atol=1e-8,
-            )
-        else:
-            assert np.allclose(
-                val['singles'], PSI4_MU_BAR_IA[direction].T, atol=1e-8,
-            )
+        assert np.allclose(
+            mubar['singles'], PSI4_MU_BAR_IA[direction].T, atol=1e-8,
+        )
+
+
+        assert mubar['doubles'].shape == (4, 4, 10, 10)
