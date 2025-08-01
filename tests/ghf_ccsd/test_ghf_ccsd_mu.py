@@ -26,6 +26,22 @@ def print_doubles_as_psi4(doubles: NDArray, ghf_data: GHF_Data) -> None:
         print()
 
 
+def psi4_mu_to_ghf(psi4: NDArray, ghf_data: GHF_Data) -> NDArray:
+    assert len(psi4.shape) == 4
+    doubles_rhf = psi4.transpose(2, 3, 0, 1)
+    no = ghf_data.no // 2
+    nv = ghf_data.nv // 2
+    assert doubles_rhf.shape == (nv, nv, no, no)
+    out = np.zeros(shape=[nv*2, nv*2, no*2, no*2])
+    for a, b, i, j in itertools.product(
+        range(nv), range(nv), range(no), range(no)
+    ):
+        out[2*a, 2*b, 2*i, 2*j] = doubles_rhf[a, b, i, j]
+        out[2*a+1, 2*b+1, 2*i+1, 2*j+1] = doubles_rhf[a, b, i, j]
+
+    return out
+
+
 def test_cc_mu(ghf_ccsd_water_sto3g: GHF_CCSD) -> None:
     ghf_data = ghf_ccsd_water_sto3g.ghf_data
     input = GHF_Generators_Input(
@@ -133,3 +149,7 @@ def test_cc_mu(ghf_ccsd_water_sto3g: GHF_CCSD) -> None:
         print()
         print(direction)
         print_doubles_as_psi4(mubar['doubles'], ghf_data)
+        ghf_psi4_mu = psi4_mu_to_ghf(PSI4_MU_BAR_IjAb[Descartes.z], ghf_data)
+        print_doubles_as_psi4(ghf_psi4_mu, ghf_data)
+        # TODO: here is another mismatch
+        assert not np.allclose(ghf_psi4_mu,  mubar['doubles'], atol=1e-8)
