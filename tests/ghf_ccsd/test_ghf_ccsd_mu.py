@@ -26,6 +26,26 @@ def print_doubles_as_psi4(doubles: NDArray, ghf_data: GHF_Data) -> None:
         print()
 
 
+def print_psi4_doubles(doubles: NDArray, ghf_data: GHF_Data) -> None:
+    assert len(doubles.shape) == 4
+    # Psi4's data comes from RHF so the GHF dimensions need to be cut in half
+    no = ghf_data.no // 2
+    nv = ghf_data.nv // 2
+    assert doubles.shape == (no, no, nv, nv)
+
+    print("Psi4 doubles")
+    print(' ' * 6, end='')
+    for a, b in itertools.product(range(nv), range(nv)):
+        print(f'  ({a}, {b})', end='')
+    print()
+    fmt = ' 6.4f'
+    for i, j in itertools.product(range(no), range(no)):
+        print(f'({i}, {j}) ', end='')
+        for a, b in itertools.product(range(nv), range(nv)):
+            print(f'{doubles[i, j, a, b]:{fmt}} ', end='')
+        print()
+
+
 def psi4_mu_to_ghf(psi4: NDArray, ghf_data: GHF_Data) -> NDArray:
     assert len(psi4.shape) == 4
     doubles_rhf = psi4.transpose(2, 3, 0, 1)
@@ -150,6 +170,7 @@ def test_cc_mu(ghf_ccsd_water_sto3g: GHF_CCSD) -> None:
         print(direction)
         print_doubles_as_psi4(mubar['doubles'], ghf_data)
         ghf_psi4_mu = psi4_mu_to_ghf(PSI4_MU_BAR_IjAb[Descartes.z], ghf_data)
+        print_psi4_doubles(PSI4_MU_BAR_IjAb[Descartes.z], ghf_data)
         print_doubles_as_psi4(ghf_psi4_mu, ghf_data)
         # TODO: here is another mismatch
         assert not np.allclose(ghf_psi4_mu,  mubar['doubles'], atol=1e-8)
