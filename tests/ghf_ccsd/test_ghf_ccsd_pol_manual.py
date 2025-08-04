@@ -28,6 +28,7 @@ def test_polarizabilities(ghf_ccsd_water_sto3g: GHF_CCSD) -> None:
     # cced_interaction_op_psi4 = {
     #     direction: {
     #         'singles': PSI4_MU_BAR_IA[direction].T,
+    #         # 'singles': cced_interaction_op[direction]['singles'],
     #         'doubles': psi4_rhf_doubles_to_ghf(double_rhf, ccsd.ghf_data)
     #     }
     #     for direction, double_rhf in PSI4_MU_BAR_IjAb.items()

@@ -9,6 +9,51 @@ from rspn.ghf_ccsd._nuOpCC import build_nu_bar_V_cc
 from psi4_data import PSI4_MU_BAR_IjAb, PSI4_MU_BAR_IA, psi4_rhf_doubles_to_ghf
 
 
+def print_ghf_doubles(doubles: NDArray, ghf_data: GHF_Data) -> None:
+    assert len(doubles.shape) == 4
+    no = ghf_data.no
+    nv = ghf_data.nv
+    assert doubles.shape == (nv, nv, no, no)
+
+    pad = ' '
+    fmt = ' 6.3f'
+    print(r'[')  # ]
+    for a, cube in enumerate(doubles):
+        print(f'{pad}[ {a=}')  # ]
+        for b, wall in enumerate(cube):
+            print(f'{pad*2}[ {b=}')  # ]
+            print(f'{pad*3}[  j=', end='')  # ]
+            for j, _ in enumerate(wall[0]):
+                print(f'{j:^6d}', end='')
+            print(']')
+            for i, row in enumerate(wall):
+                print(f'{pad*3}[ {i=}', end='')  # ]
+                for value in row:
+                    print(f'{value:{fmt}}', end='')
+                print('],')
+            print(f'{pad*2}],')
+        print(f'{pad}],')
+    print(']')
+
+
+def print_ghf_doubles_as_psi4(doubles: NDArray, ghf_data: GHF_Data) -> None:
+    assert len(doubles.shape) == 4
+    no = ghf_data.no
+    nv = ghf_data.nv
+    assert doubles.shape == (nv, nv, no, no)
+
+    print(' ' * 6, end='')
+    for a, b in itertools.product(range(0, nv), range(0, nv)):
+        print(f'  ({a}, {b})', end='')
+    print()
+    fmt = ' 6.4f'
+    for i, j in itertools.product(range(0, no), range(0, no)):
+        print(f'({i}, {j}) ', end='')
+        for a, b in itertools.product(range(0, nv), range(0, nv)):
+            print(f'{doubles[a, b, i, j]:{fmt}} ', end='')
+        print()
+
+
 def print_doubles_as_psi4(doubles: NDArray, ghf_data: GHF_Data) -> None:
     assert len(doubles.shape) == 4
     no = ghf_data.no
@@ -23,7 +68,7 @@ def print_doubles_as_psi4(doubles: NDArray, ghf_data: GHF_Data) -> None:
     for i, j in itertools.product(range(0, no, 2), range(0, no, 2)):
         print(f'({i}, {j}) ', end='')
         for a, b in itertools.product(range(0, nv, 2), range(0, nv, 2)):
-            print(f'{doubles[a][b][i][j]:{fmt}} ', end='')
+            print(f'{doubles[a, b, i, j]:{fmt}} ', end='')
         print()
 
 
@@ -75,11 +120,17 @@ def test_cc_mu(ghf_ccsd_water_sto3g: GHF_CCSD) -> None:
         assert mubar['doubles'].shape == (4, 4, 10, 10)
         print()
         print(direction)
+        print(f"Psi4's doubles {direction}")
         print_psi4_doubles(PSI4_MU_BAR_IjAb[direction], ghf_data)
+        print(f"Paweł's doubles {direction}")
         print_doubles_as_psi4(mubar['doubles'], ghf_data)
+        print_ghf_doubles_as_psi4(mubar['doubles'], ghf_data)
+        print(f"Paweł's doubles {direction}")
+        print_ghf_doubles(mubar['doubles'], ghf_data)
         ghf_psi4_mu = psi4_rhf_doubles_to_ghf(
             PSI4_MU_BAR_IjAb[direction], ghf_data
         )
-        print_doubles_as_psi4(ghf_psi4_mu, ghf_data)
+        # print_doubles_as_psi4(ghf_psi4_mu, ghf_data)
         # TODO: here is another mismatch
         assert not np.allclose(ghf_psi4_mu,  mubar['doubles'], atol=1e-8)
+        break
