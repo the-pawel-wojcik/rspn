@@ -83,7 +83,7 @@ def print_function_header(
     l1 = ghf_ccsd_data.lmbda.l1
     l2 = ghf_ccsd_data.lmbda.l2'''
 
-    body += f'\n{TAB}'
+    body += f'\n'
 
     print(body)
 

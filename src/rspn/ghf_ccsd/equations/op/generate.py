@@ -25,7 +25,8 @@ from rspn.ghf_ccsd.equations.printer import (
 def singles():
     print_imports()
     pq = pdaggerq.pq_helper('fermi')
-    pq.add_st_operator(1.0, ['e1(i,a)', 'h'], ['t1', 't2'])
+    pq.set_left_operators([['e1(i,a)']])
+    pq.add_st_operator(1.0, ['h'], ['t1', 't2'])
     pq.simplify()
     extra_arguments = (
         'h: NDArray,  # ghf_data.mu[Descartes.x|y|z]',
@@ -47,7 +48,8 @@ def singles():
 def doubles():
     print_imports()
     pq = pdaggerq.pq_helper('fermi')
-    pq.add_st_operator(1.0, ['e2(i,j,b,a)', 'h'], ['t1', 't2'])
+    pq.set_left_operators([['e2(i,j,b,a)']])
+    pq.add_st_operator(1.0, ['h'], ['t1', 't2'])
     pq.simplify()
     extra_arguments = (
         'h: NDArray,  # ghf_data.mu[Descartes.x|y|z]',
