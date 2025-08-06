@@ -28,9 +28,9 @@ class InitalGuess(StrEnum):
 
 @dataclass
 class GHF_CCSD_LR_config:
-    """ 
+    """
     store_jacobian: One implementation builds the whole CC Jacobian matrix and
-    uses it to solve the equation 
+    uses it to solve the equation
     Jacobian @ response_vector = "external_field_operator"
 
     The other implementation does not store the whole matrix but only

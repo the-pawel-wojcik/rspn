@@ -22,17 +22,17 @@ def test_polarizabilities(ghf_ccsd_water_sto3g: GHF_CCSD) -> None:
     eta_mu = lr._find_eta_mu()
     pol_etaA_xB = lr._build_pol_eta_X(eta_mu, t_response)
     pol_etaA_xB_goal = Polarizability({
-        Descartes.x : {
+        Descartes.x: {
             Descartes.x: -0.0234,
             Descartes.y: 0.0,
             Descartes.z: 0.0,
         },
-        Descartes.y : {
+        Descartes.y: {
             Descartes.x: 0.0,
             Descartes.y: -2.7409,
             Descartes.z: 0.0,
         },
-        Descartes.z : {
+        Descartes.z: {
             Descartes.x: 0.0,
             Descartes.y: 0.0,
             Descartes.z: -1.4379,
@@ -48,17 +48,17 @@ def test_polarizabilities(ghf_ccsd_water_sto3g: GHF_CCSD) -> None:
         t_res_B=t_response,
     )
     pol_xA_F_xB_goal = Polarizability({
-        Descartes.x : {
+        Descartes.x: {
             Descartes.x: 0.0011,
             Descartes.y: 0.0,
             Descartes.z: 0.0,
         },
-        Descartes.y : {
+        Descartes.y: {
             Descartes.x: 0.0,
             Descartes.y: 0.3544,
             Descartes.z: 0.0,
         },
-        Descartes.z : {
+        Descartes.z: {
             Descartes.x: 0.0,
             Descartes.y: 0.0,
             Descartes.z: 0.3481,
@@ -70,17 +70,17 @@ def test_polarizabilities(ghf_ccsd_water_sto3g: GHF_CCSD) -> None:
 
     pol = pol_etaA_xB + pol_xA_F_xB + pol_etaA_xB
     pol_goal = Polarizability({
-        Descartes.x : {
+        Descartes.x: {
             Descartes.x: -0.0458,
             Descartes.y: 0.0,
             Descartes.z: 0.0,
         },
-        Descartes.y : {
+        Descartes.y: {
             Descartes.x: 0.0,
             Descartes.y: -5.1273,
             Descartes.z: 0.0,
         },
-        Descartes.z : {
+        Descartes.z: {
             Descartes.x: 0.0,
             Descartes.y: 0.0,
             Descartes.z: -2.5278,
