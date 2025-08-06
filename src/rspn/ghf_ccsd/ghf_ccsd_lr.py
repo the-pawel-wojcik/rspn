@@ -68,7 +68,7 @@ class GHF_CCSD_LR:
 
     def find_polarizabilities(self) -> Polarizability:
         if self.CONFIG.verbose > 0:
-            print("Finding UHF-CCSD-LR polarizabilities.")
+            print("Finding GHF-CCSD-LR polarizabilities.")
             print("Configuration:")
             print(self.CONFIG)
 
