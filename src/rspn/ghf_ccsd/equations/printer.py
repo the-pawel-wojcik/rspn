@@ -20,6 +20,7 @@ def print_imports() -> None:
     print('from chem.hf.ghf_data import GHF_Data')
     print('from chem.ccsd.ghf_ccsd import GHF_CCSD_Data')
     print('from chem.meta.coordinates import Descartes')
+    print('from chem.meta.ghf_ccsd_mbe import GHF_CCSD_MBE')
 
 
 def print_function_header(
