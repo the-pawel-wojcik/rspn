@@ -26,7 +26,6 @@ Refs:
 [1] H. Koch and P. Jørgensen, Coupled cluster response functions, The Journal
 of Chemical Physics 93, 3333 (1990).
 """
-import argparse
 
 from rspn.ghf_ccsd.equations.printer import (
     DefineSections, print_to_numpy, print_imports,
@@ -62,33 +61,41 @@ def build_singles_block():
 
     return pq
 
-def build_doubles_block_r_left():
-    pq = pdaggerq.pq_helper('fermi')
-    pq.set_left_operators([['e2(i,j,b,a)', 'r1'], ['e2(i,j,b,a)', 'r2']])
-    pq.add_st_operator(-1.0, ['f'], ['t1', 't2'])
-    pq.add_st_operator(-1.0, ['v'], ['t1', 't2'])
-    pq.simplify()
-    return pq
 
+def build_doubles_block():
+    r""" Builds (A w)_{abji} 
 
-def build_doubles_block_r_right():
+    (A _w) _μ = <HF| e2(i,j,b,a) \bar{H} (r1 + r2) |HF>
+                -
+                <HF| e2(i,j,b,a) (r1 + r2) \bar{H} |HF>
+    """
     pq = pdaggerq.pq_helper('fermi')
-    pq.set_left_operators([['e2(i,j,b,a)']])
-    pq.set_right_operators([['r1'], ['r2']])
-    pq.add_st_operator(1.0, ['f'], ['t1', 't2'])
-    pq.add_st_operator(1.0, ['v'], ['t1', 't2'])
+
+    projection = 'e2(i,j,b,a)'
+    pq.set_left_operators([[projection]])
+
+    # The f part of H
+    pq.add_st_operator(1.0, ['f', 'r1'], ['t1', 't2'])
+    pq.add_st_operator(1.0, ['f', 'r2'], ['t1', 't2'])
+    pq.add_st_operator(-1.0, ['r1', 'f'], ['t1', 't2'])
+    pq.add_st_operator(-1.0, ['r2', 'f'], ['t1', 't2'])
+
+    # The v part of H
+    pq.add_st_operator(1.0, ['v', 'r1'], ['t1', 't2'])
+    pq.add_st_operator(1.0, ['v', 'r2'], ['t1', 't2'])
+    pq.add_st_operator(-1.0, ['r1', 'v'], ['t1', 't2'])
+    pq.add_st_operator(-1.0, ['r2', 'v'], ['t1', 't2'])
+
     pq.simplify()
+
     return pq
 
 
 def main():
-    parser = argparse.ArgumentParser()
-    options = parser.add_mutually_exclusive_group()
-    options.add_argument('--singles', default=False, action='store_true')
-    options.add_argument('--doubles', default=False, action='store_true')
-    args = parser.parse_args()
+    do_singles = False
+    do_doubles = True
 
-    if args.singles is True:
+    if do_singles:
         pq = build_singles_block()
         print_imports()
         print_to_numpy(
@@ -105,25 +112,9 @@ def main():
             ],
         )
 
-    if args.doubles is True:
+    elif do_doubles:
+        pq = build_doubles_block()
         print_imports()
-
-        pq = build_doubles_block_r_left()
-        print_to_numpy(
-            pq,
-            tensor_name='cc_j_w_doubles',
-            defines_exclude={DefineSections.LAMBDA_AMPS},
-            tensor_subscripts=('a', 'b', 'i', 'j'),
-            extra_arguments=[
-                'vector: GHF_CCSD_MBE',
-            ],
-            extra_definitions=[
-                'r1 = vector.singles',
-                'r2 = vector.doubles',
-            ],
-        )
-
-        pq = build_doubles_block_r_right()
         print_to_numpy(
             pq,
             tensor_name='cc_j_w_doubles',

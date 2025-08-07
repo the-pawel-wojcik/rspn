@@ -1,0 +1,123 @@
+from numpy import einsum
+from numpy.typing import NDArray
+from chem.hf.ghf_data import GHF_Data
+from chem.ccsd.ghf_ccsd import GHF_CCSD_Data
+from chem.meta.ghf_ccsd_mbe import GHF_CCSD_MBE
+
+
+def get_cc_j_w_doubles(
+    ghf_data: GHF_Data,
+    ghf_ccsd_data: GHF_CCSD_Data,
+    vector: GHF_CCSD_MBE,
+) -> NDArray:
+    """ tensor_subscripts: ('a', 'b', 'i', 'j') """
+    r1 = vector.singles
+    r2 = vector.doubles
+    f = ghf_data.f
+    g = ghf_data.g
+    v = ghf_data.v
+    o = ghf_data.o
+    t1 = ghf_ccsd_data.t1
+    t2 = ghf_ccsd_data.t2
+
+    contracted_intermediate = -1.00 * einsum('kc,abik,cj->abij', f[o, v], t2, r1, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles =  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->abji', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('kc,cbij,ak->abij', f[o, v], t2, r1, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->baij', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('kj,abik->abij', f[o, o], r2)
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->abji', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('ac,cbij->abij', f[v, v], r2)
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->baij', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('kc,bk,caij->abij', f[o, v], t1, r2, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->baij', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('kc,ci,abjk->abij', f[o, v], t1, r2, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->abji', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('kaij,bk->abij', g[o, v, o, o], r1)
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->baij', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('abcj,ci->abij', g[v, v, v, o], r1)
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->abji', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('lkij,bl,ak->abij', g[o, o, o, o], t1, r1, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->baij', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('kacj,bk,ci->abij', g[o, v, v, o], t1, r1, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->abji', contracted_intermediate)  + -1.00000 * einsum('abij->baij', contracted_intermediate)  +  1.00000 * einsum('abij->baji', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('kacj,ci,bk->abij', g[o, v, v, o], t1, r1, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->abji', contracted_intermediate)  + -1.00000 * einsum('abij->baij', contracted_intermediate)  +  1.00000 * einsum('abij->baji', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('abcd,di,cj->abij', g[v, v, v, v], t1, r1, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->abji', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('lkcj,abil,ck->abij', g[o, o, v, o], t2, r1, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->abji', contracted_intermediate) 
+    contracted_intermediate =  0.50 * einsum('lkcj,ablk,ci->abij', g[o, o, v, o], t2, r1, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->abji', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('lkcj,cbil,ak->abij', g[o, o, v, o], t2, r1, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->abji', contracted_intermediate)  + -1.00000 * einsum('abij->baij', contracted_intermediate)  +  1.00000 * einsum('abij->baji', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('kacd,dbij,ck->abij', g[o, v, v, v], t2, r1, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->baij', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('kacd,dbik,cj->abij', g[o, v, v, v], t2, r1, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->abji', contracted_intermediate)  + -1.00000 * einsum('abij->baij', contracted_intermediate)  +  1.00000 * einsum('abij->baji', contracted_intermediate) 
+    contracted_intermediate =  0.50 * einsum('kacd,cdij,bk->abij', g[o, v, v, v], t2, r1, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->baij', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('lkcd,abil,dj,ck->abij', g[o, o, v, v], t2, t1, r1, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->abji', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('lkcd,al,dbij,ck->abij', g[o, o, v, v], t1, t2, r1, optimize=['einsum_path', (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->baij', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('lkcd,abil,dk,cj->abij', g[o, o, v, v], t2, t1, r1, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->abji', contracted_intermediate) 
+    contracted_intermediate = -0.50 * einsum('lkcd,ablk,di,cj->abij', g[o, o, v, v], t2, t1, r1, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->abji', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('lkcd,ak,dbil,cj->abij', g[o, o, v, v], t1, t2, r1, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->abji', contracted_intermediate)  + -1.00000 * einsum('abij->baij', contracted_intermediate)  +  1.00000 * einsum('abij->baji', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('lkcd,dbij,cl,ak->abij', g[o, o, v, v], t2, t1, r1, optimize=['einsum_path', (0, 2), (1, 2), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->baij', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('lkcd,dbil,cj,ak->abij', g[o, o, v, v], t2, t1, r1, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->abji', contracted_intermediate)  + -1.00000 * einsum('abij->baij', contracted_intermediate)  +  1.00000 * einsum('abij->baji', contracted_intermediate) 
+    contracted_intermediate = -0.50 * einsum('lkcd,bl,cdij,ak->abij', g[o, o, v, v], t1, t2, r1, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->baij', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('lkcj,ak,bl,ci->abij', g[o, o, v, o], t1, t1, r1, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->abji', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('lkcj,bl,ci,ak->abij', g[o, o, v, o], t1, t1, r1, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->abji', contracted_intermediate)  + -1.00000 * einsum('abij->baij', contracted_intermediate)  +  1.00000 * einsum('abij->baji', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('kacd,bk,di,cj->abij', g[o, v, v, v], t1, t1, r1, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->abji', contracted_intermediate)  + -1.00000 * einsum('abij->baij', contracted_intermediate)  +  1.00000 * einsum('abij->baji', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('kacd,cj,di,bk->abij', g[o, v, v, v], t1, t1, r1, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->baij', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('lkcd,ak,bl,di,cj->abij', g[o, o, v, v], t1, t1, t1, r1, optimize=['einsum_path', (0, 1), (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->abji', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('lkcd,bl,cj,di,ak->abij', g[o, o, v, v], t1, t1, t1, r1, optimize=['einsum_path', (0, 1), (0, 3), (0, 2), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->baij', contracted_intermediate) 
+    cc_j_w_doubles +=  0.50 * einsum('lkij,ablk->abij', g[o, o, o, o], r2)
+    contracted_intermediate =  1.00 * einsum('kacj,cbik->abij', g[o, v, v, o], r2)
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->abji', contracted_intermediate)  + -1.00000 * einsum('abij->baij', contracted_intermediate)  +  1.00000 * einsum('abij->baji', contracted_intermediate) 
+    cc_j_w_doubles +=  0.50 * einsum('abcd,cdij->abij', g[v, v, v, v], r2)
+    contracted_intermediate = -1.00 * einsum('lkcj,bl,caik->abij', g[o, o, v, o], t1, r2, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->abji', contracted_intermediate)  + -1.00000 * einsum('abij->baij', contracted_intermediate)  +  1.00000 * einsum('abij->baji', contracted_intermediate) 
+    contracted_intermediate =  0.50 * einsum('lkcj,ci,ablk->abij', g[o, o, v, o], t1, r2, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->abji', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('lkcj,cl,abik->abij', g[o, o, v, o], t1, r2, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->abji', contracted_intermediate) 
+    contracted_intermediate =  0.50 * einsum('kacd,bk,cdij->abij', g[o, v, v, v], t1, r2, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->baij', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('kacd,di,cbjk->abij', g[o, v, v, v], t1, r2, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->abji', contracted_intermediate)  + -1.00000 * einsum('abij->baij', contracted_intermediate)  +  1.00000 * einsum('abij->baji', contracted_intermediate) 
+    contracted_intermediate = -1.00 * einsum('kacd,dk,cbij->abij', g[o, v, v, v], t1, r2, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->baij', contracted_intermediate) 
+    contracted_intermediate = -0.50 * einsum('lkcd,abil,cdjk->abij', g[o, o, v, v], t2, r2, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->abji', contracted_intermediate) 
+    cc_j_w_doubles +=  0.250 * einsum('lkcd,ablk,cdij->abij', g[o, o, v, v], t2, r2, optimize=['einsum_path', (0, 1), (0, 1)])
+    contracted_intermediate = -0.50 * einsum('lkcd,dbij,calk->abij', g[o, o, v, v], t2, r2, optimize=['einsum_path', (0, 2), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->baij', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('lkcd,dbil,cajk->abij', g[o, o, v, v], t2, r2, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->abji', contracted_intermediate)  + -1.00000 * einsum('abij->baij', contracted_intermediate)  +  1.00000 * einsum('abij->baji', contracted_intermediate) 
+    contracted_intermediate = -0.50 * einsum('lkcd,dblk,caij->abij', g[o, o, v, v], t2, r2, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->baij', contracted_intermediate) 
+    cc_j_w_doubles +=  0.250 * einsum('lkcd,cdij,ablk->abij', g[o, o, v, v], t2, r2, optimize=['einsum_path', (0, 1), (0, 1)])
+    contracted_intermediate = -0.50 * einsum('lkcd,cdil,abjk->abij', g[o, o, v, v], t2, r2, optimize=['einsum_path', (0, 1), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->abji', contracted_intermediate) 
+    cc_j_w_doubles += -0.50 * einsum('lkcd,ak,bl,cdij->abij', g[o, o, v, v], t1, t1, r2, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    contracted_intermediate =  1.00 * einsum('lkcd,bl,di,cajk->abij', g[o, o, v, v], t1, t1, r2, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->abji', contracted_intermediate)  + -1.00000 * einsum('abij->baij', contracted_intermediate)  +  1.00000 * einsum('abij->baji', contracted_intermediate) 
+    contracted_intermediate =  1.00 * einsum('lkcd,bl,dk,caij->abij', g[o, o, v, v], t1, t1, r2, optimize=['einsum_path', (0, 2), (0, 2), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->baij', contracted_intermediate) 
+    cc_j_w_doubles += -0.50 * einsum('lkcd,cj,di,ablk->abij', g[o, o, v, v], t1, t1, r2, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    contracted_intermediate =  1.00 * einsum('lkcd,cl,di,abjk->abij', g[o, o, v, v], t1, t1, r2, optimize=['einsum_path', (0, 1), (0, 2), (0, 1)])
+    cc_j_w_doubles +=  1.00000 * contracted_intermediate + -1.00000 * einsum('abij->abji', contracted_intermediate) 
+    return cc_j_w_doubles

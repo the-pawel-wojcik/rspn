@@ -76,15 +76,21 @@ def test_Jacobian_build_vs_Jacobian_action_on_random_vectors(
     for test_vector in test_vectors:
         fast_sigma_ndarray = cc_jacobian @ test_vector
         fast_sigma = GHF_CCSD_MBE.from_NDArray(fast_sigma_ndarray, ghf_ov_data)
-        fast_sigma.pretty_print_mbe()
+        print()
+        fast_sigma.pretty_print_mbe(
+            verbose_singles=True,
+            # verbose_doubles=True,
+        )
 
         lean_sigma = lean_sigma_build(test_vector, ccsd, **kwargs)
-        lean_sigma.pretty_print_mbe()
+        lean_sigma.pretty_print_mbe(
+            verbose_singles=True,
+            # verbose_doubles=True,
+        )
 
         assert lean_sigma == fast_sigma
 
 
-@pytest.mark.skip
 def test_Jacobian_build_vs_Jacobian_action_on_versors(
     ingredients: tuple[NDArray, GHF_CCSD, GHF_Generators_Input],
 ) -> None:
@@ -95,23 +101,47 @@ def test_Jacobian_build_vs_Jacobian_action_on_versors(
     ghf_ov_data = GHF_ov_data(nmo, no, nv)
 
     # Generate random test vectors
-    TEST_VERSORS_COUNT = 10
-    dim = cc_jacobian.shape[0]
+    TEST_VERSORS_COUNT = 1600
+    # START_VERSOR = 1600
+    START_VERSOR_IDX = 40
+    DIM = cc_jacobian.shape[0]
     test_versors = [
-        np.zeros(shape=(dim)) for _ in range(TEST_VERSORS_COUNT)
+        np.zeros(shape=(DIM)) for _ in range(TEST_VERSORS_COUNT)
     ]
     for idx, versor in enumerate(test_versors):
-        versor[idx] = 1.0
+        versor[(idx + START_VERSOR_IDX) % DIM] = 1.0
 
-    for test_vector in test_versors:
+    print()
+    for idx, test_vector in enumerate(test_versors):
         fast_sigma_ndarray = cc_jacobian @ test_vector
         fast_sigma = GHF_CCSD_MBE.from_NDArray(fast_sigma_ndarray, ghf_ov_data)
-        fast_sigma.pretty_print_mbe()
+        fast_lean = fast_sigma.flatten_single_count(ghf_ov_data)
 
         lean_sigma = lean_sigma_build(test_vector, ccsd, **kwargs)
-        lean_sigma.pretty_print_mbe()
+        single_lean = lean_sigma.flatten_single_count(ghf_ov_data)
 
-        assert lean_sigma == fast_sigma
+
+        fast_doubles_norm = np.linalg.norm(fast_sigma.doubles)
+        if fast_doubles_norm < 1e-8:
+            print(
+                f'{(START_VERSOR_IDX + idx) % DIM:>5d}:'
+                f' {float(fast_doubles_norm):.4f}'
+            )
+        # print("Jacobian @ versor")
+        # fast_sigma.pretty_print_mbe(
+        #     # verbose_singles=True,
+        # )
+        #
+        # print("Jacobian_action @ versor")
+        # lean_sigma.pretty_print_mbe(
+        #     # verbose_singles=True,
+        # )
+        # assert not lean_sigma == fast_sigma
+        #
+        # print(f'{np.linalg.norm(fast_lean)=}')
+        # print(f'{np.linalg.norm(single_lean)=}')
+        # assert not np.allclose(fast_lean, single_lean, atol=1e-8)
+
 
 
 @pytest.mark.skip
