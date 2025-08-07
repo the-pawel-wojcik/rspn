@@ -11,6 +11,7 @@ import numpy as np
 from numpy.typing import NDArray
 from rspn.ghf_ccsd._nuOpCC import build_nu_bar_V_cc
 from rspn.ghf_ccsd._jacobian import build_cc_jacobian
+from rspn.ghf_ccsd._jacobian_action import Minus_GHF_CCSD_Jacobian_action
 from rspn.ghf_ccsd._lheecc import build_pol_xA_F_xB
 import rspn.ghf_ccsd.equations.eta.singles as eta_singles
 import rspn.ghf_ccsd.equations.eta.doubles as eta_doubles
@@ -89,6 +90,10 @@ class GHF_CCSD_LR:
             )
         else:
             raise NotImplementedError("GHF-CCSD Jacobian action.")
+            minus_jacobian_op = Minus_GHF_CCSD_Jacobian_action(
+                ghf_data=self.ghf_data,
+                ghf_ccsd_data=self.ghf_ccsd_data,
+            )
         eta_mu = self._find_eta_mu()
         # TODO: generalize to operators other than electric dipole
         pol_etaA_xB = self._build_pol_eta_X(eta_mu, t_response)
