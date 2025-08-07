@@ -1,0 +1,148 @@
+hf_out.hf_energy=-74.96590119229506 Eh
+GHF-CCSD config
+  Using DIIS: False
+  Maximum number of itertations: 100
+  Energy convergence: 1e-10 Ha
+  Residuals convergence: 1e-10 Ha
+  Shift 1e: 0.0 Ha
+  Shift 2e: 0.0 Ha
+Printing:
+  Verbosity level: 2
+  Amplitude print threshold: 0.1
+Solving GHF-CCSD equations.
+                 Energy/Ha   ΔEnergy/Ha   |Residual|
+Iteration  1:   -83.911331    -0.038954     0.650135
+Iteration  2:   -83.921613    -0.010283     0.193600
+Iteration  3:   -83.924839    -0.003226     0.071920
+Iteration  4:   -83.925990    -0.001151     0.029865
+Iteration  5:   -83.926437    -0.000447     0.013117
+Iteration  6:   -83.926620    -0.000183     0.005991
+Iteration  7:   -83.926697    -0.000078     0.002826
+Iteration  8:   -83.926731    -0.000034     0.001369
+Iteration  9:   -83.926747    -0.000015     0.000677
+Iteration 10:   -83.926754    -0.000007     0.000340
+Iteration 11:   -83.926757    -0.000003     0.000173
+Iteration 12:   -83.926758    -0.000002     0.000088
+Iteration 13:   -83.926759    -0.000001     0.000045
+Iteration 14:   -83.926759    -0.000000     0.000023
+Iteration 15:   -83.926760    -0.000000     0.000012
+Iteration 16:   -83.926760    -0.000000     0.000006
+Iteration 17:   -83.926760    -0.000000     0.000003
+Iteration 18:   -83.926760    -0.000000     0.000002
+Iteration 19:   -83.926760    -0.000000     0.000001
+Iteration 20:   -83.926760    -0.000000     0.000000
+Iteration 21:   -83.926760    -0.000000     0.000000
+Iteration 22:   -83.926760    -0.000000     0.000000
+Iteration 23:   -83.926760    -0.000000     0.000000
+Iteration 24:   -83.926760    -0.000000     0.000000
+Iteration 25:   -83.926760    -0.000000     0.000000
+Iteration 26:   -83.926760    -0.000000     0.000000
+Iteration 27:   -83.926760    -0.000000     0.000000
+Iteration 28:   -83.926760    -0.000000     0.000000
+Iteration 29:   -83.926760    -0.000000     0.000000
+Iteration 30:   -83.926760    -0.000000     0.000000
+Iteration 31:   -83.926760    -0.000000     0.000000
+Iteration 32:   -83.926760    -0.000000     0.000000
+Iteration 33:   -83.926760    -0.000000     0.000000
+GHF-CCSD equations solved.
+No t1 amplitudes greater than 1e-01.
+Norm the t1 = 0.021
+No t2 amplitudes greater than 1e-01.
+Norm the t2 = 0.351
+Solving GHF-CCSD Lambda equations.
+               "Energy"/Ha Δ"Energy"/Ha   |Residual|
+Iteration  1:    -0.053743     0.000640     0.015227
+Iteration  2:    -0.053564     0.000179     0.003742
+Iteration  3:    -0.053509     0.000055     0.001233
+Iteration  4:    -0.053490     0.000019     0.000506
+Iteration  5:    -0.053483     0.000007     0.000228
+Iteration  6:    -0.053481     0.000003     0.000108
+Iteration  7:    -0.053479     0.000001     0.000052
+Iteration  8:    -0.053479     0.000001     0.000026
+Iteration  9:    -0.053479     0.000000     0.000013
+Iteration 10:    -0.053478     0.000000     0.000007
+Iteration 11:    -0.053478     0.000000     0.000003
+Iteration 12:    -0.053478     0.000000     0.000002
+Iteration 13:    -0.053478     0.000000     0.000001
+Iteration 14:    -0.053478     0.000000     0.000000
+Iteration 15:    -0.053478     0.000000     0.000000
+Iteration 16:    -0.053478     0.000000     0.000000
+Iteration 17:    -0.053478     0.000000     0.000000
+Iteration 18:    -0.053478     0.000000     0.000000
+Iteration 19:    -0.053478     0.000000     0.000000
+Iteration 20:    -0.053478     0.000000     0.000000
+Iteration 21:    -0.053478     0.000000     0.000000
+Iteration 22:    -0.053478     0.000000     0.000000
+Iteration 23:    -0.053478     0.000000     0.000000
+Iteration 24:    -0.053478     0.000000     0.000000
+Iteration 25:    -0.053478     0.000000     0.000000
+Iteration 26:    -0.053478     0.000000     0.000000
+Iteration 27:    -0.053478     0.000000     0.000000
+Iteration 28:    -0.053478     0.000000     0.000000
+GHF-CCSD lambda equations solved.
+No l1 amplitudes greater than 1e-01.
+Norm the l1 = 0.018
+No l2 amplitudes greater than 1e-01.
+Norm the l2 = 0.345
+ccsd_energy=-75.020284329412 Eh
+Finding GHF-CCSD-LR polarizabilities.
+Configuration:
+GHF-CCSD-LR config
+  Response threshold: 1e-06
+  Store CC Jacobian: True
+  Store <ᴧ|[[H,τ_μ],τ_ν]|CC>: True
+  Verbose: 2
+
+	[GMRES] Residue norm = 0.7657.
+	[GMRES] Residue norm = 0.6445.
+	[GMRES] Residue norm = 0.1611.
+	[GMRES] Residue norm = 0.1422.
+	[GMRES] Residue norm = 0.0312.
+	[GMRES] Residue norm = 0.0069.
+	[GMRES] Residue norm = 0.0006.
+	[GMRES] Residue norm = 0.0000.
+	[GMRES] Residue norm = 0.0000.
+	[GMRES] Residue norm = 0.7848.
+	[GMRES] Residue norm = 0.1119.
+	[GMRES] Residue norm = 0.1019.
+	[GMRES] Residue norm = 0.0862.
+	[GMRES] Residue norm = 0.0326.
+	[GMRES] Residue norm = 0.0231.
+	[GMRES] Residue norm = 0.0126.
+	[GMRES] Residue norm = 0.0067.
+	[GMRES] Residue norm = 0.0056.
+	[GMRES] Residue norm = 0.0015.
+	[GMRES] Residue norm = 0.0013.
+	[GMRES] Residue norm = 0.0003.
+	[GMRES] Residue norm = 0.0002.
+	[GMRES] Residue norm = 0.0000.
+	[GMRES] Residue norm = 0.0000.
+	[GMRES] Residue norm = 0.0000.
+	[GMRES] Residue norm = 0.7520.
+	[GMRES] Residue norm = 0.2037.
+	[GMRES] Residue norm = 0.1943.
+	[GMRES] Residue norm = 0.1573.
+	[GMRES] Residue norm = 0.0746.
+	[GMRES] Residue norm = 0.0514.
+	[GMRES] Residue norm = 0.0364.
+	[GMRES] Residue norm = 0.0301.
+	[GMRES] Residue norm = 0.0080.
+	[GMRES] Residue norm = 0.0066.
+	[GMRES] Residue norm = 0.0020.
+	[GMRES] Residue norm = 0.0017.
+	[GMRES] Residue norm = 0.0006.
+	[GMRES] Residue norm = 0.0004.
+	[GMRES] Residue norm = 0.0001.
+	[GMRES] Residue norm = 0.0000.
+	[GMRES] Residue norm = 0.0000.
+	[GMRES] Residue norm = 0.0000.
+========== Polarizability (atomic units)==========
+xx: -0.0458
+xy:  0.0000
+xz: -0.0000
+yx:  0.0000
+yy: -5.1273
+yz:  0.0000
+zx: -0.0000
+zy:  0.0000
+zz: -2.5278
