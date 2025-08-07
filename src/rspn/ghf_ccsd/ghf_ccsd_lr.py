@@ -117,14 +117,17 @@ class GHF_CCSD_LR:
     # ) -> dict[Descartes, dict[str, NDArray]]:
     ) -> dict[Descartes, NDArray]:
         t_response_mu = {}
-        ghf_ov_data = ghf_data_to_GHF_ov_data(self.ghf_data)
+        # HINT: for double counting
+        # ghf_ov_data = ghf_data_to_GHF_ov_data(self.ghf_data)
         for coord in Descartes:
             mu = cc_mu[coord]
             rhs_mbe = GHF_CCSD_MBE(
                 singles=mu['singles'],
                 doubles=mu['doubles'],
             )
-            rhs = rhs_mbe.flatten_single_count(ghf_ov_data)
+            # HINT: double counting
+            # rhs = rhs_mbe.flatten_single_count(ghf_ov_data)
+            rhs = rhs_mbe.flatten()
 
             # Build an inverse of a GMRES pre-conditioner
             precond_inv = None
@@ -146,13 +149,17 @@ class GHF_CCSD_LR:
                             doubles=first_response['doubles'],
                         )
                         initial_guess = (
-                            first_response_mbe.flatten_single_count(
-                                ghf_ov_data
-                        ))
+                            # HINT: double counting
+                            # first_response_mbe.flatten_single_count(
+                            #     ghf_ov_data
+                            # )
+                            first_response_mbe.flatten()
+                        )
 
                                 
             callback = None
             callback_type = 'pr_norm'
+            # TODO: replace gmres_verbose with verbose > 1
             if self.CONFIG.gmres_verbose is True:
                 callback = lambda norm: print(
                     f"\t[GMRES] Residue norm = {norm:.4f}."
@@ -215,19 +222,31 @@ class GHF_CCSD_LR:
         Calculates
         sum _mu \eta _\mu X _\mu
         """
-        ghf_ov_data = ghf_data_to_GHF_ov_data(self.ghf_data)
-        # convert eta an NDArray with singly-couted indices of doubles
-        # use the converted build into the GHF_CCSD_MBE
-        single_counted_eta = {
+        # HINT: double counting
+        # ghf_ov_data = ghf_data_to_GHF_ov_data(self.ghf_data)
+
+        # HINT: double counting
+        # # convert eta an NDArray with singly-couted indices of doubles
+        # # use the converted build into the GHF_CCSD_MBE
+        # single_counted_eta = {
+        #     direction: GHF_CCSD_MBE(
+        #         singles=value['singles'],
+        #         doubles=value['doubles'],
+        #     ).flatten_single_count(ghf_ov_data)
+        #     for direction, value in eta.items()
+        # }
+        eta_flatten = {
             direction: GHF_CCSD_MBE(
-                singles=value['singles'],
-                doubles=value['doubles'],
-            ).flatten_single_count(ghf_ov_data)
-            for direction, value in eta.items()
+                singles=matrix['singles'],
+                doubles=matrix['doubles'],
+            ).flatten()
+            for direction, matrix in eta.items()
         }
         pol = Polarizability.from_builder(
             builder=lambda first, second: float(
-                single_counted_eta[first] @ t_response[second]
+                # HINT: double counting
+                # single_counted_eta[first] @ t_response[second]
+                eta_flatten[first] @ t_response[second]
             ),
         )
         return pol

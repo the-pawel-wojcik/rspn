@@ -21,4 +21,6 @@ def test_t_response_structure(ghf_ccsd_water_sto3g: GHF_CCSD) -> None:
     )
     assert set(t_mu_resp.keys()) == {Descartes.x, Descartes.y, Descartes.z}
     t_mu_res_x = t_mu_resp[Descartes.x]
-    assert t_mu_res_x.shape == (310,)
+    # HINT: double counting
+    # assert t_mu_res_x.shape == (310,)
+    assert t_mu_res_x.shape == (1640,)

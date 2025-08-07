@@ -7,10 +7,11 @@ from rspn.ghf_ccsd.equations.lHeecc.e1e1 import get_lhe1e1cc
 from rspn.ghf_ccsd.equations.lHeecc.e1e2 import get_lhe1e2cc
 from rspn.ghf_ccsd.equations.lHeecc.e2e1 import get_lhe2e1cc
 from rspn.ghf_ccsd.equations.lHeecc.e2e2 import get_lhe2e2cc
-from rspn.ghf_ccsd._jacobian import (
-    single_count_sd_and_ds,
-    single_count_doubles,
-)
+# HINT: double counting
+# from rspn.ghf_ccsd._jacobian import (
+#     single_count_sd_and_ds,
+#     single_count_doubles,
+# )
 
 
 def build_pol_xA_F_xB(
@@ -26,12 +27,18 @@ def build_pol_xA_F_xB(
     nv = kwargs['ghf_data'].nv
     no = kwargs['ghf_data'].no
     f_e1_e1 = f_e1_e1_raw.reshape(nv*no, nv*no)
-    f_e1_e2, f_e2_e1 = single_count_sd_and_ds(
-        raw_sd=f_e1_e2_raw,
-        raw_ds=f_e2_e1_raw,
-        nv=nv, no=no,
-    )
-    f_e2_e2 = single_count_doubles(f_e2_e2_raw, nv=nv, no=no)
+
+    # HINT: double counting
+    # f_e1_e2, f_e2_e1 = single_count_sd_and_ds(
+    #     raw_sd=f_e1_e2_raw,
+    #     raw_ds=f_e2_e1_raw,
+    #     nv=nv, no=no,
+    # )
+    # f_e2_e2 = single_count_doubles(f_e2_e2_raw, nv=nv, no=no)
+
+    f_e1_e2 = f_e1_e2_raw.reshape((nv*no, nv**2*no**2))
+    f_e2_e1 = f_e2_e1_raw.reshape((nv**2*no**2, nv*no))
+    f_e2_e2 = f_e2_e2_raw.reshape((nv**2*no**2, nv**2*no**2))
 
     f_matrix = np.block([
         [f_e1_e1, f_e1_e2],

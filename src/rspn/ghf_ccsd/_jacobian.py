@@ -74,14 +74,14 @@ def build_cc_jacobian(
     raw_ds = get_cc_j_doubles_singles(**kwargs)
     raw_dd = get_cc_j_doubles_doubles(**kwargs)
 
-    doubles_doubles = single_count_doubles(raw_dd, nv=nv, no=no)
-    singles_doubles, doubles_singles = single_count_sd_and_ds(
-        raw_sd=raw_sd, raw_ds=raw_ds, nv=nv, no=no,
-    )
-    # dim_d = dim_s**2
-    # singles_doubles = raw_sd.reshape((dim_s, dim_d))
-    # doubles_singles = raw_ds.reshape((dim_d, dim_s))
-    # doubles_doubles = raw_dd.reshape((dim_d, dim_d))
+    # doubles_doubles = single_count_doubles(raw_dd, nv=nv, no=no)
+    # singles_doubles, doubles_singles = single_count_sd_and_ds(
+    #     raw_sd=raw_sd, raw_ds=raw_ds, nv=nv, no=no,
+    # )
+    dim_d = dim_s**2
+    singles_doubles = raw_sd.reshape((dim_s, dim_d))
+    doubles_singles = raw_ds.reshape((dim_d, dim_s))
+    doubles_doubles = raw_dd.reshape((dim_d, dim_d))
 
     jacobian = np.block([
         [singles_singles, singles_doubles,],
