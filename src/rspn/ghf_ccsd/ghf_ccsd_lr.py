@@ -67,6 +67,7 @@ class GHF_CCSD_LR:
     CONFIG: GHF_CCSD_LR_config = field(default_factory=GHF_CCSD_LR_config)
 
     def find_polarizabilities(self) -> Polarizability:
+        """ Static Polarizabilities """
         if self.CONFIG.verbose > 0:
             print("Finding GHF-CCSD-LR polarizabilities.")
             print("Configuration:")
@@ -83,6 +84,7 @@ class GHF_CCSD_LR:
             cc_jacobian = build_cc_jacobian(
                 kwargs=builders_input,
             )
+
             t_response = self.find_t_response(
                 minus_cc_jacobian=-cc_jacobian,
                 cc_mu=cc_electric_dipole,
@@ -99,6 +101,54 @@ class GHF_CCSD_LR:
         if self.CONFIG.store_lHeecc is True:
             pol_xA_F_xB = build_pol_xA_F_xB(
                 builders_input, t_res_A=t_response, t_res_B=t_response,
+            )
+        else:
+            raise NotImplementedError("On-the-fly contraction F response.")
+
+        return pol_etaA_xB + pol_xA_F_xB + pol_etaB_xA
+
+    def find_dynamic_polarizabilities(self, omega: float = 0.) -> Polarizability:
+        if self.CONFIG.verbose > 0:
+            print("Finding GHF-CCSD-LR polarizabilities.")
+            print("Configuration:")
+            print(self.CONFIG)
+
+        builders_input = GHF_Generators_Input(
+            ghf_data=self.ghf_data,
+            ghf_ccsd_data=self.ghf_ccsd_data,
+        )
+
+        cc_electric_dipole = build_nu_bar_V_cc(input=builders_input)
+
+        if self.CONFIG.store_jacobian:
+            cc_jacobian = build_cc_jacobian(
+                kwargs=builders_input,
+            )
+
+            diagonal_idx = np.arange(cc_jacobian.shape[0])
+            cc_jacobian[diagonal_idx, diagonal_idx] -= omega
+
+            t_response_omega = self.find_t_response(
+                minus_cc_jacobian=-cc_jacobian,
+                cc_mu=cc_electric_dipole,
+            )
+            cc_jacobian[diagonal_idx, diagonal_idx] += 2*omega
+            t_response_minus_omega = self.find_t_response(
+                minus_cc_jacobian=-cc_jacobian,
+                cc_mu=cc_electric_dipole,
+            )
+        else:
+            raise NotImplementedError("GHF-CCSD Jacobian action.")
+        eta_mu = self._find_eta_mu()
+        # TODO: generalize to operators other than electric dipole
+        pol_etaA_xB = self._build_pol_eta_X(eta_mu, t_response_omega)
+        pol_etaB_xA = self._build_pol_eta_X(eta_mu, t_response_minus_omega)
+
+        if self.CONFIG.store_lHeecc is True:
+            pol_xA_F_xB = build_pol_xA_F_xB(
+                builders_input,
+                t_res_A=t_response_minus_omega,
+                t_res_B=t_response_omega,
             )
         else:
             raise NotImplementedError("On-the-fly contraction F response.")
