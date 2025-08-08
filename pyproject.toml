@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "rspn"
-version = "0.1.0"
+version = "1.0.0"
 readme = "readme.md"
 classifiers = [
     "Intended Audience :: Science/Research",
@@ -16,7 +16,6 @@ authors = [
 ]
 requires-python = ">=3.12"
 dependencies = [
-  "chem",
   "numpy",
   "scipy",
 ]
